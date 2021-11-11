@@ -4,7 +4,7 @@
 <mapper namespace="com.douzone.mapper.user">
 
     <select id="selectUserAll" resultType="com.douzone.final_backend.User.UserBean">
-        select * from LastOrder.user
+        select * from goods
     </select>
 
 </mapper>
