@@ -17,4 +17,9 @@ public class MasterService {
     public List<OwnerBean> findAll() {
             return masterDAO.findAll();
     }
+
+
+    public int requestOK(int o_sNumber) {
+        return masterDAO.requestOK(o_sNumber);
+    }
 }

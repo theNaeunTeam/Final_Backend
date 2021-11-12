@@ -1,13 +1,12 @@
 package com.douzone.final_backend.Master;
 
 import com.douzone.final_backend.Owner.OwnerBean;
-import com.douzone.final_backend.security.ResponseDTO;
+import com.douzone.final_backend.Owner.OwnerDTO;
+import com.douzone.final_backend.Common.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +33,21 @@ public class MasterController {
 
        }
 
+    }
+
+    @PostMapping("/requestOK")
+    public ResponseEntity<?> ownerRequestCheck(@RequestBody OwnerDTO ownerDTO){
+        log.info("sNumber : "+ownerDTO.getO_sNumber());
+        try{
+            int requestCheck = masterService.requestOK(ownerDTO.getO_sNumber());
+            log.info("check : "+requestCheck);
+            return ResponseEntity.ok().body(requestCheck);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
     }
 
 }
