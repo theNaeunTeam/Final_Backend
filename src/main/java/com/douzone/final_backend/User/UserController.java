@@ -5,10 +5,9 @@ import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -29,13 +28,16 @@ public class UserController {
     @Autowired
     private TokenProvider tokenProvider;
 
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     // 회원가입
     @PostMapping("/userjoin")
     public ResponseEntity<?> signup(@RequestBody UserDTO userDTO) {
         try {
+            String encodePW = passwordEncoder.encode(userDTO.getU_pw());
             UserBean user = UserBean.builder()
                     .u_id(userDTO.getU_id())
-                    .u_pw(userDTO.getU_pw())
+                    .u_pw(encodePW)
                     .u_cellPhone(userDTO.getU_cellPhone())
                     .u_email(userDTO.getU_email())
                     .u_gender(userDTO.getU_gender())
@@ -65,8 +67,13 @@ public class UserController {
     // 로그인
     @PostMapping("/userlogin")
     public ResponseEntity<?> signin(@RequestBody UserDTO userDTO) {
-        UserBean user = userService.getByCredentials(userDTO);
-        log.warn(userDTO.getU_id());
+        UserBean user = userService.getByCredentials(
+                userDTO.getU_id(),
+                userDTO.getU_pw(),
+                passwordEncoder
+        );
+        log.info("user : "+userDTO.getU_pw()+user);
+
         if (user != null) {
             final String token = tokenProvider.create(user);
             final UserDTO responseUserDTO = UserDTO.builder()
