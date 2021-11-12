@@ -4,7 +4,14 @@
 <mapper namespace="com.douzone.mapper.user">
 
     <select id="selectUserAll" resultType="com.douzone.final_backend.User.UserBean">
-        select * from goods
+        select * from user
     </select>
 
+    <select id="existsById" resultType="boolean">
+        select count(*) from user where u_id = #{u_id}
+    </select>
+
+    <select id="findByIdAndPassword" resultType="com.douzone.final_backend.User.UserBean">
+        select * from user where u_id = #{u_id} and u_pw = #{u_pw}
+    </select>
 </mapper>

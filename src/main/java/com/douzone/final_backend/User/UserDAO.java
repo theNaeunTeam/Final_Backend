@@ -14,4 +14,14 @@ public class UserDAO {
     public List<UserBean> select() {
         return sqlSession.selectList("selectUserAll");
     }
+
+
+    public boolean existsById(String u_id) {
+
+        return sqlSession.selectOne("existsById",u_id);
+    }
+
+    public UserBean findByIdAndPassword(UserDTO userDTO) {
+        return sqlSession.selectOne("findByIdAndPassword",userDTO);
+    }
 }

@@ -1,8 +1,14 @@
 package com.douzone.final_backend.User;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 // 사용자 테이블
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class UserBean {
     private String u_id; // 사용자 id

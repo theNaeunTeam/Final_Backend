@@ -13,4 +13,5 @@ public class ReserveBean {
     private int r_status; // 예약 상태 0:상품등록상태 1:유저예약 2:가게승인 3:판매완료 4:취소 5:노쇼
     private String r_lastTime; // 판매시간 -> 예약 상태가 판매완료로 바뀌는 시간
     private String r_customOrder; //요청사항, 방문하는사람 등 기타사항
+    private int r_count; // 해당 상품 몇개 예약했는지
 }
