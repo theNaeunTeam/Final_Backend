@@ -30,7 +30,7 @@ public class UserController {
     private TokenProvider tokenProvider;
 
         // 회원가입
-       @PostMapping("/signup")
+       @PostMapping("/userjoin")
         public ResponseEntity<?> signup(@RequestBody UserDTO userDTO){
             try {
                 UserBean user = UserBean.builder()
@@ -50,10 +50,11 @@ public class UserController {
                         .u_gender(registerUser.getU_gender())
                         .u_age(registerUser.getU_age())
                         .build();
-
+                log.info("회원가입 성공");
                 return ResponseEntity.ok().body(responseUserDTO);
             }catch (Exception e){
                 ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+
                 return ResponseEntity
                         .badRequest()
                         .body(responseDTO);
@@ -62,10 +63,10 @@ public class UserController {
         }
 
         // 로그인
-        @PostMapping("/signin")
+        @PostMapping("/userlogin")
         public ResponseEntity<?> signin(@RequestBody UserDTO userDTO){
             UserBean user = userService.getByCredentials(userDTO);
-
+            log.warn(userDTO.getU_id());
             if(user != null){
                 final String token = tokenProvider.create(user);
                 final UserDTO responseUserDTO = UserDTO.builder()
@@ -77,6 +78,7 @@ public class UserController {
                         .u_age(user.getU_age())
                         .token(token)
                         .build();
+                log.info("로그인 성공");
                 return ResponseEntity.ok().body(responseUserDTO);
             }else{
                 ResponseDTO responseDTO = ResponseDTO.builder()
