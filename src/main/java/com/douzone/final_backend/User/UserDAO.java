@@ -25,7 +25,7 @@ public class UserDAO {
         return sqlSession.selectOne("findByIdAndPassword",userDTO);
     }
 
-    public UserBean insertUser(UserBean userBean) {
-        return sqlSession.insert("insertUser",userBean);
+    public void insertUser(UserBean userBean) {
+        sqlSession.insert("insertUser",userBean);
     }
 }

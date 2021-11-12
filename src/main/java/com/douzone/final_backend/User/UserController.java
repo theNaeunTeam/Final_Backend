@@ -29,17 +29,26 @@ public class UserController {
     @Autowired
     private TokenProvider tokenProvider;
 
-        @PostMapping("/signup")
+        // 회원가입
+       @PostMapping("/signup")
         public ResponseEntity<?> signup(@RequestBody UserDTO userDTO){
             try {
                 UserBean user = UserBean.builder()
                         .u_id(userDTO.getU_id())
                         .u_pw(userDTO.getU_pw())
+                        .u_cellPhone(userDTO.getU_cellPhone())
+                        .u_email(userDTO.getU_email())
+                        .u_gender(userDTO.getU_gender())
+                        .u_age(userDTO.getU_age())
                         .build();
                 UserBean registerUser = userService.create(user);
                 UserDTO responseUserDTO = UserDTO.builder()
                         .u_id(registerUser.getU_id())
                         .u_pw(registerUser.getU_pw())
+                        .u_cellPhone(registerUser.getU_cellPhone())
+                        .u_email(registerUser.getU_email())
+                        .u_gender(registerUser.getU_gender())
+                        .u_age(registerUser.getU_age())
                         .build();
 
                 return ResponseEntity.ok().body(responseUserDTO);
@@ -51,6 +60,8 @@ public class UserController {
             }
 
         }
+
+        // 로그인
         @PostMapping("/signin")
         public ResponseEntity<?> signin(@RequestBody UserDTO userDTO){
             UserBean user = userService.getByCredentials(userDTO);
@@ -60,6 +71,10 @@ public class UserController {
                 final UserDTO responseUserDTO = UserDTO.builder()
                         .u_id(user.getU_id())
                         .u_pw(user.getU_pw())
+                        .u_cellPhone(user.getU_cellPhone())
+                        .u_email(user.getU_email())
+                        .u_gender(user.getU_gender())
+                        .u_age(user.getU_age())
                         .token(token)
                         .build();
                 return ResponseEntity.ok().body(responseUserDTO);

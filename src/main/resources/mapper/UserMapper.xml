@@ -15,6 +15,10 @@
         select * from user where u_id = #{u_id} and u_pw = #{u_pw}
     </select>
 
+    <insert id="insertUser" parameterType="com.douzone.final_backend.User.UserBean">
+        insert into user(u_id, u_pw, u_cellPhone, u_email, u_gender, u_age)
+            values(#{u_id},#{u_pw},#{u_cellPhone},#{u_email},#{u_gender},#{u_age})
 
+    </insert>
 
 </mapper>
