@@ -4,20 +4,26 @@
 <mapper namespace="com.douzone.mapper.user">
 
     <select id="selectUserAll" resultType="com.douzone.final_backend.User.UserBean">
-        select * from user
+        select *
+        from user
     </select>
 
     <select id="existsById" resultType="boolean">
-        select count(*) from user where u_id = #{u_id}
+        select count(*)
+        from user
+        where u_id = #{u_id}
     </select>
 
     <select id="findByIdAndPassword" resultType="com.douzone.final_backend.User.UserBean">
-        select * from user where u_id = #{u_id} and u_pw = #{u_pw}
+        select *
+        from user
+        where u_id = #{u_id}
+          and u_pw = #{u_pw}
     </select>
 
     <insert id="insertUser" parameterType="com.douzone.final_backend.User.UserBean">
         insert into user(u_id, u_pw, u_cellPhone, u_email, u_gender, u_age)
-            values(#{u_id},#{u_pw},#{u_cellPhone},#{u_email},#{u_gender},#{u_age})
+        values (#{u_id}, #{u_pw}, #{u_cellPhone}, #{u_email}, #{u_gender}, #{u_age})
     </insert>
 
 </mapper>

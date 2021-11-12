@@ -12,20 +12,20 @@ public class UserService {
     private UserDAO userDAO;
 
     public UserBean create(final UserBean userBean) {
-        if(userBean == null || userBean.getU_id() == ""){
+        if (userBean == null || userBean.getU_id() == null) {
             log.warn("데이터 누락");
             throw new RuntimeException("데이터 누락");
         }
         final String u_id = userBean.getU_id();
 
-        if(userDAO.existsById(u_id)){
+        if (userDAO.existsById(u_id)) {
             log.warn("이미 존재하는 아이디");
             throw new RuntimeException("존재하는 아이디");
         }
 
         userDAO.insertUser(userBean);
 
-        return  userBean;
+        return userBean;
     }
 
 

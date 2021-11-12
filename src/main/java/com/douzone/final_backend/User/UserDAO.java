@@ -18,14 +18,14 @@ public class UserDAO {
 
     public boolean existsById(String u_id) {
 
-        return sqlSession.selectOne("existsById",u_id);
+        return sqlSession.selectOne("existsById", u_id);
     }
 
     public UserBean findByIdAndPassword(UserDTO userDTO) {
-        return sqlSession.selectOne("findByIdAndPassword",userDTO);
+        return sqlSession.selectOne("findByIdAndPassword", userDTO);
     }
 
     public void insertUser(UserBean userBean) {
-        sqlSession.insert("insertUser",userBean);
+        sqlSession.insert("insertUser", userBean);
     }
 }

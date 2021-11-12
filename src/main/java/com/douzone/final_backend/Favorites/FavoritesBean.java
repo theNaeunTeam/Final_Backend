@@ -1,6 +1,7 @@
 package com.douzone.final_backend.Favorites;
 
 import lombok.Data;
+
 // 즐겨찾는 가게 테이블
 @Data
 public class FavoritesBean {

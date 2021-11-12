@@ -25,14 +25,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private TokenProvider tokenProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = parseBearerToken(request);
             log.info("Filter is running");
 
-            if (token != null && !token.equalsIgnoreCase("null")){
+            if (token != null && !token.equalsIgnoreCase("null")) {
                 String u_id = tokenProvider.validateAndGetUserId(token);
-                log.info("Autjenticated user ID : "+u_id);
+                log.info("Autjenticated user ID : " + u_id);
                 AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         u_id,
                         null,
@@ -43,16 +43,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 securityContext.setAuthentication(auth);
                 SecurityContextHolder.setContext(securityContext);
             }
-        }catch (Exception ex){
-            log.error("Security context error",ex);
+        } catch (Exception ex) {
+            log.error("Security context error", ex);
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
     private String parseBearerToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if(StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")){
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }
         return null;

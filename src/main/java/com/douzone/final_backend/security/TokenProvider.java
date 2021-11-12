@@ -16,7 +16,7 @@ import java.util.Date;
 public class TokenProvider {
     private static final String SECRET_KEY = "SDJ23MKP1M";
 
-    public String create(UserBean userBean){
+    public String create(UserBean userBean) {
         // 기한은 지금부터 1일로 설정
         Date expiryDate = Date.from(
                 Instant.now()
@@ -33,7 +33,7 @@ public class TokenProvider {
                 .compact();
     }
 
-    public String validateAndGetUserId(String token){
+    public String validateAndGetUserId(String token) {
 
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
