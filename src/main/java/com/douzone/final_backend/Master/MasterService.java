@@ -1,20 +1,20 @@
 package com.douzone.final_backend.Master;
 
 import com.douzone.final_backend.Owner.OwnerBean;
-import org.apache.ibatis.session.SqlSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Repository
-public class MasterDAO {
+@Slf4j
+@Service
+public class MasterService {
 
     @Autowired
-    private SqlSession sqlSession;
-
+    private MasterDAO masterDAO;
 
     public List<OwnerBean> findAll() {
-        return sqlSession.selectList("findAll");
+            return masterDAO.findAll();
     }
 }
