@@ -17,4 +17,8 @@ public class MasterDAO {
     public List<OwnerBean> findAll() {
         return sqlSession.selectList("findAll");
     }
+
+    public int requestOK(int o_sNumber) {
+        return sqlSession.update("requestOK",o_sNumber);
+    }
 }

@@ -1,6 +1,6 @@
 package com.douzone.final_backend.User;
 
-import com.douzone.final_backend.security.ResponseDTO;
+import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
