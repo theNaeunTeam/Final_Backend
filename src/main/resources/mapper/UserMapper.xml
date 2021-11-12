@@ -14,4 +14,7 @@
     <select id="findByIdAndPassword" resultType="com.douzone.final_backend.User.UserBean">
         select * from user where u_id = #{u_id} and u_pw = #{u_pw}
     </select>
+
+
+
 </mapper>

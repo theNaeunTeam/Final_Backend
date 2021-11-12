@@ -23,7 +23,8 @@ public class UserService {
             throw new RuntimeException("존재하는 아이디");
         }
 
-        return userBean;
+
+        return  userDAO.insertUser(userBean);
     }
 
 
