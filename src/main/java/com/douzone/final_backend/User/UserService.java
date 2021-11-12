@@ -2,6 +2,7 @@ package com.douzone.final_backend.User;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -29,8 +30,15 @@ public class UserService {
     }
 
 
-    public UserBean getByCredentials(UserDTO userDTO) {
+    public UserBean getByCredentials(final String u_id, final String u_pw, final PasswordEncoder encoder){
+        final UserBean originalUser = userDAO.findByUId(u_id);
+        log.info("PW : " +encoder.matches(u_pw,originalUser.getU_pw()));
+        log.info("PW?? "+originalUser.getU_pw());
 
-        return userDAO.findByIdAndPassword(userDTO);
+        if(originalUser != null && encoder.matches(u_pw,originalUser.getU_pw())){
+            log.info("originalUser : "+originalUser);
+            return originalUser;
+        }
+        return null;
     }
 }

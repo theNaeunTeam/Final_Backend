@@ -3,5 +3,8 @@
 
 <mapper namespace="com.douzone.mapper.master">
 
+    <select id="findAll" resultType="com.douzone.final_backend.Owner.OwnerBean">
+        select * from owner;
+    </select>
 
 </mapper>

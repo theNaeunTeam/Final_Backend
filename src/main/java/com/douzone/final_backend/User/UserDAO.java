@@ -28,4 +28,8 @@ public class UserDAO {
     public void insertUser(UserBean userBean) {
         sqlSession.insert("insertUser", userBean);
     }
+
+    public UserBean findByUId(String u_id) {
+        return sqlSession.selectOne("findByUId",u_id);
+    }
 }
