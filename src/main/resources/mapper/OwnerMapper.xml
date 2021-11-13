@@ -2,6 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 <mapper namespace="com.douzone.mapper.owner">
+    <select id="findBySNum" resultType="com.douzone.final_backend.Owner.OwnerBean">
+        select *
+        from owner
+        where o_sNumber = #{o_sNumber}
+    </select>
 
+    <select id="existsBySNum" resultType="boolean">
+        select count(*)
+        from owner
+        where o_sNumber = #{o_sNumber}
+    </select>
 
+    <insert id="insertOwner" parameterType="com.douzone.final_backend.Owner.OwnerBean">
+        insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time, o_image)
+        values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time},
+                #{o_image})
+    </insert>
 </mapper>

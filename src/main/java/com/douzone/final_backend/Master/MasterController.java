@@ -21,17 +21,17 @@ public class MasterController {
     @GetMapping
     public ResponseEntity<?> getOwnerList() {
 
-       try{
-           List<OwnerBean> requestList = masterService.findAll();
-           log.info("가게 정보 불러오기 성공");
-           return ResponseEntity.ok().body(requestList);
-       }catch (Exception e){
-           ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-           return ResponseEntity
-                   .badRequest()
-                   .body(responseDTO);
+        try {
+            List<OwnerBean> requestList = masterService.findAll();
+            log.info("가게 정보 불러오기 성공");
+            return ResponseEntity.ok().body(requestList);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
 
-       }
+        }
 
     }
 
@@ -49,5 +49,6 @@ public class MasterController {
                     .body(responseDTO);
         }
     }
+
 
 }

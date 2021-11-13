@@ -1,12 +1,14 @@
 package com.douzone.final_backend.Master;
 
 import com.douzone.final_backend.Owner.OwnerBean;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Slf4j
 @Repository
 public class MasterDAO {
 
@@ -18,7 +20,8 @@ public class MasterDAO {
         return sqlSession.selectList("findAll");
     }
 
-    public int requestOK(int o_sNumber) {
+    public int requestOK(String o_sNumber) {
+        log.info("master : "+sqlSession.update("requestOK",o_sNumber));
         return sqlSession.update("requestOK",o_sNumber);
     }
 }

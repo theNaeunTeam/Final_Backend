@@ -7,7 +7,7 @@
         select * from owner;
     </select>
 
-    <update id="requestOK" parameterType="int">
-        update owner set o_approval = 1 where o_sNumber=#{o_sNumber}
+    <update id="requestOK" parameterType="String">
+        update owner set o_approval = 1 and o_time = now() where o_sNumber=#{o_sNumber}
     </update>
 </mapper>

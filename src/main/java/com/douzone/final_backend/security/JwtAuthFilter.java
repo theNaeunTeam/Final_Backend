@@ -29,7 +29,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         try {
             String token = parseBearerToken(request);
             log.info("Filter is running");
-
+            log.info(token);
             if (token != null && !token.equalsIgnoreCase("null")) {
                 String u_id = tokenProvider.validateAndGetUserId(token);
                 log.info("Autjenticated user ID : " + u_id);
