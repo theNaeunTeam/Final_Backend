@@ -1,9 +1,15 @@
 package com.douzone.final_backend.Owner;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 // 사업자 테이블
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class OwnerBean {
     private String o_sNumber; // 사업자 번호
     private int o_approval; // 가맹 상태 0:승인대기 1:승인완료 2:승인거절 3:가맹해제

@@ -19,7 +19,8 @@ public class MasterService {
     }
 
 
-    public int requestOK(int o_sNumber) {
+    public int requestOK(String o_sNumber) {
+        log.info("service : "+masterDAO.requestOK(o_sNumber));
         return masterDAO.requestOK(o_sNumber);
     }
 }

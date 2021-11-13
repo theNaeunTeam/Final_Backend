@@ -30,13 +30,13 @@ public class UserService {
     }
 
 
-    public UserBean getByCredentials(final String u_id, final String u_pw, final PasswordEncoder encoder){
+    public UserBean getByCredentials(final String u_id, final String u_pw, final PasswordEncoder encoder) {
         final UserBean originalUser = userDAO.findByUId(u_id);
-        log.info("PW : " +encoder.matches(u_pw,originalUser.getU_pw()));
-        log.info("PW?? "+originalUser.getU_pw());
+        log.info("PW : " + encoder.matches(u_pw, originalUser.getU_pw()));
+        log.info("PW?? " + originalUser.getU_pw());
 
-        if(originalUser != null && encoder.matches(u_pw,originalUser.getU_pw())){
-            log.info("originalUser : "+originalUser);
+        if (originalUser != null && encoder.matches(u_pw, originalUser.getU_pw())) {
+            log.info("originalUser : " + originalUser);
             return originalUser;
         }
         return null;
