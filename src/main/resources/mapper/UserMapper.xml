@@ -27,7 +27,14 @@
     </insert>
 
     <select id="findByUId" resultType="com.douzone.final_backend.User.UserBean">
-        select * from user where u_id=#{u_id}
+        select *
+        from user
+        where u_id = #{u_id}
     </select>
 
+    <select id="findByUIdDTO" resultType="com.douzone.final_backend.User.UserDTO">
+        select *
+        from user
+        where u_id = #{id}
+    </select>
 </mapper>
