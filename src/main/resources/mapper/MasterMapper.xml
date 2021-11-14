@@ -8,6 +8,12 @@
     </select>
 
     <update id="requestOK" parameterType="String">
-        update owner set o_approval = 1 and o_time = now() where o_sNumber=#{o_sNumber}
+        update owner set o_approval = 1 , o_time = now() where o_sNumber=#{o_sNumber}
     </update>
+
+    <select id="findByMaster" resultType="com.douzone.final_backend.Master.MasterDTO">
+        select * from master where a_id=#{id}
+    </select>
 </mapper>
+
+

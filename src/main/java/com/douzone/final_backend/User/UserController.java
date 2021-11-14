@@ -1,12 +1,12 @@
 package com.douzone.final_backend.User;
 
 import com.douzone.final_backend.Common.ResponseDTO;
-import com.douzone.final_backend.Owner.OwnerBean;
-import com.douzone.final_backend.Owner.OwnerDTO;
-import com.douzone.final_backend.Owner.OwnerService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 public class UserController {
     //    @GetMapping("/user")
 //    public String test() {
@@ -39,6 +43,7 @@ public class UserController {
     // 회원가입
     @PostMapping("/userjoin")
     public ResponseEntity<?> userjoin(@RequestBody UserDTO userDTO) {
+        log.info("회원가입 들어옴"+userDTO);
         try {
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
             UserBean user = UserBean.builder()
@@ -82,19 +87,28 @@ public class UserController {
         log.info("user : " + userDTO.getU_pw() + user);
 
         if (user != null) {
-            final String id = user.getU_id();
+            final String id = user.getU_id()+"&USER";
+            log.info(id);
             final String token = tokenProvider.create(id);
+            List<String> list = new ArrayList<>();
+            list.add("ROLE_USER");
             final UserDTO responseUserDTO = UserDTO.builder()
                     .u_id(user.getU_id())
                     .u_pw(user.getU_pw())
-                    .u_cellPhone(user.getU_cellPhone())
-                    .u_email(user.getU_email())
-                    .u_gender(user.getU_gender())
-                    .u_age(user.getU_age())
+//                    .u_cellPhone(user.getU_cellPhone())
+//                    .u_email(user.getU_email())
+//                    .u_gender(user.getU_gender())
+//                    .u_age(user.getU_age())
+                    .roles(list)
                     .token(token)
                     .build();
+            log.info(token);
             log.info("로그인 성공");
-            return ResponseEntity.ok().body(responseUserDTO);
+            HttpHeaders headers= new HttpHeaders();
+            headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+            headers.add("X-AUTH-TOKEN",token);
+            return new ResponseEntity<>(responseUserDTO, headers, HttpStatus.OK);
+//            return ResponseEntity.ok().body(responseUserDTO);
         } else {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .error("Login Failed")
@@ -107,41 +121,7 @@ public class UserController {
 
     }
 
-    @Autowired
-    private OwnerService ownerService;
 
-    // 가게 로그인
-    @PostMapping("/ownerlogin")
-    public ResponseEntity<?> ownerlogin(@RequestBody OwnerDTO ownerDTO) {
-        OwnerBean owner = ownerService.getByCredentials(
-                ownerDTO.getO_sNumber(),
-                ownerDTO.getO_pw(),
-                passwordEncoder
-        );
-        log.info(ownerDTO.getO_pw());
-
-        if (owner != null) {
-            final String id = owner.getO_sNumber();
-            final String token = tokenProvider.create(id);
-            final OwnerDTO responseOwnerDTO = OwnerDTO.builder()
-                    .o_sNumber(owner.getO_sNumber())
-                    .o_approval(owner.getO_approval())
-                    .o_pw(owner.getO_pw())
-                    .token(token)
-                    .build();
-            log.info("로그인 성공");
-            return ResponseEntity.ok().body(responseOwnerDTO);
-        } else {
-            ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("Login Failed")
-                    .build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-
-
-    }
 
 
 }

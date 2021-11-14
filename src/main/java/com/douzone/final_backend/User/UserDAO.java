@@ -32,4 +32,8 @@ public class UserDAO {
     public UserBean findByUId(String u_id) {
         return sqlSession.selectOne("findByUId",u_id);
     }
+
+    public UserDTO findByUIdDTO(String id) {
+        return sqlSession.selectOne("findByUIdDTO",id);
+    }
 }

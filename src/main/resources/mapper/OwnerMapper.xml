@@ -19,4 +19,15 @@
         values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time},
                 #{o_image})
     </insert>
+    <select id="findByOwner" resultType="com.douzone.final_backend.Owner.OwnerDTO">
+        select *
+        from owner
+        where o_sNumber = #{id}
+    </select>
+
+    <insert id="addGoods" parameterType="com.douzone.final_backend.Goods.GoodsBean">
+        insert into goods(g_owner, g_name, g_price, g_discount, g_detail, g_image, g_expireDate, g_category)
+        values (#{g_owner},#{g_name},#{g_price},#{g_discount},#{g_detail},#{g_image},#{g_expireDate},#{g_category})
+
+    </insert>
 </mapper>

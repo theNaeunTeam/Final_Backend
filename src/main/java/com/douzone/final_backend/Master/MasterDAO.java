@@ -24,4 +24,8 @@ public class MasterDAO {
         log.info("master : "+sqlSession.update("requestOK",o_sNumber));
         return sqlSession.update("requestOK",o_sNumber);
     }
+
+    public MasterDTO findByMaster(String id) {
+        return sqlSession.selectOne("findByMaster",id);
+    }
 }
