@@ -1,6 +1,7 @@
 package com.douzone.final_backend.Owner;
 
 import com.douzone.final_backend.Common.ResponseDTO;
+import com.douzone.final_backend.Common.S3Service;
 import com.douzone.final_backend.Goods.GoodsBean;
 import com.douzone.final_backend.Goods.GoodsDTO;
 import com.douzone.final_backend.security.TokenProvider;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,9 @@ public class OwnerController {
 
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
+    private S3Service s3Service;
 
     // 입점 신청
     @PostMapping("/request")
@@ -109,7 +115,12 @@ public class OwnerController {
     }
 
     @PostMapping("/addGoods")
-    public ResponseEntity<?> addGoods(@RequestBody GoodsDTO goodsDTO) {
+    public ResponseEntity<?> addGoods( GoodsDTO goodsDTO, MultipartFile file) throws IOException {
+       log.info("file 정보 :" + file);
+       log.info("goods" + goodsDTO);
+        String image = s3Service.upload(file);
+        goodsDTO.setG_image(image);
+
         log.info("goodsDTO" + goodsDTO);
         try {
 
