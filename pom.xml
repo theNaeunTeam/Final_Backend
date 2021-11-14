@@ -115,11 +115,18 @@
             <artifactId>aws-java-sdk-dynamodb</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-context -->
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-context -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-context</artifactId>
-            <version>3.0.4</version>
+            <artifactId>spring-cloud-aws-context</artifactId>
+            <version>2.2.6.RELEASE</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-aws-autoconfigure -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-aws-autoconfigure</artifactId>
+            <version>2.2.6.RELEASE</version>
         </dependency>
 
 
