@@ -31,7 +31,7 @@ public class MasterDAO {
 
     public MasterBean masterLogin(MasterDTO masterDTO) {
         log.info(masterDTO.getM_id()+"/"+masterDTO.getM_pw());
-        log.info("MasterDAO  : " + sqlSession.selectOne("masterlogin", masterDTO));
+        log.info("MasterBean  : " + sqlSession.selectOne("masterlogin", masterDTO));
         return sqlSession.selectOne("masterlogin", masterDTO);
     }
 }

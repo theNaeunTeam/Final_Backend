@@ -26,6 +26,7 @@ public class MasterService {
 
     public MasterBean login(MasterDTO masterDTO) {
         final MasterBean masterBean = masterDAO.masterLogin(masterDTO);
+
         log.info("serviceMasterBean : " + masterBean);
         if (masterBean != null) {
 
@@ -35,10 +36,4 @@ public class MasterService {
         return null;
     }
 
-
-    public MasterDTO findMaster(MasterDTO masterDTO) {
-        final MasterDTO masterBean = masterDAO.findByMaster(masterDTO.getM_id());
-        log.info("dmkd" + masterBean);
-        return masterBean;
-    }
 }

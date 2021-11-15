@@ -12,11 +12,11 @@
     </update>
 
     <select id="findByMaster" resultType="com.douzone.final_backend.Master.MasterDTO">
-        select * from master where a_id=#{id}
+        select * from master where m_id=#{id}
     </select>
 
-    <select id="masterlogin" resultType="com.douzone.final_backend.Master.MasterBean" parameterType="com.douzone.final_backend.Master.MasterDTO">
-        select * from master where a_id=#{m_id} and a_pw=#{m_pw};
+    <select id="masterlogin" resultType="com.douzone.final_backend.Master.MasterBean">
+        select* from master where m_id=#{m_id} and m_pw=#{m_pw}
     </select>
 </mapper>
 
