@@ -30,7 +30,7 @@ public class TokenProvider {
                 Instant.now()
                         .plus(1, ChronoUnit.DAYS)
         );
-
+        log.info("토근 생성 완료");
         //JWT 토큰 생성
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
@@ -39,6 +39,8 @@ public class TokenProvider {
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .compact();
+
+
     }
 
     // 인증 성공시 SecurityContextHolder에 저장할 Authentication 객체 생성

@@ -93,8 +93,8 @@ public class UserController {
             List<String> list = new ArrayList<>();
             list.add("ROLE_USER");
             final UserDTO responseUserDTO = UserDTO.builder()
-                    .u_id(user.getU_id())
-                    .u_pw(user.getU_pw())
+//                    .u_id(user.getU_id())
+//                    .u_pw(user.getU_pw())
 //                    .u_cellPhone(user.getU_cellPhone())
 //                    .u_email(user.getU_email())
 //                    .u_gender(user.getU_gender())
