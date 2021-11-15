@@ -1,6 +1,7 @@
 package com.douzone.final_backend.Master;
 
 import com.douzone.final_backend.Owner.OwnerBean;
+import com.douzone.final_backend.User.UserBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ public class MasterService {
         return masterDAO.requestOK(o_sNumber);
     }
 
+    public int requestNO(String o_sNumber) {
+        return masterDAO.requestNO(o_sNumber);
+    }
+
     public MasterBean login(MasterDTO masterDTO) {
         final MasterBean masterBean = masterDAO.masterLogin(masterDTO);
 
@@ -36,4 +41,7 @@ public class MasterService {
         return null;
     }
 
+    public List<UserBean> userAll() {
+        return masterDAO.userAll();
+    }
 }

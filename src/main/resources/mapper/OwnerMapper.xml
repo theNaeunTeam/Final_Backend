@@ -27,7 +27,31 @@
 
     <insert id="addGoods" parameterType="com.douzone.final_backend.Goods.GoodsBean">
         insert into goods(g_owner, g_name, g_price, g_discount, g_detail, g_image, g_expireDate, g_category)
-        values (#{g_owner},#{g_name},#{g_price},#{g_discount},#{g_detail},#{g_image},#{g_expireDate},#{g_category})
+        values (#{g_owner}, #{g_name}, #{g_price}, #{g_discount}, #{g_detail}, #{g_image}, #{g_expireDate},
+                #{g_category})
 
     </insert>
+
+    <select id="goodsList" resultType="com.douzone.final_backend.Goods.GoodsBean">
+        select *
+        from goods
+        where g_owner = #{o_sNumber}
+    </select>
+
+    <!--  예약 승인  -->
+    <update id="resOkCount" parameterType="com.douzone.final_backend.Reserve.ReserveDTO">
+        update goods
+        set g_count = g_owner - #{r_count}
+        where g_count = #{r_code}
+    </update>
+    <update id="resOK" parameterType="com.douzone.final_backend.Reserve.ReserveDTO">
+        update reserve
+        set r_status = 1
+        where r_code = #{r_code}
+    </update>
+
+    <!-- 예약 거절 -->
+    <update id="resNoCount" parameterType="com.douzone.final_backend.Reserve.ReserveDTO">
+        update
+    </update>
 </mapper>

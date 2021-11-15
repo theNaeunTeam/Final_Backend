@@ -34,6 +34,9 @@ public class OwnerDTO implements UserDetails {
 
     private List<String> roles;
 
+    private String checkStatus;
+
+    private List<String> selectedRow;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

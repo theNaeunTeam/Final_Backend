@@ -4,19 +4,37 @@
 <mapper namespace="com.douzone.mapper.master">
 
     <select id="findAll" resultType="com.douzone.final_backend.Owner.OwnerBean">
-        select * from owner;
+        select *
+        from owner
     </select>
 
     <update id="requestOK" parameterType="String">
-        update owner set o_approval = 1 , o_time = now() where o_sNumber=#{o_sNumber}
+        update owner
+        set o_approval = 1,
+            o_time     = now()
+        where o_sNumber = #{o_sNumber}
     </update>
-
+    <update id="requestNO" parameterType="String">
+        update owner
+        set o_approval = 2
+        where o_sNumber = #{o_sNumber}
+    </update>
     <select id="findByMaster" resultType="com.douzone.final_backend.Master.MasterDTO">
-        select * from master where m_id=#{id}
+        select *
+        from master
+        where m_id = #{id}
     </select>
 
     <select id="masterlogin" resultType="com.douzone.final_backend.Master.MasterBean">
-        select* from master where m_id=#{m_id} and m_pw=#{m_pw}
+        select*
+        from master
+        where m_id = #{m_id}
+          and m_pw = #{m_pw}
+    </select>
+
+    <select id="userAll" resultType="com.douzone.final_backend.User.UserBean">
+        select*
+        from user
     </select>
 </mapper>
 

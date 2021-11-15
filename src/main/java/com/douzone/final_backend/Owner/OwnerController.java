@@ -4,6 +4,7 @@ import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
 import com.douzone.final_backend.Goods.GoodsBean;
 import com.douzone.final_backend.Goods.GoodsDTO;
+import com.douzone.final_backend.Reserve.ReserveDTO;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -115,9 +118,9 @@ public class OwnerController {
     }
 
     @PostMapping("/addGoods")
-    public ResponseEntity<?> addGoods( GoodsDTO goodsDTO, MultipartFile file) throws IOException {
-       log.info("file 정보 :" + file);
-       log.info("goods" + goodsDTO);
+    public ResponseEntity<?> addGoods(GoodsDTO goodsDTO, MultipartFile file) throws IOException {
+        log.info("file 정보 :" + file);
+        log.info("goods" + goodsDTO);
         String image = s3Service.upload(file);
         goodsDTO.setG_image(image);
 
@@ -161,5 +164,56 @@ public class OwnerController {
                     .body(responseDTO);
         }
     }
+
+    // 해당 가게 상품 리스트 -> 상품조회,예약 현황
+    @PostMapping("goodsView")
+    public ResponseEntity<?> goodsView(@RequestBody GoodsDTO goodsDTO) {
+        try {
+            List<GoodsBean> goodsList = ownerService.goodsList(goodsDTO.getG_owner());
+            log.info("e" + goodsDTO);
+            log.info("사업자 번호" + goodsDTO.getG_owner());
+//            log.info("해당 가게 상품 리스트" + goodsList);
+
+
+            for (GoodsBean g : goodsList) {
+
+//                Date exp = new Date(g.getG_expireDate());
+                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+                Date now = new Date();
+
+                String now_dt = date.format(now);
+                Date date1 = date.parse(now_dt);
+
+                Date date2 =date.parse(g.getG_expireDate());
+
+
+                String exp = g.getG_expireDate();
+                log.info("비교는 ? "+date1.before(date2));
+
+                // 오늘 날짜를 지났으면 DB 가서 바꾸고 list.set 상태 해주기
+                g.setG_status(1); // 이렇게 처럼 바꾸기
+                log.info("list"+exp);
+                log.info("유통기한 " + now_dt);
+            }
+            return ResponseEntity.ok().body(goodsList);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 예약 상태 변화. 예약 승인완료, 거절, 노쇼
+    // r_code 랑 status=승인완료, 거절, 판매완료, 노쇼 정보
+    @PostMapping("reserveCheck")
+    public ResponseEntity<?> reserveCheck(@RequestBody ReserveDTO reserve) {
+        log.info("reserve 넘어온 값 : " + reserve);
+
+        int result = ownerService.reserveCheck(reserve);
+
+        return null;
+    }
+
 
 }

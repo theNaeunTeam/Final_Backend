@@ -55,7 +55,7 @@ public class CustomDetailsService implements UserDetailsService {
             if (result == null) throw new BadCredentialsException("MasterID not Found");
             List<String> list = new ArrayList<>();
             list.add("ROLE_MASTER");
-            list.add("ROLE_OWNER");
+//            list.add("ROLE_OWNER");
             result.setRoles(list);
             return result;
         } else if (role.equals("OWNER")) {

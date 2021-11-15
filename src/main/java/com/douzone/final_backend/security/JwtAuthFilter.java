@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -27,8 +28,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             log.info("Filter is running");
             log.info("token: " +token);
             if (token != null && !token.equalsIgnoreCase("null")) {
-                String u_id = tokenProvider.validateAndGetUserId(token);
-                log.info("Authenticated user ID : " + u_id);
+                String id = tokenProvider.validateAndGetUserId(token);
+                log.info("Authenticated user ID : " + id);
 //                AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 //                        u_id,
 //                        null,
@@ -50,15 +51,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private String parseBearerToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("X-AUTH-TOKEN");
+//        String bearerToken = request.getHeader("X-AUTH-TOKEN");
+
+        String bearerToken = request.getHeader("Authorization");
         log.info("bearedToken : "+bearerToken);
-//        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
-//            return bearerToken.substring(7);
-//        }
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
+            return bearerToken.substring(7);
+        }
         return bearerToken;
     }
 
     public String resolveToken(HttpServletRequest req) {
-        return req.getHeader("X-AUTH-TOKEN");
+        return req.getHeader("Authorization");
     }
 }

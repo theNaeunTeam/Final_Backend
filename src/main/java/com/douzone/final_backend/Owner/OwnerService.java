@@ -1,10 +1,13 @@
 package com.douzone.final_backend.Owner;
 
 import com.douzone.final_backend.Goods.GoodsBean;
+import com.douzone.final_backend.Reserve.ReserveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -50,4 +53,15 @@ public class OwnerService {
         return goodsBean;
 
     }
+
+    public List<GoodsBean> goodsList(String o_sNumber) {
+
+        return ownerDAO.goodsList(o_sNumber);
+    }
+
+    public int reserveCheck(ReserveDTO reserveDTO){
+
+        return ownerDAO.reserveCheck(reserveDTO);
+    }
+
 }
