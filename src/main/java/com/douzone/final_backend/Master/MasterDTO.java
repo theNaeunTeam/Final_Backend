@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class MasterDTO implements UserDetails {
     private String m_id; // 운영자 아이디
     private String m_pw; // 운영자 비밀번호
-
+    private String token;
     private List<String> roles;
 
     @Override
