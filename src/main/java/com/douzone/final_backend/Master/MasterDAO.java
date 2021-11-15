@@ -21,11 +21,17 @@ public class MasterDAO {
     }
 
     public int requestOK(String o_sNumber) {
-        log.info("master : "+sqlSession.update("requestOK",o_sNumber));
-        return sqlSession.update("requestOK",o_sNumber);
+        log.info("master : " + sqlSession.update("requestOK", o_sNumber));
+        return sqlSession.update("requestOK", o_sNumber);
     }
 
     public MasterDTO findByMaster(String id) {
-        return sqlSession.selectOne("findByMaster",id);
+        return sqlSession.selectOne("findByMaster", id);
+    }
+
+    public MasterBean masterLogin(MasterDTO masterDTO) {
+        log.info(masterDTO.getM_id()+"/"+masterDTO.getM_pw());
+        log.info("MasterDAO  : " + sqlSession.selectOne("masterlogin", masterDTO));
+        return sqlSession.selectOne("masterlogin", masterDTO);
     }
 }
