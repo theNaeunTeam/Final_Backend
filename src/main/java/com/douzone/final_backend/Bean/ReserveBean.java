@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Reserve;
+package com.douzone.final_backend.Bean;
 
 import lombok.Builder;
 import lombok.Data;

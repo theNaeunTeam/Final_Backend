@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Favorites;
+package com.douzone.final_backend.Bean;
 
 import lombok.Data;
 

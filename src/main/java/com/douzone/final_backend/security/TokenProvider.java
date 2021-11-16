@@ -45,11 +45,11 @@ public class TokenProvider {
 
     // 인증 성공시 SecurityContextHolder에 저장할 Authentication 객체 생성
     public Authentication getAuthentication(String token) {
-        log.info("여기토큰 : "+token);
+        log.info("여기토큰 : " + token);
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.validateAndGetUserId(token));
         log.info("userDetails : " + userDetails.getAuthorities());
         log.info("userDetails : " + userDetails);
-        log.info("이게뭐야 "+new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+        log.info("이게뭐야 " + new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 
     }

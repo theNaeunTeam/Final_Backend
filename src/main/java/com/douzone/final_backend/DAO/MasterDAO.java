@@ -1,7 +1,9 @@
-package com.douzone.final_backend.Master;
+package com.douzone.final_backend.DAO;
 
-import com.douzone.final_backend.Owner.OwnerBean;
-import com.douzone.final_backend.User.UserBean;
+import com.douzone.final_backend.Bean.MasterBean;
+import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.DTO.MasterDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;

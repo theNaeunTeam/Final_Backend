@@ -3,7 +3,7 @@
 
 <mapper namespace="com.douzone.mapper.user">
 
-    <select id="selectUserAll" resultType="com.douzone.final_backend.User.UserBean">
+    <select id="selectUserAll" resultType="com.douzone.final_backend.Bean.UserBean">
         select *
         from user
     </select>
@@ -14,27 +14,31 @@
         where u_id = #{u_id}
     </select>
 
-    <select id="findByIdAndPassword" resultType="com.douzone.final_backend.User.UserBean">
+    <select id="findByIdAndPassword" resultType="com.douzone.final_backend.Bean.UserBean">
         select *
         from user
         where u_id = #{u_id}
           and u_pw = #{u_pw}
     </select>
 
-    <insert id="insertUser" parameterType="com.douzone.final_backend.User.UserBean">
+    <insert id="insertUser" parameterType="com.douzone.final_backend.Bean.UserBean">
         insert into user(u_id, u_pw, u_cellPhone, u_email, u_gender, u_age)
         values (#{u_id}, #{u_pw}, #{u_cellPhone}, #{u_email}, #{u_gender}, #{u_age})
     </insert>
 
-    <select id="findByUId" resultType="com.douzone.final_backend.User.UserBean">
+    <select id="findByUId" resultType="com.douzone.final_backend.Bean.UserBean">
         select *
         from user
-        where u_id = #{u_id}
+        where u_id = #{u_id};
     </select>
 
-    <select id="findByUIdDTO" resultType="com.douzone.final_backend.User.UserDTO">
+    <select id="findByUIdDTO" resultType="com.douzone.final_backend.DTO.UserDTO">
         select *
         from user
         where u_id = #{id}
+    </select>
+
+    <select id="shopView" resultType="com.douzone.final_backend.Bean.GoodsBean">
+        select * from goods where g_owner = #{o_sNumber} and g_status = 0
     </select>
 </mapper>

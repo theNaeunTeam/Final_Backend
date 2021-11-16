@@ -26,7 +26,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 //            String token = resolveToken((HttpServletRequest) request);
             String token = parseBearerToken(request);
             log.info("Filter is running");
-            log.info("token: " +token);
+            log.info("token: " + token);
             if (token != null && !token.equalsIgnoreCase("null")) {
                 String id = tokenProvider.validateAndGetUserId(token);
                 log.info("Authenticated user ID : " + id);
@@ -54,7 +54,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 //        String bearerToken = request.getHeader("X-AUTH-TOKEN");
 
         String bearerToken = request.getHeader("Authorization");
-        log.info("bearedToken : "+bearerToken);
+        log.info("bearedToken : " + bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }

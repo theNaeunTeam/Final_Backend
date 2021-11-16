@@ -1,11 +1,11 @@
 package com.douzone.final_backend.security;
 
-import com.douzone.final_backend.Master.MasterDAO;
-import com.douzone.final_backend.Master.MasterDTO;
-import com.douzone.final_backend.Owner.OwnerDAO;
-import com.douzone.final_backend.Owner.OwnerDTO;
-import com.douzone.final_backend.User.UserDAO;
-import com.douzone.final_backend.User.UserDTO;
+import com.douzone.final_backend.DAO.MasterDAO;
+import com.douzone.final_backend.DTO.MasterDTO;
+import com.douzone.final_backend.DAO.OwnerDAO;
+import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DAO.UserDAO;
+import com.douzone.final_backend.DTO.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;

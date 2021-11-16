@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Owner;
+package com.douzone.final_backend.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,10 +1,13 @@
-package com.douzone.final_backend.Owner;
+package com.douzone.final_backend.Controller;
 
+import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
-import com.douzone.final_backend.Goods.GoodsBean;
-import com.douzone.final_backend.Goods.GoodsDTO;
-import com.douzone.final_backend.Reserve.ReserveDTO;
+import com.douzone.final_backend.Bean.GoodsBean;
+import com.douzone.final_backend.DTO.GoodsDTO;
+import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.Service.OwnerService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +17,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -126,7 +124,6 @@ public class OwnerController {
 
         log.info("goodsDTO" + goodsDTO);
         try {
-
             GoodsBean goods = GoodsBean.builder()
 //                    .g_owner(goodsDTO.getG_owner())
                     .g_owner("123")
@@ -139,7 +136,13 @@ public class OwnerController {
                     .g_expireDate(goodsDTO.getG_expireDate())
                     .g_category(goodsDTO.getG_category())
                     .build();
-            GoodsBean registerGoods = ownerService.addGoods(goods);
+            GoodsBean registerGoods = null;
+            if (goodsDTO.getActionType().equals("new")) {
+                registerGoods = ownerService.addGoods(goods);
+            } else if (goodsDTO.getActionType().equals("update")) {
+                goods.setG_code(goodsDTO.getG_code());
+                registerGoods = ownerService.updateGoods(goods);
+            }
             GoodsDTO responseGoodsDTO = GoodsDTO.builder()
 //                    .g_owner(registerGoods.getG_owner())
                     .g_owner("123")
@@ -152,8 +155,11 @@ public class OwnerController {
                     .g_expireDate(registerGoods.getG_expireDate())
                     .g_category(registerGoods.getG_category())
                     .build();
-
-            log.info("상품 등록 완료" + registerGoods);
+            if (goodsDTO.getActionType().equals("new")) {
+                log.info("상품 등록 완료" + registerGoods);
+            } else if (goodsDTO.getActionType().equals("update")) {
+                log.info("상품 업데이트 완료" + registerGoods);
+            }
             return ResponseEntity.ok().body(responseGoodsDTO);
         } catch (Exception e) {
             log.error("여기서 에러다");
@@ -166,35 +172,33 @@ public class OwnerController {
     }
 
     // 해당 가게 상품 리스트 -> 상품조회,예약 현황
-    @PostMapping("goodsView")
+    @GetMapping("goodsView")
     public ResponseEntity<?> goodsView(@RequestBody GoodsDTO goodsDTO) {
         try {
             List<GoodsBean> goodsList = ownerService.goodsList(goodsDTO.getG_owner());
             log.info("e" + goodsDTO);
             log.info("사업자 번호" + goodsDTO.getG_owner());
-//            log.info("해당 가게 상품 리스트" + goodsList);
 
-
-            for (GoodsBean g : goodsList) {
-
-//                Date exp = new Date(g.getG_expireDate());
-                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-                Date now = new Date();
-
-                String now_dt = date.format(now);
-                Date date1 = date.parse(now_dt);
-
-                Date date2 =date.parse(g.getG_expireDate());
-
-
-                String exp = g.getG_expireDate();
-                log.info("비교는 ? "+date1.before(date2));
-
-                // 오늘 날짜를 지났으면 DB 가서 바꾸고 list.set 상태 해주기
-                g.setG_status(1); // 이렇게 처럼 바꾸기
-                log.info("list"+exp);
-                log.info("유통기한 " + now_dt);
-            }
+//            for (GoodsBean g : goodsList) {
+//
+////                Date exp = new Date(g.getG_expireDate());
+//                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+//                Date now = new Date();
+//
+//                String now_dt = date.format(now);
+//                Date date1 = date.parse(now_dt);
+//
+//                Date date2 =date.parse(g.getG_expireDate());
+//
+//
+//                String exp = g.getG_expireDate();
+//                log.info("비교는 ? "+date1.before(date2));
+//
+//                // 오늘 날짜를 지났으면 DB 가서 바꾸고 list.set 상태 해주기
+//                g.setG_status(1); // 이렇게 처럼 바꾸기
+//                log.info("list"+exp);
+//                log.info("유통기한 " + now_dt);
+//            }
             return ResponseEntity.ok().body(goodsList);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -209,11 +213,24 @@ public class OwnerController {
     @PostMapping("reserveCheck")
     public ResponseEntity<?> reserveCheck(@RequestBody ReserveDTO reserve) {
         log.info("reserve 넘어온 값 : " + reserve);
+        try {
+            ownerService.reserveCheck(reserve);
+//            log.info("결과 값 : " + result);
+            int r = 1;
+            return ResponseEntity.ok().body(r);
 
-        int result = ownerService.reserveCheck(reserve);
 
-        return null;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            log.error("reserveCheck Error");
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+
+
     }
 
-
+    // 상품 삭제 시 PatchMapping
 }

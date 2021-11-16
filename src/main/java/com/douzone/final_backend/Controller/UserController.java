@@ -1,6 +1,11 @@
-package com.douzone.final_backend.User;
+package com.douzone.final_backend.Controller;
 
+import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Common.ResponseDTO;
+import com.douzone.final_backend.Bean.GoodsBean;
+import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DTO.UserDTO;
+import com.douzone.final_backend.Service.UserService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ public class UserController {
     // 회원가입
     @PostMapping("/userjoin")
     public ResponseEntity<?> userjoin(@RequestBody UserDTO userDTO) {
-        log.info("회원가입 들어옴"+userDTO);
+        log.info("회원가입 들어옴" + userDTO);
         try {
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
             UserBean user = UserBean.builder()
@@ -87,7 +89,7 @@ public class UserController {
         log.info("user : " + userDTO.getU_pw() + user);
 
         if (user != null) {
-            final String id = user.getU_id()+"&USER";
+            final String id = user.getU_id() + "&USER";
             log.info(id);
             final String token = tokenProvider.create(id);
             List<String> list = new ArrayList<>();
@@ -104,9 +106,9 @@ public class UserController {
                     .build();
             log.info(token);
             log.info("로그인 성공");
-            HttpHeaders headers= new HttpHeaders();
+            HttpHeaders headers = new HttpHeaders();
             headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-            headers.add("X-AUTH-TOKEN",token);
+            headers.add("X-AUTH-TOKEN", token);
             return new ResponseEntity<>(responseUserDTO, headers, HttpStatus.OK);
 //            return ResponseEntity.ok().body(responseUserDTO);
         } else {
@@ -121,7 +123,21 @@ public class UserController {
 
     }
 
-
+    // 예약하기 위한 가게 상세 페이지
+    @GetMapping("/shopView")
+    public ResponseEntity<?> shopView(@RequestBody OwnerDTO ownerDTO) {
+        log.info(ownerDTO.getO_sNumber());
+        try {
+            List<GoodsBean> goodsList = userService.shopView(ownerDTO.getO_sNumber());
+            log.info("shopView" + goodsList);
+            return ResponseEntity.ok().body(goodsList);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
 
 
 }
