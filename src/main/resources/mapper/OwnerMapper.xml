@@ -2,10 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 <mapper namespace="com.douzone.mapper.owner">
-    <select id="findBySNum" resultType="com.douzone.final_backend.Owner.OwnerBean">
+    <select id="findBySNum" resultType="com.douzone.final_backend.Bean.OwnerBean">
         select *
         from owner
         where o_sNumber = #{o_sNumber}
+          and o_approval = 1
     </select>
 
     <select id="existsBySNum" resultType="boolean">
@@ -14,44 +15,56 @@
         where o_sNumber = #{o_sNumber}
     </select>
 
-    <insert id="insertOwner" parameterType="com.douzone.final_backend.Owner.OwnerBean">
+    <insert id="insertOwner" parameterType="com.douzone.final_backend.Bean.OwnerBean">
         insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time, o_image)
         values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time},
                 #{o_image})
     </insert>
-    <select id="findByOwner" resultType="com.douzone.final_backend.Owner.OwnerDTO">
+    <select id="findByOwner" resultType="com.douzone.final_backend.DTO.OwnerDTO">
         select *
         from owner
         where o_sNumber = #{id}
     </select>
 
-    <insert id="addGoods" parameterType="com.douzone.final_backend.Goods.GoodsBean">
+    <insert id="addGoods" parameterType="com.douzone.final_backend.Bean.GoodsBean">
         insert into goods(g_owner, g_name, g_price, g_discount, g_detail, g_image, g_expireDate, g_category)
         values (#{g_owner}, #{g_name}, #{g_price}, #{g_discount}, #{g_detail}, #{g_image}, #{g_expireDate},
                 #{g_category})
 
     </insert>
 
-    <select id="goodsList" resultType="com.douzone.final_backend.Goods.GoodsBean">
+    <update id="updateGoods" parameterType="com.douzone.final_backend.Bean.GoodsBean">
+        update goods
+        set g_owner      = #{g_owner},
+            g_name       = #{g_name},
+            g_price      = #{g_price},
+            g_discount   = #{g_discount},
+            g_detail     = #{g_detail},
+            g_image      = #{g_image},
+            g_expireDate = #{g_expireDate},
+            g_category   = #{g_category}
+        where g_code = #{g_code}
+    </update>
+    <select id="goodsList" resultType="com.douzone.final_backend.Bean.GoodsBean">
         select *
         from goods
         where g_owner = #{o_sNumber}
     </select>
 
     <!--  예약 승인  -->
-    <update id="resOkCount" parameterType="com.douzone.final_backend.Reserve.ReserveDTO">
+    <update id="resOkCount" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
         update goods
-        set g_count = g_owner - #{r_count}
-        where g_count = #{r_code}
+        set g_count = g_count - #{r_count}
+        where g_code = #{r_code}
     </update>
-    <update id="resOK" parameterType="com.douzone.final_backend.Reserve.ReserveDTO">
+    <update id="resOK" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
         update reserve
         set r_status = 1
         where r_code = #{r_code}
     </update>
 
     <!-- 예약 거절 -->
-    <update id="resNoCount" parameterType="com.douzone.final_backend.Reserve.ReserveDTO">
-        update
+    <update id="resNoCount" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
+
     </update>
 </mapper>

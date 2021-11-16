@@ -1,7 +1,9 @@
-package com.douzone.final_backend.Owner;
+package com.douzone.final_backend.Service;
 
-import com.douzone.final_backend.Goods.GoodsBean;
-import com.douzone.final_backend.Reserve.ReserveDTO;
+import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.DAO.OwnerDAO;
+import com.douzone.final_backend.Bean.GoodsBean;
+import com.douzone.final_backend.DTO.ReserveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,9 +50,24 @@ public class OwnerService {
             log.warn("Goods 데이터 누락");
             throw new RuntimeException("Goods 데이터 누락");
         }
-        ownerDAO.addGoods(goodsBean);
 
-        return goodsBean;
+        int result = ownerDAO.addGoods(goodsBean);
+        if (result != 0) {
+            return goodsBean;
+        }
+        return null;
+    }
+
+    public GoodsBean updateGoods(GoodsBean goodsBean) {
+        if (goodsBean == null) {
+            log.warn("Goods Update 데이터 누락");
+            throw new RuntimeException("Goods Update 데이터 누락");
+        }
+        int result = ownerDAO.updateGoods(goodsBean);
+        if (result != 0) {
+            return goodsBean;
+        }
+        return null;
 
     }
 
@@ -59,7 +76,7 @@ public class OwnerService {
         return ownerDAO.goodsList(o_sNumber);
     }
 
-    public int reserveCheck(ReserveDTO reserveDTO){
+    public int reserveCheck(ReserveDTO reserveDTO) {
 
         return ownerDAO.reserveCheck(reserveDTO);
     }

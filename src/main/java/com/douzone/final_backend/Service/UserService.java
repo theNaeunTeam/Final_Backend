@@ -1,9 +1,14 @@
-package com.douzone.final_backend.User;
+package com.douzone.final_backend.Service;
 
+import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.DAO.UserDAO;
+import com.douzone.final_backend.Bean.GoodsBean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -43,5 +48,7 @@ public class UserService {
     }
 
 
-
+    public List<GoodsBean> shopView(String o_sNumber) {
+        return userDAO.shopView(o_sNumber);
+    }
 }

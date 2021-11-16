@@ -1,5 +1,8 @@
-package com.douzone.final_backend.User;
+package com.douzone.final_backend.DAO;
 
+import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.Bean.GoodsBean;
+import com.douzone.final_backend.DTO.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,5 +38,9 @@ public class UserDAO {
 
     public UserDTO findByUIdDTO(String id) {
         return sqlSession.selectOne("findByUIdDTO",id);
+    }
+
+    public List<GoodsBean> shopView(String o_sNumber) {
+        return sqlSession.selectList("shopView",o_sNumber);
     }
 }

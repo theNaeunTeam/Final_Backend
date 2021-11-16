@@ -1,10 +1,9 @@
-package com.douzone.final_backend.User;
+package com.douzone.final_backend.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,32 +16,26 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Slf4j
-public class UserDTO implements UserDetails {
+public class MasterDTO implements UserDetails {
+    private String m_id; // 운영자 아이디
+    private String m_pw; // 운영자 비밀번호
     private String token;
-    private String u_id; // 사용자 id
-    private String u_pw; // 비밀번호
-    private String u_cellPhone; // 사용자 전화번호
-    private String u_email; // 사용자 이메일
-    private String u_gender; // 사용자 성별
-    private int u_age; // 사용자 나이
-
     private List<String> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-    }
+        return this.roles.stream().map( SimpleGrantedAuthority:: new ).collect( Collectors.toList() );
 
+    }
 
     @Override
     public String getPassword() {
-        return u_pw;
+        return m_pw;
     }
 
     @Override
     public String getUsername() {
-        return u_id;
+        return m_id;
     }
 
     @Override
@@ -64,5 +57,4 @@ public class UserDTO implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

@@ -3,7 +3,7 @@
 
 <mapper namespace="com.douzone.mapper.master">
 
-    <select id="findAll" resultType="com.douzone.final_backend.Owner.OwnerBean">
+    <select id="findAll" resultType="com.douzone.final_backend.Bean.OwnerBean">
         select *
         from owner
     </select>
@@ -19,20 +19,20 @@
         set o_approval = 2
         where o_sNumber = #{o_sNumber}
     </update>
-    <select id="findByMaster" resultType="com.douzone.final_backend.Master.MasterDTO">
+    <select id="findByMaster" resultType="com.douzone.final_backend.DTO.MasterDTO">
         select *
         from master
         where m_id = #{id}
     </select>
 
-    <select id="masterlogin" resultType="com.douzone.final_backend.Master.MasterBean">
+    <select id="masterlogin" resultType="com.douzone.final_backend.Bean.MasterBean">
         select*
         from master
         where m_id = #{m_id}
           and m_pw = #{m_pw}
     </select>
 
-    <select id="userAll" resultType="com.douzone.final_backend.User.UserBean">
+    <select id="userAll" resultType="com.douzone.final_backend.Bean.UserBean">
         select*
         from user
     </select>

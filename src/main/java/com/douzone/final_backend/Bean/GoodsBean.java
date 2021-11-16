@@ -1,15 +1,16 @@
-package com.douzone.final_backend.Goods;
+package com.douzone.final_backend.Bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// 상품 테이블
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class GoodsDTO {
+public class GoodsBean {
     private int g_code; //상품 코드
     private String g_owner; // 상품 올린 사업자 번호
     private String g_name; // 상품 이름

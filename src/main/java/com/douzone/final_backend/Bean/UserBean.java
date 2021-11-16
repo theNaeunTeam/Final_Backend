@@ -1,4 +1,4 @@
-package com.douzone.final_backend.User;
+package com.douzone.final_backend.Bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
