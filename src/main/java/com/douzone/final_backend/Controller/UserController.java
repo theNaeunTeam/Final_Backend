@@ -42,6 +42,11 @@ public class UserController {
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+    @GetMapping("/tokencheck")
+    public String UserTokenCheck() {
+        return "success";
+    }
+
     // 회원가입
     @PostMapping("/userjoin")
     public ResponseEntity<?> userjoin(@RequestBody UserDTO userDTO) {

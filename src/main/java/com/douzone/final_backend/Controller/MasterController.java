@@ -30,6 +30,11 @@ public class MasterController {
     @Autowired
     private TokenProvider tokenProvider;
 
+    @GetMapping("/tokencheck")
+    public String UserTokenCheck() {
+        return "success";
+    }
+
     @GetMapping
     public ResponseEntity<?> getOwnerList() {
 

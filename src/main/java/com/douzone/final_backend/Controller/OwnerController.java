@@ -41,6 +41,11 @@ public class OwnerController {
     @Autowired
     private S3Service s3Service;
 
+    @GetMapping("/tokencheck")
+    public String UserTokenCheck() {
+        return "success";
+    }
+
     // 입점 신청
     @PostMapping("/request")
     public ResponseEntity<?> ownerRequest(@RequestBody OwnerDTO ownerDTO) {
