@@ -1,13 +1,14 @@
 package com.douzone.final_backend.Service;
 
+import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
-import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.DTO.ReserveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -53,9 +54,11 @@ public class OwnerService {
 
         int result = ownerDAO.addGoods(goodsBean);
         if (result != 0) {
-            return goodsBean;
+            throw new RuntimeException("결과값 안나옴");
         }
-        return null;
+        return goodsBean;
+
+
     }
 
     public GoodsBean updateGoods(GoodsBean goodsBean) {
@@ -65,20 +68,40 @@ public class OwnerService {
         }
         int result = ownerDAO.updateGoods(goodsBean);
         if (result != 0) {
-            return goodsBean;
+            throw new RuntimeException("결과값 안나옴");
         }
-        return null;
+        return goodsBean;
+
 
     }
 
     public List<GoodsBean> goodsList(String o_sNumber) {
 
+        if (ownerDAO.goodsList(o_sNumber) == null) {
+            throw new RuntimeException("goodsList 결과값 없음 에러");
+        }
         return ownerDAO.goodsList(o_sNumber);
     }
 
-    public int reserveCheck(ReserveDTO reserveDTO) {
+    @Transactional
+    public void reserveCheck(ReserveDTO reserveDTO) throws Exception {
+        String check = reserveDTO.getCheck();
+        if (check.equals("승인")) {
+            ownerDAO.resOK(reserveDTO);
+        } else if (check.equals("거절")) {
+            ownerDAO.resNoCount(reserveDTO);
+            ownerDAO.resNo(reserveDTO);
+            ownerDAO.reNoSt(reserveDTO);
+        } else if (check.equals("판매완료")) {
+            ownerDAO.resSu(reserveDTO);
+        } else if (check.equals("노쇼")) {
+            ownerDAO.resNoCount(reserveDTO);
+            ownerDAO.reseNoShowStatus(reserveDTO);
+            ownerDAO.resNoShowCount(reserveDTO);
+            ownerDAO.resNSSt(reserveDTO);
+        }
 
-        return ownerDAO.reserveCheck(reserveDTO);
     }
+
 
 }

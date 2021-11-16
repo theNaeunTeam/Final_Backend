@@ -213,10 +213,23 @@ public class OwnerController {
     @PostMapping("reserveCheck")
     public ResponseEntity<?> reserveCheck(@RequestBody ReserveDTO reserve) {
         log.info("reserve 넘어온 값 : " + reserve);
+        try {
+            ownerService.reserveCheck(reserve);
+//            log.info("결과 값 : " + result);
+            int r = 1;
+            return ResponseEntity.ok().body(r);
 
-        int result = ownerService.reserveCheck(reserve);
 
-        return null;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            log.error("reserveCheck Error");
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+
+
     }
 
     // 상품 삭제 시 PatchMapping

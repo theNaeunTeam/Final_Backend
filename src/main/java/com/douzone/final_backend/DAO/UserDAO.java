@@ -33,14 +33,14 @@ public class UserDAO {
     }
 
     public UserBean findByUId(String u_id) {
-        return sqlSession.selectOne("findByUId",u_id);
+        return sqlSession.selectOne("findByUId", u_id);
     }
 
     public UserDTO findByUIdDTO(String id) {
-        return sqlSession.selectOne("findByUIdDTO",id);
+        return sqlSession.selectOne("findByUIdDTO", id);
     }
 
     public List<GoodsBean> shopView(String o_sNumber) {
-        return sqlSession.selectList("shopView",o_sNumber);
+        return sqlSession.selectList("shopView", o_sNumber);
     }
 }

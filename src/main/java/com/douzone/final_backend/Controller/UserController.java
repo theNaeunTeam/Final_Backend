@@ -129,9 +129,9 @@ public class UserController {
         log.info(ownerDTO.getO_sNumber());
         try {
             List<GoodsBean> goodsList = userService.shopView(ownerDTO.getO_sNumber());
-            log.info("shopView"+goodsList);
+            log.info("shopView" + goodsList);
             return ResponseEntity.ok().body(goodsList);
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
