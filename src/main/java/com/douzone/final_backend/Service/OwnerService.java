@@ -87,18 +87,34 @@ public class OwnerService {
     public void reserveCheck(ReserveDTO reserveDTO) throws Exception {
         String check = reserveDTO.getCheck();
         if (check.equals("승인")) {
-            ownerDAO.resOK(reserveDTO);
+            int r = ownerDAO.resOK(reserveDTO);
+            if (r == 0) {
+                throw new RuntimeException("승인 에러");
+            }
         } else if (check.equals("거절")) {
-            ownerDAO.resNoCount(reserveDTO);
-            ownerDAO.resNo(reserveDTO);
-            ownerDAO.reNoSt(reserveDTO);
+            int r = ownerDAO.resNoCount(reserveDTO);
+            int r1 = ownerDAO.resNo(reserveDTO);
+            int r2 = ownerDAO.reNoSt(reserveDTO);
+            if (r == 0 || r1 == 0 || r2 == 0) {
+                throw new RuntimeException("예약 거절 에러");
+            }
         } else if (check.equals("판매완료")) {
-            ownerDAO.resSu(reserveDTO);
+            int r = ownerDAO.resSu(reserveDTO);
+            if (r == 0) {
+                throw new RuntimeException("판매완료 에러");
+            }
         } else if (check.equals("노쇼")) {
-            ownerDAO.resNoCount(reserveDTO);
-            ownerDAO.reseNoShowStatus(reserveDTO);
-            ownerDAO.resNoShowCount(reserveDTO);
-            ownerDAO.resNSSt(reserveDTO);
+            int r = ownerDAO.resNoCount(reserveDTO);
+            int r1 = ownerDAO.reseNoShowStatus(reserveDTO);
+            int r2 = ownerDAO.resNoShowCount(reserveDTO);
+            int r3 = ownerDAO.resNSSt(reserveDTO);
+            log.info("r_code"+reserveDTO.getR_code());
+            log.info(""+r+"/"+r1+"/"+r2+"/"+r3);
+            if (r == 0 || r1 == 0 || r2 == 0 || r3 == 0) {
+                log.error("노쇼 에러"+r,r1,r2,r3);
+                throw new RuntimeException("노쇼 에러");
+            }
+            ownerDAO.noShowCheck(reserveDTO);
         }
 
     }
