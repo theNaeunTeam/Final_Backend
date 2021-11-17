@@ -1,12 +1,12 @@
 package com.douzone.final_backend.Controller;
 
+import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
-import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.DTO.GoodsDTO;
-import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.Service.OwnerService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -178,32 +178,12 @@ public class OwnerController {
 
     // 해당 가게 상품 리스트 -> 상품조회,예약 현황
     @GetMapping("goodsView")
-    public ResponseEntity<?> goodsView(@RequestBody GoodsDTO goodsDTO) {
+    public ResponseEntity<?> goodsView(@RequestParam String o_sNumber) {
         try {
-            List<GoodsBean> goodsList = ownerService.goodsList(goodsDTO.getG_owner());
-            log.info("e" + goodsDTO);
-            log.info("사업자 번호" + goodsDTO.getG_owner());
+            List<GoodsBean> goodsList = ownerService.goodsList(o_sNumber);
 
-//            for (GoodsBean g : goodsList) {
-//
-////                Date exp = new Date(g.getG_expireDate());
-//                SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-//                Date now = new Date();
-//
-//                String now_dt = date.format(now);
-//                Date date1 = date.parse(now_dt);
-//
-//                Date date2 =date.parse(g.getG_expireDate());
-//
-//
-//                String exp = g.getG_expireDate();
-//                log.info("비교는 ? "+date1.before(date2));
-//
-//                // 오늘 날짜를 지났으면 DB 가서 바꾸고 list.set 상태 해주기
-//                g.setG_status(1); // 이렇게 처럼 바꾸기
-//                log.info("list"+exp);
-//                log.info("유통기한 " + now_dt);
-//            }
+            log.info("사업자 번호" + o_sNumber);
+
             return ResponseEntity.ok().body(goodsList);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();

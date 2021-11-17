@@ -104,4 +104,11 @@ public class OwnerService {
     }
 
 
+    public List<GoodsBean> allGoodsList() {
+        return ownerDAO.allGoodList();
+    }
+
+    public void changeStatus(int g_code) {
+        ownerDAO.changeStatus(g_code);
+    }
 }

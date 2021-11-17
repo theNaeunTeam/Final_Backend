@@ -80,4 +80,12 @@ public class OwnerDAO {
     public void resNSSt(ReserveDTO reserveDTO) {
         sqlSession.update("resNSSt", reserveDTO);
     }
+
+    public List<GoodsBean> allGoodList() {
+        return sqlSession.selectList("allGoodsList");
+    }
+
+    public void changeStatus(int g_code) {
+        sqlSession.update("changeStatus", g_code);
+    }
 }
