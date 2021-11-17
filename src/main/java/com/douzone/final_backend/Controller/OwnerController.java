@@ -47,8 +47,11 @@ public class OwnerController {
 
     // 입점 신청
     @PostMapping("/request")
-    public ResponseEntity<?> ownerRequest(@RequestBody OwnerDTO ownerDTO) {
+    public ResponseEntity<?> ownerRequest(OwnerDTO ownerDTO, MultipartFile file) {
         try {
+            String image = s3Service.upload(file);
+            ownerDTO.setO_image(image);
+
             String encodePW = passwordEncoder.encode(ownerDTO.getO_pw());
             OwnerBean owner = OwnerBean.builder()
                     .o_sNumber(ownerDTO.getO_sNumber())
@@ -60,10 +63,12 @@ public class OwnerController {
                     .o_name(ownerDTO.getO_name())
                     .o_time1(ownerDTO.getO_time1())
                     .o_time2(ownerDTO.getO_time2())
+                    .o_latitude(ownerDTO.getO_latitude())
+                    .o_longitude(ownerDTO.getO_longitude())
                     .build();
             ownerService.create(owner);
 
-            log.info("owenr 입점 신청 성공");
+            log.info("owner 입점 신청 성공");
             return ResponseEntity.ok().body(true);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
