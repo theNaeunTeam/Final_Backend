@@ -16,9 +16,9 @@
     </select>
 
     <insert id="insertOwner" parameterType="com.douzone.final_backend.Bean.OwnerBean">
-        insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time1, o_image)
-        values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time},
-                #{o_image})
+        insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time1,o_time2, o_image, o_longitude, o_latitude)
+        values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time1}, #{o_time2},
+                #{o_image}, #{o_longitude}, #{o_latitude})
     </insert>
     <select id="findByOwner" resultType="com.douzone.final_backend.DTO.OwnerDTO">
         select *

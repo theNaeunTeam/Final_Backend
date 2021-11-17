@@ -23,7 +23,7 @@ public class OwnerDTO{
     private String o_latitude; //가게 위도
     private String o_longitude; // 가게 경도
     private String o_date; // 가입일
-    private String o_time;
+//    private String o_time;
     private String o_time1; // 영업 시작 시간
     private String o_time2; // 영업 종료 시간
     private String o_image; // 가게 대표 사진

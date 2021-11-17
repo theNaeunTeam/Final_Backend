@@ -34,3 +34,5 @@ build/
 /mvnw
 /mvnw.cmd
 /.mvn/
+/out/
+/src/main/resources/static/
