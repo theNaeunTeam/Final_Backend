@@ -19,6 +19,9 @@ public class UserService {
     @Autowired
     private UserDAO userDAO;
 
+    @Autowired
+    private OwnerDAO ownerDAO;
+
     public UserBean create(final UserBean userBean) {
         if (userBean == null || userBean.getU_id() == null) {
             log.warn("데이터 누락");
@@ -36,7 +39,7 @@ public class UserService {
         return userBean;
     }
 
-
+    // 로그인 시 id로 정보 들고와 입력된 비밀번호화 암호화된 비밀번호 match
     public UserBean getByCredentials(final String u_id, final String u_pw, final PasswordEncoder encoder) {
         final UserBean originalUser = userDAO.findByUId(u_id);
         log.info("PW : " + encoder.matches(u_pw, originalUser.getU_pw()));
@@ -49,11 +52,12 @@ public class UserService {
         return null;
     }
 
-
-    public List<GoodsBean> shopView(String o_sNumber) {
-        return userDAO.shopView(o_sNumber);
+    // 가게 눌렀을 때 해당 가게의 판매중인 상품 보기
+    public List<GoodsBean> storeGoodsView(String o_sNumber) {
+        return userDAO.storeGoodsView(o_sNumber);
     }
 
+    // 해당 가게 정보 상세보기
     public OwnerBean findByStore(String o_sNumber) {
         return userDAO.findByStore(o_sNumber);
     }

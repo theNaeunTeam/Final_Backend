@@ -1,11 +1,11 @@
 package com.douzone.final_backend.security;
 
+import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DAO.MasterDAO;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.MasterDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
-import com.douzone.final_backend.DTO.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -44,7 +44,7 @@ public class CustomDetailsService implements UserDetailsService {
         log.info("CustomDetailServie 들어옴 !@!@!@!");
         SecurityUser securityUser = new SecurityUser();
         if (role.equals("USER")) {
-            UserDTO result = userDAO.findByUIdDTO(id);
+            UserBean result = userDAO.findByUId(id);
             if (result == null) throw new BadCredentialsException("UserID not Found");
 
 //            List<String> list = new ArrayList<>();
