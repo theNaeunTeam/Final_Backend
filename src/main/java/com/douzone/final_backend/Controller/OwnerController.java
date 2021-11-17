@@ -129,12 +129,12 @@ public class OwnerController {
         log.info("goodsDTO" + goodsDTO);
         try {
             GoodsBean goods = GoodsBean.builder()
-//                    .g_owner(goodsDTO.getG_owner())
-                    .g_owner("123")
+                    .g_owner(goodsDTO.getG_owner())
+//                    .g_owner("123")
                     .g_name(goodsDTO.getG_name())
-                    .g_count(goodsDTO.getG_count())
-                    .g_price(goodsDTO.getG_price())
-                    .g_discount(goodsDTO.getG_discount())
+                    .g_count(Integer.parseInt(goodsDTO.getG_count()))
+                    .g_price(Integer.parseInt(goodsDTO.getG_price()))
+                    .g_discount(Integer.parseInt(goodsDTO.getG_discount()))
                     .g_detail(goodsDTO.getG_detail())
                     .g_image(goodsDTO.getG_image())
                     .g_expireDate(goodsDTO.getG_expireDate())
@@ -145,18 +145,18 @@ public class OwnerController {
                 registerGoods = ownerService.addGoods(goods);
                 log.info("상품 등록 완료" + registerGoods);
             } else if (goodsDTO.getActionType().equals("update")) {
-                goods.setG_code(goodsDTO.getG_code());
+                goods.setG_code(Integer.parseInt(goodsDTO.getG_code()));
                 registerGoods = ownerService.updateGoods(goods);
                 log.info("상품 업데이트 완료" + registerGoods);
             }
 
             GoodsDTO responseGoodsDTO = GoodsDTO.builder()
-//                    .g_owner(registerGoods.getG_owner())
-                    .g_owner("123")
+                    .g_owner(registerGoods.getG_owner())
+//                    .g_owner("123")
                     .g_name(registerGoods.getG_name())
-                    .g_count(registerGoods.getG_count())
-                    .g_price(registerGoods.getG_price())
-                    .g_discount(registerGoods.getG_discount())
+                    .g_count(String.valueOf(registerGoods.getG_count()))
+                    .g_price(String.valueOf(registerGoods.getG_price()))
+                    .g_discount(String.valueOf(registerGoods.getG_discount()))
                     .g_detail(registerGoods.getG_detail())
                     .g_image(registerGoods.getG_image())
                     .g_expireDate(registerGoods.getG_expireDate())
@@ -166,7 +166,8 @@ public class OwnerController {
             return ResponseEntity.ok().body(responseGoodsDTO);
         } catch (Exception e) {
             log.error("여기서 에러다");
-            log.error(e.getMessage());
+//            log.error(e.getMessage());
+            e.printStackTrace();
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()

@@ -54,12 +54,12 @@ public class OwnerService {
         }
 
         int result = ownerDAO.addGoods(goodsBean);
-        if (result != 0) {
-            throw new RuntimeException("결과값 안나옴");
+        if (result == 0) {
+            throw new RuntimeException("인서트 실패 포링키 확인할것");
         }
+        ownerDAO.addGoods(goodsBean);
+
         return goodsBean;
-
-
     }
 
     public GoodsBean updateGoods(GoodsBean goodsBean) {
@@ -68,12 +68,13 @@ public class OwnerService {
             throw new RuntimeException("Goods Update 데이터 누락");
         }
         int result = ownerDAO.updateGoods(goodsBean);
-        if (result != 0) {
+        if (result == 0) {
             throw new RuntimeException("결과값 안나옴");
         }
+
+        ownerDAO.updateGoods(goodsBean);
+
         return goodsBean;
-
-
     }
 
     public List<GoodsBean> goodsList(String o_sNumber) {
