@@ -200,9 +200,7 @@ public class OwnerController {
         log.info("reserve 넘어온 값 : " + reserve);
         try {
             ownerService.reserveCheck(reserve);
-//            log.info("결과 값 : " + result);
-            int r = 1;
-            return ResponseEntity.ok().body(r);
+            return ResponseEntity.ok().body(true);
 
 
         } catch (Exception e) {

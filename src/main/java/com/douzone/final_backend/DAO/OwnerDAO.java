@@ -47,38 +47,41 @@ public class OwnerDAO {
         return sqlSession.selectList("goodsList", o_sNumber);
     }
 
-
-    public void resOK(ReserveDTO reserveDTO) {
-        sqlSession.update("resOK", reserveDTO);
+    // 예약 승인
+    public int resOK(ReserveDTO reserveDTO) {
+        return sqlSession.update("resOK", reserveDTO);
     }
 
-
-    public void resNoCount(ReserveDTO reserveDTO) {
-        sqlSession.update("resNoCount", reserveDTO);
+    // 예약 거절
+    public int resNoCount(ReserveDTO reserveDTO) {
+        return sqlSession.update("resNoCount", reserveDTO);
+    }
+    public int resNo(ReserveDTO reserveDTO) {
+        return sqlSession.update("resNo", reserveDTO);
+    }
+    public int reNoSt(ReserveDTO reserveDTO) {
+        return sqlSession.update("reNoSt", reserveDTO);
     }
 
-    public void resNo(ReserveDTO reserveDTO) {
-        sqlSession.update("resNo", reserveDTO);
+    // 판매 완료
+    public int resSu(ReserveDTO reserveDTO) {
+        return sqlSession.update("resSu", reserveDTO);
     }
 
-    public void reNoSt(ReserveDTO reserveDTO) {
-        sqlSession.update("reNoSt", reserveDTO);
+    // 노쇼 . 예약 거절 resNoCount 재사용
+    public int reseNoShowStatus(ReserveDTO reserveDTO) {
+        return sqlSession.update("reseNoShowStatus", reserveDTO);
+    }
+    public int resNoShowCount(ReserveDTO reserveDTO) {
+        return sqlSession.update("resNoShowCount", reserveDTO);
+    }
+    public int resNSSt(ReserveDTO reserveDTO) {
+        return sqlSession.update("resNSSt", reserveDTO);
     }
 
-    public void resSu(ReserveDTO reserveDTO) {
-        sqlSession.update("resSu", reserveDTO);
-    }
-
-    public void reseNoShowStatus(ReserveDTO reserveDTO) {
-        sqlSession.update("reseNoShowStatus", reserveDTO);
-    }
-
-    public void resNoShowCount(ReserveDTO reserveDTO) {
-        sqlSession.update("resNoShowCount", reserveDTO);
-    }
-
-    public void resNSSt(ReserveDTO reserveDTO) {
-        sqlSession.update("resNSSt", reserveDTO);
+    // noShowcnt 5이상인지 확인하고 5이상이면 블랙리스트
+    public void noShowCheck(ReserveDTO reserveDTO) {
+        sqlSession.update("noShowCheck", reserveDTO);
     }
 
     public List<GoodsBean> allGoodList() {
