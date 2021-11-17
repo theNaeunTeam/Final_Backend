@@ -2,6 +2,7 @@ package com.douzone.final_backend.DAO;
 
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.DTO.GoodsDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -90,5 +91,9 @@ public class OwnerDAO {
 
     public void changeStatus(int g_code) {
         sqlSession.update("changeStatus", g_code);
+    }
+
+    public int deleteGoods(GoodsDTO goodsDTO) {
+        return sqlSession.update("deleteGoods",goodsDTO);
     }
 }

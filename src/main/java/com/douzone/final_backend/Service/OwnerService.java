@@ -3,6 +3,7 @@ package com.douzone.final_backend.Service;
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
+import com.douzone.final_backend.DTO.GoodsDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,5 +127,9 @@ public class OwnerService {
 
     public void changeStatus(int g_code) {
         ownerDAO.changeStatus(g_code);
+    }
+
+    public void deleteGoods(GoodsDTO goodsDTO) {
+       int r = ownerDAO.deleteGoods(goodsDTO);
     }
 }

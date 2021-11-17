@@ -52,41 +52,36 @@ public class MasterController {
 
     }
 
-    @PostMapping("/requestOK")
+    @PatchMapping("/requestOK")
     public ResponseEntity<?> ownerRequestCheck(@RequestBody OwnerDTO ownerDTO) {
         log.info("requestOK 넘어오는 배열 : " + ownerDTO.getSelectedRow());
         log.info("requestOK ok?no?" + ownerDTO.getCheckStatus());
         String checkStatus = ownerDTO.getCheckStatus();
         log.info("checkStatus : " + checkStatus);
-        int result = 0;
-        if (checkStatus.equals("ok")) {
-            log.info("ok 들어옴");
-            for (String selected : ownerDTO.getSelectedRow()) {
-                result = masterService.requestOK(selected);
+        try{
+            if (checkStatus.equals("ok")) {
+                log.info("ok 들어옴");
+                for (String selected : ownerDTO.getSelectedRow()) {
+                    masterService.requestOK(selected);
+                }
+            } else if (checkStatus.equals("no")) {
+                log.info("no 들어옴");
+                for (String selected : ownerDTO.getSelectedRow()) {
+                   masterService.requestNO(selected);
+                }
             }
-        } else if (checkStatus.equals("no")) {
-            log.info("no 들어옴");
-            for (String selected : ownerDTO.getSelectedRow()) {
-                result = masterService.requestNO(selected);
-            }
+
+            return ResponseEntity.ok().body(true);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
         }
 
-        log.info("result : " + result);
 
 
-//        log.info("sNumber : " + ownerDTO.getO_sNumber());
-//        try {
-//            int requestCheck = masterService.requestOK(ownerDTO.getO_sNumber());
-//            log.info("check : " + requestCheck);
-//            return ResponseEntity.ok().body(requestCheck);
-//        } catch (Exception e) {
-//            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-//            return ResponseEntity
-//                    .badRequest()
-//                    .body(responseDTO);
-//        }
 
-        return null;
     }
 
 

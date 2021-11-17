@@ -16,7 +16,7 @@
     </select>
 
     <insert id="insertOwner" parameterType="com.douzone.final_backend.Bean.OwnerBean">
-        insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time, o_image)
+        insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time1, o_image)
         values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time},
                 #{o_image})
     </insert>
@@ -125,6 +125,13 @@
     </select>
 
     <update id="changeStatus" parameterType="int">
+        update goods
+        set g_status = 2
+        where g_code = #{g_code}
+    </update>
+
+    <!-- 상품 판매 중지 신청 -->
+    <update id="deleteGoods" parameterType="com.douzone.final_backend.DTO.GoodsDTO">
         update goods
         set g_status = 2
         where g_code = #{g_code}
