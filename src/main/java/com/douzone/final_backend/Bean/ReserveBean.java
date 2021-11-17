@@ -1,11 +1,15 @@
 package com.douzone.final_backend.Bean;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 // 상품 예약 테이블
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReserveBean {
 
     private int r_code; // 예약 번호

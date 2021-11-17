@@ -128,10 +128,10 @@ public class UserController {
 
     // 예약하기 위한 가게 상세 페이지
     @GetMapping("/storeGoodsView")
-    public ResponseEntity<?> shopView(@RequestBody OwnerDTO ownerDTO) {
-        log.info(ownerDTO.getO_sNumber());
+    public ResponseEntity<?> shopView(@RequestParam String o_sNumber) {
+        log.info(o_sNumber);
         try {
-            List<GoodsBean> goodsList = userService.shopView(ownerDTO.getO_sNumber());
+            List<GoodsBean> goodsList = userService.storeGoodsView(o_sNumber);
             log.info("shopView" + goodsList);
             return ResponseEntity.ok().body(goodsList);
         } catch (Exception e) {
@@ -141,11 +141,12 @@ public class UserController {
                     .body(responseDTO);
         }
     }
+    // 해당 가게 정보 상세보기
     @GetMapping("/storeView")
-    public ResponseEntity<?> storeView(@RequestBody OwnerDTO ownerDTO){
-        log.info("storeView 들어오는 값 : "+ownerDTO.getO_sNumber());
+    public ResponseEntity<?> storeView(@RequestParam String o_sNumber){
+        log.info("storeView 들어오는 값 : "+o_sNumber);
         try {
-            OwnerBean ownerBean = userService.findByStore(ownerDTO.getO_sNumber());
+            OwnerBean ownerBean = userService.findByStore(o_sNumber);
             OwnerDTO responseDTO = OwnerDTO.builder()
                     .o_sNumber(ownerBean.getO_sNumber())
                     .o_address(ownerBean.getO_address())
