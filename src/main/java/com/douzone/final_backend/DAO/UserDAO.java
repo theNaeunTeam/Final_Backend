@@ -1,9 +1,8 @@
 package com.douzone.final_backend.DAO;
 
+import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
-import com.douzone.final_backend.Bean.GoodsBean;
-import com.douzone.final_backend.DTO.UserDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,8 +34,8 @@ public class UserDAO {
     }
 
     // 가게 클릭 시 해당 가게 상품 중 판매중인 것만 반환
-    public List<GoodsBean> shopView(String o_sNumber) {
-        return sqlSession.selectList("shopView", o_sNumber);
+    public List<GoodsBean> storeGoodsView(String o_sNumber) {
+        return sqlSession.selectList("storeGoodsView", o_sNumber);
     }
 
     // 가게 클릭 시 해당 가게 정보
@@ -45,12 +44,5 @@ public class UserDAO {
     }
 
 
-
-    public UserBean findByIdAndPassword(UserDTO userDTO) {
-        return sqlSession.selectOne("findByIdAndPassword", userDTO);
-    }
-    public UserDTO findByUIdDTO(String id) {
-        return sqlSession.selectOne("findByUIdDTO", id);
-    }
 
 }
