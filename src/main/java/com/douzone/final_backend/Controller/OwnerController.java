@@ -2,6 +2,7 @@ package com.douzone.final_backend.Controller;
 
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
 import com.douzone.final_backend.DTO.GoodsDTO;
@@ -83,6 +84,7 @@ public class OwnerController {
     // 가게 로그인
     @PostMapping("/ownerlogin")
     public ResponseEntity<?> ownerlogin(@RequestBody OwnerDTO ownerDTO) {
+        log.info("들어온 정보 : "+ownerDTO);
         OwnerBean owner = ownerService.getByCredentials(
                 ownerDTO.getO_sNumber(),
                 ownerDTO.getO_pw(),
@@ -174,7 +176,7 @@ public class OwnerController {
         }
     }
 
-    // 해당 가게 상품 리스트 -> 상품조회,예약 현황
+    // 해당 가게 상품 리스트 -> 상품조회
     @GetMapping("goodsView")
     public ResponseEntity<?> goodsView(@RequestParam String o_sNumber) {
         try {
@@ -184,6 +186,22 @@ public class OwnerController {
 
             return ResponseEntity.ok().body(goodsList);
         } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+    @GetMapping("reserveList")
+    public ResponseEntity<?> reservationView(@RequestParam String g_owner){
+        log.info("g : "+g_owner);
+        try{
+            List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
+
+            log.info("reserveBeans : "+reserveBeans);
+
+            return ResponseEntity.ok().body(reserveBeans);
+        }catch (Exception e){
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()

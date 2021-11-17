@@ -2,6 +2,7 @@ package com.douzone.final_backend.DAO;
 
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.DTO.GoodsDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
@@ -95,5 +96,10 @@ public class OwnerDAO {
 
     public int deleteGoods(GoodsDTO goodsDTO) {
         return sqlSession.update("deleteGoods",goodsDTO);
+    }
+
+    public List<ReserveBean> reserveList(String g_owner) {
+
+        return sqlSession.selectList("reserveList",g_owner);
     }
 }

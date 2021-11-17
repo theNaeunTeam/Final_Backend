@@ -29,7 +29,6 @@ public class CustomDetailsService implements UserDetailsService {
     private final OwnerDAO ownerDAO;
 
 
-
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
@@ -53,41 +52,48 @@ public class CustomDetailsService implements UserDetailsService {
 
 //            log.info("DetailsService : " + list);
 
-            if(result != null){
-                securityUser.setId(result.getU_id());
-                securityUser.setPw(result.getU_pw());
+            securityUser.setId(result.getU_id());
+            securityUser.setPw(result.getU_pw());
 
-                List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
-                securityUser.setAuthorities(authorities);
+            log.info("authorities : " + authorities);
 
-                log.info("authorities : "+authorities);
-            }
+            securityUser.setAuthorities(authorities);
+
+            log.info("security : " + securityUser.getAuthorities());
 
             return securityUser;
         } else if (role.equals("MASTER")) {
             MasterDTO result = masterDAO.findByMaster(id);
             if (result == null) throw new BadCredentialsException("MasterID not Found");
 
+            securityUser.setId(result.getM_id());
+            securityUser.setPw(result.getM_pw());
+
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add(new SimpleGrantedAuthority("ROLE_MASTER"));
 
             securityUser.setAuthorities(authorities);
 
-            log.info("authorities : "+authorities);
+            log.info("authorities : " + authorities);
+            log.info("security : " + securityUser.getAuthorities());
 
             return securityUser;
         } else if (role.equals("OWNER")) {
             OwnerDTO result = ownerDAO.findByOwner(id);
             if (result == null) throw new BadCredentialsException("OwnerID not Found");
 
+            securityUser.setId(result.getO_sNumber());
+            securityUser.setPw(result.getO_pw());
+
             List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
             authorities.add(new SimpleGrantedAuthority("ROLE_OWNER"));
 
             securityUser.setAuthorities(authorities);
 
-            log.info("authorities : "+authorities);
+            log.info("authorities : " + authorities);
 
             return securityUser;
         } else {

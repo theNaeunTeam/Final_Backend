@@ -16,8 +16,10 @@
     </select>
 
     <insert id="insertOwner" parameterType="com.douzone.final_backend.Bean.OwnerBean">
-        insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time1,o_time2, o_image, o_longitude, o_latitude)
-        values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time1}, #{o_time2},
+        insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time1, o_time2, o_image,
+                          o_longitude, o_latitude)
+        values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time1},
+                #{o_time2},
                 #{o_image}, #{o_longitude}, #{o_latitude})
     </insert>
     <select id="findByOwner" resultType="com.douzone.final_backend.DTO.OwnerDTO">
@@ -136,4 +138,11 @@
         set g_status = 2
         where g_code = #{g_code}
     </update>
+
+    <!-- 본인 가게 예약 리스트 -->
+    <select id="reserveList" resultType="com.douzone.final_backend.Bean.ReserveBean">
+        select *
+        from reserve
+        where r_owner = #{g_owner}
+    </select>
 </mapper>
