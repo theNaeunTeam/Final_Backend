@@ -6,7 +6,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -44,13 +43,13 @@ public class TokenProvider {
     }
 
     // 인증 성공시 SecurityContextHolder에 저장할 Authentication 객체 생성
-    public Authentication getAuthentication(String token) {
+    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
         log.info("여기토큰 : " + token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.validateAndGetUserId(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
         log.info("userDetails : " + userDetails.getAuthorities());
         log.info("userDetails : " + userDetails);
         log.info("이게뭐야 " + new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
     }
 
@@ -60,7 +59,7 @@ public class TokenProvider {
     }
 
     public String validateAndGetUserId(String token) {
-
+        log.info("여기");
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)

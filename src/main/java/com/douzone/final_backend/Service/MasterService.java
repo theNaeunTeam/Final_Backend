@@ -23,12 +23,17 @@ public class MasterService {
     }
 
 
-    public int requestOK(String o_sNumber) {
+    public void requestOK(String o_sNumber) {
         log.info("service : " + masterDAO.requestOK(o_sNumber));
-        return masterDAO.requestOK(o_sNumber);
+        if(masterDAO.requestOK(o_sNumber) == 0)
+            throw new RuntimeException("입점 신청 수락 에러");
+
+         masterDAO.requestOK(o_sNumber);
     }
 
     public int requestNO(String o_sNumber) {
+        if(masterDAO.requestNO(o_sNumber) == 0)
+            throw new RuntimeException("입점 신청 거절 에러");
         return masterDAO.requestNO(o_sNumber);
     }
 

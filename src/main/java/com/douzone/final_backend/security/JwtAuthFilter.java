@@ -2,8 +2,9 @@ package com.douzone.final_backend.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,16 +29,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             log.info("Filter is running");
             log.info("token: " + token);
             if (token != null && !token.equalsIgnoreCase("null")) {
-                String id = tokenProvider.validateAndGetUserId(token);
+                log.info("wwwww");
+                String id = tokenProvider.getUserPk(token);
                 log.info("Authenticated user ID : " + id);
 //                AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
 //                        u_id,
 //                        null,
 //                        AuthorityUtils.NO_AUTHORITIES //권한
 //                );
-                Authentication authentication = tokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-//                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
+                auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(auth);
 //                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
 //                securityContext.setAuthentication(auth);
 //                SecurityContextHolder.setContext(securityContext);

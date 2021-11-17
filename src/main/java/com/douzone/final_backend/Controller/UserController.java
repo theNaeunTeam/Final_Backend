@@ -1,8 +1,9 @@
 package com.douzone.final_backend.Controller;
 
+import com.douzone.final_backend.Bean.GoodsBean;
+import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Common.ResponseDTO;
-import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import com.douzone.final_backend.Service.UserService;
@@ -18,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -69,7 +69,6 @@ public class UserController {
                     .u_email(registerUser.getU_email())
                     .u_gender(registerUser.getU_gender())
                     .u_age(registerUser.getU_age())
-
                     .build();
             log.info("회원가입 성공");
             return ResponseEntity.ok().body(responseUserDTO);
@@ -97,8 +96,7 @@ public class UserController {
             final String id = user.getU_id() + "&USER";
             log.info(id);
             final String token = tokenProvider.create(id);
-            List<String> list = new ArrayList<>();
-            list.add("ROLE_USER");
+
             final UserDTO responseUserDTO = UserDTO.builder()
 //                    .u_id(user.getU_id())
 //                    .u_pw(user.getU_pw())
@@ -106,7 +104,7 @@ public class UserController {
 //                    .u_email(user.getU_email())
 //                    .u_gender(user.getU_gender())
 //                    .u_age(user.getU_age())
-                    .roles(list)
+//                    .roles(list)
                     .token(token)
                     .build();
             log.info(token);
@@ -129,7 +127,7 @@ public class UserController {
     }
 
     // 예약하기 위한 가게 상세 페이지
-    @GetMapping("/shopView")
+    @GetMapping("/storeGoodsView")
     public ResponseEntity<?> shopView(@RequestBody OwnerDTO ownerDTO) {
         log.info(ownerDTO.getO_sNumber());
         try {
@@ -143,7 +141,31 @@ public class UserController {
                     .body(responseDTO);
         }
     }
-
+    @GetMapping("/storeView")
+    public ResponseEntity<?> storeView(@RequestBody OwnerDTO ownerDTO){
+        log.info("storeView 들어오는 값 : "+ownerDTO.getO_sNumber());
+        try {
+            OwnerBean ownerBean = userService.findByStore(ownerDTO.getO_sNumber());
+            OwnerDTO responseDTO = OwnerDTO.builder()
+                    .o_sNumber(ownerBean.getO_sNumber())
+                    .o_address(ownerBean.getO_address())
+                    .o_image(ownerBean.getO_image())
+                    .o_cellPhone(ownerBean.getO_cellPhone())
+                    .o_name(ownerBean.getO_name())
+                    .o_phone(ownerBean.getO_phone())
+                    .o_time1(ownerBean.getO_time1())
+                    .o_time2(ownerBean.getO_time2())
+                    .o_latitude(ownerBean.getO_latitude())
+                    .o_latitude(ownerBean.getO_latitude())
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
 
 }
 

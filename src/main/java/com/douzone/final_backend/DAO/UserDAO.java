@@ -1,5 +1,6 @@
 package com.douzone.final_backend.DAO;
 
+import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.DTO.UserDTO;
@@ -18,29 +19,38 @@ public class UserDAO {
         return sqlSession.selectList("selectUserAll");
     }
 
-
+    // 회원가입  시 아이디 존재여부 확인
     public boolean existsById(String u_id) {
-
         return sqlSession.selectOne("existsById", u_id);
     }
 
-    public UserBean findByIdAndPassword(UserDTO userDTO) {
-        return sqlSession.selectOne("findByIdAndPassword", userDTO);
-    }
-
+    // 회원가입 시 아이디 존재하지 않으면 데이터 insert
     public void insertUser(UserBean userBean) {
         sqlSession.insert("insertUser", userBean);
     }
 
+    // 로그인 시 해당 아이디 값 들고옴 비밀번호 비교는 service에서
     public UserBean findByUId(String u_id) {
         return sqlSession.selectOne("findByUId", u_id);
     }
 
+    // 가게 클릭 시 해당 가게 상품 중 판매중인 것만 반환
+    public List<GoodsBean> shopView(String o_sNumber) {
+        return sqlSession.selectList("shopView", o_sNumber);
+    }
+
+    // 가게 클릭 시 해당 가게 정보
+    public OwnerBean findByStore(String o_sNumber) {
+        return sqlSession.selectOne("storeView", o_sNumber);
+    }
+
+
+
+    public UserBean findByIdAndPassword(UserDTO userDTO) {
+        return sqlSession.selectOne("findByIdAndPassword", userDTO);
+    }
     public UserDTO findByUIdDTO(String id) {
         return sqlSession.selectOne("findByUIdDTO", id);
     }
 
-    public List<GoodsBean> shopView(String o_sNumber) {
-        return sqlSession.selectList("shopView", o_sNumber);
-    }
 }

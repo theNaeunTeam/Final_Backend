@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -59,16 +58,13 @@ public class OwnerController {
                     .o_cellPhone(ownerDTO.getO_cellPhone())
                     .o_image(ownerDTO.getO_image())
                     .o_name(ownerDTO.getO_name())
-                    .o_time(ownerDTO.getO_time1() + "-" + ownerDTO.getO_time2())
+                    .o_time1(ownerDTO.getO_time1())
+                    .o_time2(ownerDTO.getO_time2())
                     .build();
-            OwnerBean registerOwner = ownerService.create(owner);
-            OwnerDTO responseOwnerDTO = OwnerDTO.builder()
-                    .o_sNumber(registerOwner.getO_sNumber())
-                    .o_approval(registerOwner.getO_approval())
-                    .o_pw(registerOwner.getO_pw())
-                    .build();
+            ownerService.create(owner);
+
             log.info("owenr 입점 신청 성공");
-            return ResponseEntity.ok().body(responseOwnerDTO);
+            return ResponseEntity.ok().body(true);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
 
@@ -93,13 +89,11 @@ public class OwnerController {
             final String id = owner.getO_sNumber() + "&" + "OWNER";
             final String token = tokenProvider.create(id);
             log.info(token);
-            List<String> list = new ArrayList<>();
-            list.add("ROLE_OWNER");
+
             final OwnerDTO responseOwnerDTO = OwnerDTO.builder()
                     .o_sNumber(owner.getO_sNumber())
                     .o_approval(owner.getO_approval())
                     .o_pw(owner.getO_pw())
-                    .roles(list)
                     .token(token)
                     .build();
             log.info("로그인 성공");
@@ -144,10 +138,13 @@ public class OwnerController {
             GoodsBean registerGoods = null;
             if (goodsDTO.getActionType().equals("new")) {
                 registerGoods = ownerService.addGoods(goods);
+                log.info("상품 등록 완료" + registerGoods);
             } else if (goodsDTO.getActionType().equals("update")) {
                 goods.setG_code(goodsDTO.getG_code());
                 registerGoods = ownerService.updateGoods(goods);
+                log.info("상품 업데이트 완료" + registerGoods);
             }
+
             GoodsDTO responseGoodsDTO = GoodsDTO.builder()
 //                    .g_owner(registerGoods.getG_owner())
                     .g_owner("123")
@@ -160,11 +157,7 @@ public class OwnerController {
                     .g_expireDate(registerGoods.getG_expireDate())
                     .g_category(registerGoods.getG_category())
                     .build();
-            if (goodsDTO.getActionType().equals("new")) {
-                log.info("상품 등록 완료" + registerGoods);
-            } else if (goodsDTO.getActionType().equals("update")) {
-                log.info("상품 업데이트 완료" + registerGoods);
-            }
+
             return ResponseEntity.ok().body(responseGoodsDTO);
         } catch (Exception e) {
             log.error("여기서 에러다");
@@ -216,4 +209,21 @@ public class OwnerController {
     }
 
     // 상품 삭제 시 PatchMapping
+    @PatchMapping("/deleteGoods")
+    public ResponseEntity<?> deleteGoods(@RequestBody GoodsDTO goodsDTO){
+        log.info("deleteGoods 넘어온 값 : "+goodsDTO.getG_code());
+        try {
+            ownerService.deleteGoods(goodsDTO);
+            return ResponseEntity.ok().body(true);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            log.error("deleteGoods Error");
+
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
 }

@@ -39,6 +39,15 @@
     </select>
 
     <select id="shopView" resultType="com.douzone.final_backend.Bean.GoodsBean">
-        select * from goods where g_owner = #{o_sNumber} and g_status = 0
+        select *
+        from goods
+        where g_owner = #{o_sNumber}
+          and g_status = 0
+    </select>
+
+    <select id="storeView" resultType="com.douzone.final_backend.Bean.OwnerBean">
+        select *
+        from owner
+        where o_sNumber = #{o_sNumber}
     </select>
 </mapper>

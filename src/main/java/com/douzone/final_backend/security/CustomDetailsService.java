@@ -1,14 +1,16 @@
 package com.douzone.final_backend.security;
 
 import com.douzone.final_backend.DAO.MasterDAO;
-import com.douzone.final_backend.DTO.MasterDTO;
 import com.douzone.final_backend.DAO.OwnerDAO;
-import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.DAO.UserDAO;
+import com.douzone.final_backend.DTO.MasterDTO;
+import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +28,8 @@ public class CustomDetailsService implements UserDetailsService {
     private final MasterDAO masterDAO;
     private final OwnerDAO ownerDAO;
 
+
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
 
@@ -38,33 +42,54 @@ public class CustomDetailsService implements UserDetailsService {
         log.info(s.substring(s.indexOf("&") + 1));
 
         log.info("CustomDetailServie 들어옴 !@!@!@!");
-
+        SecurityUser securityUser = new SecurityUser();
         if (role.equals("USER")) {
             UserDTO result = userDAO.findByUIdDTO(id);
             if (result == null) throw new BadCredentialsException("UserID not Found");
 
-            List<String> list = new ArrayList<>();
-            list.add("ROLE_USER");
-            result.setRoles(list);
+//            List<String> list = new ArrayList<>();
+//            list.add("ROLE_USER");
+//            result.setRoles(list);
 
-            log.info("DetailsService : " + list);
+//            log.info("DetailsService : " + list);
 
-            return result;
+            if(result != null){
+                securityUser.setId(result.getU_id());
+                securityUser.setPw(result.getU_pw());
+
+                List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+                securityUser.setAuthorities(authorities);
+
+                log.info("authorities : "+authorities);
+            }
+
+            return securityUser;
         } else if (role.equals("MASTER")) {
             MasterDTO result = masterDAO.findByMaster(id);
             if (result == null) throw new BadCredentialsException("MasterID not Found");
-            List<String> list = new ArrayList<>();
-            list.add("ROLE_MASTER");
-//            list.add("ROLE_OWNER");
-            result.setRoles(list);
-            return result;
+
+            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_MASTER"));
+
+            securityUser.setAuthorities(authorities);
+
+            log.info("authorities : "+authorities);
+
+            return securityUser;
         } else if (role.equals("OWNER")) {
             OwnerDTO result = ownerDAO.findByOwner(id);
             if (result == null) throw new BadCredentialsException("OwnerID not Found");
-            List<String> list = new ArrayList<>();
-            list.add("ROLE_OWNER");
-            result.setRoles(list);
-            return result;
+
+            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+            authorities.add(new SimpleGrantedAuthority("ROLE_OWNER"));
+
+            securityUser.setAuthorities(authorities);
+
+            log.info("authorities : "+authorities);
+
+            return securityUser;
         } else {
             return null;
         }
