@@ -87,26 +87,26 @@ public class OwnerService {
     }
 
     @Transactional
-    public void reserveCheck(ReserveDTO reserveDTO) throws Exception {
-        String check = reserveDTO.getCheck();
-        if (check.equals("승인")) {
+    public void reserveCheck(ReserveDTO reserveDTO){
+        int check = reserveDTO.getCheck();
+        if (check == 1) {
             int r = ownerDAO.resOK(reserveDTO);
             if (r == 0) {
                 throw new RuntimeException("승인 에러");
             }
-        } else if (check.equals("거절")) {
+        } else if (check == 2) {
             int r = ownerDAO.resNoCount(reserveDTO);
             int r1 = ownerDAO.resNo(reserveDTO);
             int r2 = ownerDAO.reNoSt(reserveDTO);
             if (r == 0 || r1 == 0 || r2 == 0) {
                 throw new RuntimeException("예약 거절 에러");
             }
-        } else if (check.equals("판매완료")) {
+        } else if (check == 3) {
             int r = ownerDAO.resSu(reserveDTO);
             if (r == 0) {
                 throw new RuntimeException("판매완료 에러");
             }
-        } else if (check.equals("노쇼")) {
+        } else if (check == 4) {
             int r = ownerDAO.resNoCount(reserveDTO);
             int r1 = ownerDAO.reseNoShowStatus(reserveDTO);
             int r2 = ownerDAO.resNoShowCount(reserveDTO);
@@ -140,10 +140,19 @@ public class OwnerService {
         return ownerDAO.reserveList(g_owner);
     }
 
+
+
     public GoodsBean goodsData(int r_g_code) {
         if(ownerDAO.goodsData(r_g_code) == null){
             throw new RuntimeException("반환되는 값 없음");
         }
         return ownerDAO.goodsData(r_g_code);
+    }
+
+    public ReserveBean reserveOne(ReserveDTO reserve) {
+        if(ownerDAO.reserveOne(reserve) == null){
+            throw new RuntimeException("반환되는 값 없음");
+        }
+        return ownerDAO.reserveOne(reserve);
     }
 }

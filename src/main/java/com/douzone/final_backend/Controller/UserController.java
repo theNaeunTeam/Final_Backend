@@ -157,7 +157,7 @@ public class UserController {
                     .o_time1(ownerBean.getO_time1())
                     .o_time2(ownerBean.getO_time2())
                     .o_latitude(ownerBean.getO_latitude())
-                    .o_latitude(ownerBean.getO_latitude())
+                    .o_longitude(ownerBean.getO_longitude())
                     .build();
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {

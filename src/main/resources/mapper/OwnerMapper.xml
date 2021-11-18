@@ -132,6 +132,13 @@
         where g_code = #{g_code}
     </update>
 
+    <!-- 예약 번호로 예약정보 부르기 -->
+    <select id="reserveOne" resultType="com.douzone.final_backend.Bean.ReserveBean">
+        select *
+        from reserve
+        where r_code = #{r_code};
+    </select>
+
     <!-- 상품 판매 중지 신청 -->
     <update id="deleteGoods" parameterType="com.douzone.final_backend.DTO.GoodsDTO">
         update goods
@@ -149,5 +156,12 @@
     <!-- g_code로 물건 정보 조회 -->
     <select id="goodsData" resultType="com.douzone.final_backend.Bean.GoodsBean">
         select * from goods where g_code = #{r_g_code}
+    </select>
+
+    <!-- g_code로 물건 정보 조회 -->
+    <select id="goodsData" resultType="com.douzone.final_backend.Bean.GoodsBean">
+        select *
+        from goods
+        where g_code = #{r_g_code}
     </select>
 </mapper>

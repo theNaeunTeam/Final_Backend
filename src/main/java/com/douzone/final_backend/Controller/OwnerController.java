@@ -85,7 +85,7 @@ public class OwnerController {
     // 가게 로그인
     @PostMapping("/ownerlogin")
     public ResponseEntity<?> ownerlogin(@RequestBody OwnerDTO ownerDTO) {
-        log.info("들어온 정보 : "+ownerDTO);
+        log.info("들어온 정보 : " + ownerDTO);
         OwnerBean owner = ownerService.getByCredentials(
                 ownerDTO.getO_sNumber(),
                 ownerDTO.getO_pw(),
@@ -194,48 +194,49 @@ public class OwnerController {
                     .body(responseDTO);
         }
     }
+
     @GetMapping("reserveList")
-    public ResponseEntity<?> reservationView(@RequestParam String g_owner){
-        log.info("g : "+g_owner);
-        try{
+    public ResponseEntity<?> reservationView(@RequestParam String g_owner) {
+        log.info("g : " + g_owner);
+        try {
             List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
 
-            log.info("reserveBeans : "+reserveBeans);
+            log.info("reserveBeans : " + reserveBeans);
 
 
-                log.info("if null");
-                List<ReserveDTO> responseDTOList = new ArrayList<>();
-                for (ReserveBean r : reserveBeans) {
-                    log.info("반복문");
-                    GoodsBean goods = ownerService.goodsData(r.getR_g_code());
+            log.info("if null");
+            List<ReserveDTO> responseDTOList = new ArrayList<>();
+            for (ReserveBean r : reserveBeans) {
+                log.info("반복문");
+                GoodsBean goods = ownerService.goodsData(r.getR_g_code());
 
-                    ReserveDTO responseDTO = ReserveDTO.builder()
-                            .r_code(r.getR_code())
-                            .r_u_id(r.getR_u_id())
-                            .r_count(r.getR_count())
-                            .r_g_code(r.getR_g_code())
-                            .r_firstTime(r.getR_firstTime())
-                            .r_status(r.getR_status())
-                            .r_customOrder(r.getR_customOrder())
-                            .r_g_code(r.getR_g_code())
-                            .g_name(goods.getG_name())
-                            .g_price(goods.getG_price())
-                            .g_discount(goods.getG_discount())
-                            .g_expireDate(goods.getG_expireDate())
-                            .g_category(goods.getG_category())
-                            .g_status(goods.getG_status())
-                            .g_count(goods.getG_count())
-                            .build();
-                    log.info("responseDTO : "+responseDTO);
+                ReserveDTO responseDTO = ReserveDTO.builder()
+                        .r_code(r.getR_code())
+                        .r_u_id(r.getR_u_id())
+                        .r_count(r.getR_count())
+                        .r_g_code(r.getR_g_code())
+                        .r_firstTime(r.getR_firstTime())
+                        .r_status(r.getR_status())
+                        .r_customOrder(r.getR_customOrder())
+                        .r_g_code(r.getR_g_code())
+                        .g_name(goods.getG_name())
+                        .g_price(goods.getG_price())
+                        .g_discount(goods.getG_discount())
+                        .g_expireDate(goods.getG_expireDate())
+                        .g_category(goods.getG_category())
+                        .g_status(goods.getG_status())
+                        .g_count(goods.getG_count())
+                        .build();
+                log.info("responseDTO : " + responseDTO);
 
-                    responseDTOList.add(responseDTO);
+                responseDTOList.add(responseDTO);
 
-                }
-                log.info("responseDTOList : "+responseDTOList);
+            }
+//                log.info("responseDTOList : "+responseDTOList);
 
-                return ResponseEntity.ok().body(responseDTOList);
+            return ResponseEntity.ok().body(responseDTOList);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -245,13 +246,24 @@ public class OwnerController {
 
     // 예약 상태 변화. 예약 승인완료, 거절, 노쇼
     // r_code 랑 status=승인완료, 거절, 판매완료, 노쇼 정보
-    @PostMapping("reserveCheck")
+    @PatchMapping("/statusChange")
     public ResponseEntity<?> reserveCheck(@RequestBody ReserveDTO reserve) {
         log.info("reserve 넘어온 값 : " + reserve);
         try {
-            ownerService.reserveCheck(reserve);
-            return ResponseEntity.ok().body(true);
+            ReserveBean reserveBean = ownerService.reserveOne(reserve);
 
+            ReserveDTO responseDTO = ReserveDTO.builder()
+                    .r_count(reserveBean.getR_count())
+                    .r_code(reserveBean.getR_code())
+                    .r_g_code(reserveBean.getR_g_code())
+                    .r_u_id(reserveBean.getR_u_id())
+                    .r_status(reserveBean.getR_status())
+                    .check(reserve.getCheck())
+                    .build();
+            log.info("빌드한 responseDTO : "+responseDTO);
+            ownerService.reserveCheck(responseDTO);
+
+            return ResponseEntity.ok().body(true);
 
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -267,12 +279,12 @@ public class OwnerController {
 
     // 상품 삭제 시 PatchMapping
     @PatchMapping("/deleteGoods")
-    public ResponseEntity<?> deleteGoods(@RequestBody GoodsDTO goodsDTO){
-        log.info("deleteGoods 넘어온 값 : "+goodsDTO.getG_code());
+    public ResponseEntity<?> deleteGoods(@RequestBody GoodsDTO goodsDTO) {
+        log.info("deleteGoods 넘어온 값 : " + goodsDTO.getG_code());
         try {
             ownerService.deleteGoods(goodsDTO);
             return ResponseEntity.ok().body(true);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error(e.getMessage());
             log.error("deleteGoods Error");
 
@@ -283,4 +295,5 @@ public class OwnerController {
         }
     }
 
+    //
 }

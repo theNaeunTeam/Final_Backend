@@ -106,4 +106,8 @@ public class OwnerDAO {
     public GoodsBean goodsData(int r_g_code) {
         return sqlSession.selectOne("goodsData",r_g_code);
     }
+
+    public ReserveBean reserveOne(ReserveDTO reserve) {
+        return sqlSession.selectOne("reserveOne",reserve);
+    }
 }
