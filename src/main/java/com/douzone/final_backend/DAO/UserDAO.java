@@ -3,6 +3,7 @@ package com.douzone.final_backend.DAO;
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.DTO.FavoritesDTO;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -43,6 +44,7 @@ public class UserDAO {
         return sqlSession.selectOne("storeView", o_sNumber);
     }
 
-
+    // 즐겨찾기 유무 체크
+    public boolean favorCheck(FavoritesDTO favoritesDTO){return sqlSession.selectOne("favorView", favoritesDTO);}
 
 }

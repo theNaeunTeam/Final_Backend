@@ -4,6 +4,7 @@ import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Common.ResponseDTO;
+import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import com.douzone.final_backend.Service.UserService;
@@ -167,6 +168,23 @@ public class UserController {
                     .body(responseDTO);
         }
     }
+
+    // 즐겨찾기 유무 확인
+    @PostMapping("/")
+    public ResponseEntity favorView(@RequestBody FavoritesDTO favoritesDTO){
+        log.info("들어온 사업자번호,유저아이디:"+ favoritesDTO);
+        try{
+            boolean result = userService.favorCheck(favoritesDTO);
+
+            return ResponseEntity.ok().body(result);
+        } catch(Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
 
 }
 

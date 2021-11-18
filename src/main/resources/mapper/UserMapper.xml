@@ -42,4 +42,11 @@
         from owner
         where o_sNumber = #{o_sNumber}
     </select>
+
+    <select id="favorView" resultType="boolean">
+        select *
+        form favorites
+        where f_o_sNumber = #{o_sNumber} and f_p_user_id = #{u_id}
+    </select>
+
 </mapper>

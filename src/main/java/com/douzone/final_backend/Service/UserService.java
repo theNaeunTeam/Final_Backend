@@ -5,6 +5,7 @@ import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
+import com.douzone.final_backend.DTO.FavoritesDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,5 +61,9 @@ public class UserService {
     // 해당 가게 정보 상세보기
     public OwnerBean findByStore(String o_sNumber) {
         return userDAO.findByStore(o_sNumber);
+    }
+
+    public boolean favorCheck(FavoritesDTO favoritesDTO){
+        return userDAO.favorCheck(favoritesDTO);
     }
 }
