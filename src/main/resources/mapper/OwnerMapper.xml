@@ -145,4 +145,9 @@
         from reserve
         where r_owner = #{g_owner}
     </select>
+
+    <!-- g_code로 물건 정보 조회 -->
+    <select id="goodsData" resultType="com.douzone.final_backend.Bean.GoodsBean">
+        select * from goods where g_code = #{r_g_code}
+    </select>
 </mapper>

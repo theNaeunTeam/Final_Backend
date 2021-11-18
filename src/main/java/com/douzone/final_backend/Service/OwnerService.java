@@ -139,4 +139,11 @@ public class OwnerService {
 
         return ownerDAO.reserveList(g_owner);
     }
+
+    public GoodsBean goodsData(int r_g_code) {
+        if(ownerDAO.goodsData(r_g_code) == null){
+            throw new RuntimeException("반환되는 값 없음");
+        }
+        return ownerDAO.goodsData(r_g_code);
+    }
 }
