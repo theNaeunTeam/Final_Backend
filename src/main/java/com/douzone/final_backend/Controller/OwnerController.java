@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -201,7 +202,39 @@ public class OwnerController {
 
             log.info("reserveBeans : "+reserveBeans);
 
-            return ResponseEntity.ok().body(reserveBeans);
+
+                log.info("if null");
+                List<ReserveDTO> responseDTOList = new ArrayList<>();
+                for (ReserveBean r : reserveBeans) {
+                    log.info("반복문");
+                    GoodsBean goods = ownerService.goodsData(r.getR_g_code());
+
+                    ReserveDTO responseDTO = ReserveDTO.builder()
+                            .r_code(r.getR_code())
+                            .r_u_id(r.getR_u_id())
+                            .r_count(r.getR_count())
+                            .r_g_code(r.getR_g_code())
+                            .r_firstTime(r.getR_firstTime())
+                            .r_status(r.getR_status())
+                            .r_customOrder(r.getR_customOrder())
+                            .r_g_code(r.getR_g_code())
+                            .g_name(goods.getG_name())
+                            .g_price(goods.getG_price())
+                            .g_discount(goods.getG_discount())
+                            .g_expireDate(goods.getG_expireDate())
+                            .g_category(goods.getG_category())
+                            .g_status(goods.getG_status())
+                            .g_count(goods.getG_count())
+                            .build();
+                    log.info("responseDTO : "+responseDTO);
+
+                    responseDTOList.add(responseDTO);
+
+                }
+                log.info("responseDTOList : "+responseDTOList);
+
+                return ResponseEntity.ok().body(responseDTOList);
+
         }catch (Exception e){
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
