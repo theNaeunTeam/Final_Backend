@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-//이재현
+
 @Slf4j
 @RestController
 @RequestMapping("/master")

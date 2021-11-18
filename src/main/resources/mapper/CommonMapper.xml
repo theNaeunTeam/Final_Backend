@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.douzone.mapper.master">
+
+    <select id="getShoppingCart" resultType="com.douzone.final_backend.DTO.ShoppingCartDTO">
+        select o_name, g_code, g_count, g_name, g_price, g_discount
+        from goods
+                 left join owner o on goods.g_owner = o.o_sNumber
+        where g_code = #{g_code};
+    </select>
+
+</mapper>
+
+
