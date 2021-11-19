@@ -130,4 +130,20 @@ public class OwnerDAO {
     public List<GoodsDTO> searchStatus(GoodsDTO g) {
         return sqlSession.selectList("searchStatus", g);
     }
+
+    public OwnerBean getOwner(String o_sNumber) {
+        return sqlSession.selectOne("getOwner",o_sNumber);
+    }
+
+    public int goods(String o_sNumber) {
+        return sqlSession.selectOne("goods",o_sNumber);
+    }
+
+    public int total(String o_sNumber) {
+        return sqlSession.selectOne("total",o_sNumber);
+    }
+
+    public int reserve(String o_sNumber) {
+        return sqlSession.selectOne("reserve",o_sNumber);
+    }
 }
