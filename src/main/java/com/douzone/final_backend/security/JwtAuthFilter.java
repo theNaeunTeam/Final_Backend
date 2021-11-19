@@ -7,6 +7,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -24,6 +26,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private TokenProvider tokenProvider;
 
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
@@ -37,8 +42,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 log.info("Authenticated user ID : " + id);
                 String u_id = id.substring(0,id.indexOf("&"));
                 log.info("u_id : "+u_id);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(tokenProvider.validateAndGetUserId(token));
+                log.info("uuuuuuuuu : "+userDetails);
                 AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        u_id,
+                        userDetails,
                         null,
                         AuthorityUtils.NO_AUTHORITIES //권한
                 );

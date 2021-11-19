@@ -64,7 +64,7 @@ public class TokenProvider {
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
                 .getBody();
-        log.info(token);
+        log.info(claims.getSubject());
         return claims.getSubject();
     }
 }
