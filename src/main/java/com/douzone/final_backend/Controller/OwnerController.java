@@ -318,6 +318,7 @@ public class OwnerController {
             r = ReserveDTO.builder()
                     .g_category(g_category)
                     .searchInput(searchInput)
+                    .r_status(9999)
                     .r_owner(o_sNumber)
                     .build();
         } else {
@@ -349,8 +350,10 @@ public class OwnerController {
             g = GoodsDTO.builder()
                     .g_owner(g_owner)
                     .g_category(g_category)
+                    .g_status(9999)
                     .searchInput(searchInput)
                     .build();
+            log.info("status 값 공백");
         } else {
             g = GoodsDTO.builder()
                     .g_owner(g_owner)
@@ -358,6 +361,7 @@ public class OwnerController {
                     .g_status(Integer.parseInt(g_status))
                     .searchInput(searchInput)
                     .build();
+            log.info("stauts 값 : "+g_status);
         }
 
         log.info("search Build 성공");

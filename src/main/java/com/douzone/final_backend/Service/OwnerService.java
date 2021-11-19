@@ -176,7 +176,7 @@ public class OwnerService {
     }
 
     public List<ReserveDTO> searchReserve(ReserveDTO reserveDTO) {
-        if (reserveDTO.getR_status() == 0) {
+        if (reserveDTO.getR_status() == 9999) {
             return ownerDAO.searchReserveStatus(reserveDTO);
 
         } else {
@@ -185,7 +185,7 @@ public class OwnerService {
     }
 
     public List<GoodsDTO> search(GoodsDTO g) {
-        if (g.getG_status() == 0) {
+        if (g.getG_status() == 9999) {
             return ownerDAO.search(g);
         } else {
             return ownerDAO.searchStatus(g);
