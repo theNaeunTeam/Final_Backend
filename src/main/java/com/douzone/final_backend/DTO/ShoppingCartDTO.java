@@ -16,5 +16,8 @@ public class ShoppingCartDTO {
     private int g_code; // 상품 고유번호
     private int g_count; // 상품 수량
     private int g_status; // 예약 상태
+    private int g_price;
+    private int g_discount;
+    private String g_image;
     private String g_name;
 }

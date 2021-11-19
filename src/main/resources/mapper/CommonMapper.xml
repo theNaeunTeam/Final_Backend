@@ -4,7 +4,7 @@
 <mapper namespace="com.douzone.mapper.master">
 
     <select id="getShoppingCart" resultType="com.douzone.final_backend.DTO.ShoppingCartDTO">
-        select o_name, g_code, g_count, g_name, g_price, g_discount
+        select g_code, g_count, g_name, g_status, g_price, g_discount, g_image, o_name
         from goods
                  left join owner o on goods.g_owner = o.o_sNumber
         where g_code = #{g_code};

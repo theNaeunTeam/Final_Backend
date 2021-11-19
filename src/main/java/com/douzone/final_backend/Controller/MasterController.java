@@ -47,9 +47,7 @@ public class MasterController {
             return ResponseEntity
                     .badRequest()
                     .body(responseDTO);
-
         }
-
     }
 
     @PatchMapping("/requestOK")
