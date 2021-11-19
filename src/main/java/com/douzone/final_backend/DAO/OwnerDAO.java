@@ -150,4 +150,6 @@ public class OwnerDAO {
     public int reserve(String o_sNumber) {
         return sqlSession.selectOne("reserve", o_sNumber);
     }
+
+
 }
