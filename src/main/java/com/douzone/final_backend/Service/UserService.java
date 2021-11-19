@@ -1,6 +1,5 @@
 package com.douzone.final_backend.Service;
 
-import com.douzone.final_backend.Bean.FavoritesBean;
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
@@ -65,15 +64,33 @@ public class UserService {
     }
 
     // 즐겨찾기 유무 체크 하기
-    public boolean favorCheck(FavoritesDTO favoritesDTO) {return userDAO.favorCheck(favoritesDTO);}
+    public boolean favorCheck(FavoritesDTO favoritesDTO) {
+        return userDAO.favorCheck(favoritesDTO);
+    }
 
     // 유저 즐겨찾기 추가 하기
-    public int addFavorService(FavoritesDTO favoritesDTO){
-        return  userDAO.addFavorDAO(favoritesDTO);
+    public int addFavorService(FavoritesDTO favoritesDTO) {
+        return userDAO.addFavorDAO(favoritesDTO);
     }
 
     // 유저 즐겨찾기 해제
-    public int FavorOffService(FavoritesDTO favoritesDTO){
-        return  userDAO.FavorOffDAO(favoritesDTO);
+    public int FavorOffService(FavoritesDTO favoritesDTO) {
+        return userDAO.FavorOffDAO(favoritesDTO);
+    }
+
+    public UserBean userData(String u_id) {
+
+        if (userDAO.userData(u_id) == null) {
+            throw new RuntimeException("해당 회원 정보 없음");
+        }
+        return userDAO.userData(u_id);
+    }
+
+    public int userSave(String u_id) {
+        return userDAO.userSave(u_id);
+    }
+
+    public int userReserve(String u_id) {
+        return userDAO.userReserve(u_id);
     }
 }

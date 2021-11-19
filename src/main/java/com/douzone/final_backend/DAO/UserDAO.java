@@ -47,16 +47,30 @@ public class UserDAO {
     }
 
     // 즐겨찾기 유무 체크
-    public boolean favorCheck(FavoritesDTO favoritesDTO){
-        System.out.println(sqlSession.selectOne("favorView", favoritesDTO)+"");
-        return sqlSession.selectOne("favorView", favoritesDTO);}
+    public boolean favorCheck(FavoritesDTO favoritesDTO) {
+        System.out.println(sqlSession.selectOne("favorView", favoritesDTO) + "");
+        return sqlSession.selectOne("favorView", favoritesDTO);
+    }
 
     // 유저 즐겨찾기 추가
-    public int addFavorDAO(FavoritesDTO favoritesDTO){
-        return sqlSession.insert("addFavor", favoritesDTO);}
+    public int addFavorDAO(FavoritesDTO favoritesDTO) {
+        return sqlSession.insert("addFavor", favoritesDTO);
+    }
 
     // 유저 즐겨찾기 해제
-    public int FavorOffDAO(FavoritesDTO favoritesDTO){
+    public int FavorOffDAO(FavoritesDTO favoritesDTO) {
         return sqlSession.delete("favorOff", favoritesDTO);
+    }
+
+    public UserBean userData(String u_id) {
+        return sqlSession.selectOne("userData", u_id);
+    }
+
+    public int userSave(String u_id) {
+        return sqlSession.selectOne("userSave", u_id);
+    }
+
+    public int userReserve(String u_id) {
+        return sqlSession.selectOne("userReserve", u_id);
     }
 }

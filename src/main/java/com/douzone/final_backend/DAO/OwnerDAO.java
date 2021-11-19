@@ -72,6 +72,10 @@ public class OwnerDAO {
         return sqlSession.update("resSu", reserveDTO);
     }
 
+    public int point(ReserveDTO reserveDTO) {
+        return sqlSession.update("point", reserveDTO);
+    }
+
     // 노쇼 . 예약 거절 resNoCount 재사용
     public int reseNoShowStatus(ReserveDTO reserveDTO) {
         return sqlSession.update("reseNoShowStatus", reserveDTO);
@@ -132,18 +136,18 @@ public class OwnerDAO {
     }
 
     public OwnerBean getOwner(String o_sNumber) {
-        return sqlSession.selectOne("getOwner",o_sNumber);
+        return sqlSession.selectOne("getOwner", o_sNumber);
     }
 
     public int goods(String o_sNumber) {
-        return sqlSession.selectOne("goods",o_sNumber);
+        return sqlSession.selectOne("goods", o_sNumber);
     }
 
     public int total(String o_sNumber) {
-        return sqlSession.selectOne("total",o_sNumber);
+        return sqlSession.selectOne("total", o_sNumber);
     }
 
     public int reserve(String o_sNumber) {
-        return sqlSession.selectOne("reserve",o_sNumber);
+        return sqlSession.selectOne("reserve", o_sNumber);
     }
 }

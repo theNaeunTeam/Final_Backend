@@ -25,7 +25,8 @@
     <select id="findByUId" resultType="com.douzone.final_backend.Bean.UserBean">
         select *
         from user
-        where u_id = #{u_id};
+        where u_id = #{u_id}
+          and u_status = 0;
     </select>
 
     <!-- 해당 가게 클릭시 판매중인 상품 리스트 보기-->
@@ -46,17 +47,39 @@
     <select id="favorView" resultType="boolean">
         select count(*)
         from favorites
-        where f_o_sNumber = #{f_o_sNumber} and f_p_user_id = #{f_p_user_id}
+        where f_o_sNumber = #{f_o_sNumber}
+          and f_p_user_id = #{f_p_user_id}
     </select>
 
     <insert id="addFavor" parameterType="com.douzone.final_backend.DTO.FavoritesDTO">
-        insert into favorites(f_o_sNumber,f_p_user_id)
-            value(#{f_o_sNumber}, #{f_p_user_id})
+        insert into favorites(f_o_sNumber, f_p_user_id)
+            value (#{f_o_sNumber}, #{f_p_user_id})
     </insert>
 
     <delete id="favorOff" parameterType="com.douzone.final_backend.DTO.FavoritesDTO">
-        delete from favorites
-        where f_o_sNumber = #{f_o_sNumber} and f_p_user_id = #{f_p_user_id}
+        delete
+        from favorites
+        where f_o_sNumber = #{f_o_sNumber}
+          and f_p_user_id = #{f_p_user_id}
     </delete>
 
+    <select id="userData" resultType="com.douzone.final_backend.Bean.UserBean">
+        select *
+        from user
+        where u_id = #{u_id}
+    </select>
+
+    <select id="userSave" resultType="int">
+        select count(*)
+        from reserve
+        where r_status = 3
+          and r_u_id = #{u_id}
+    </select>
+
+    <select id="userReserve" resultType="int">
+        select count(*)
+        from reserve
+        where r_status = 1
+          and r_u_id = #{u_id}
+    </select>
 </mapper>

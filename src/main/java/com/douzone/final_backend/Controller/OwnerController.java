@@ -292,6 +292,7 @@ public class OwnerController {
                     .r_g_code(reserveBean.getR_g_code())
                     .r_u_id(reserveBean.getR_u_id())
                     .r_status(reserveBean.getR_status())
+                    .r_pay(reserveBean.getR_pay())
                     .check(reserve.getCheck())
                     .build();
             log.info("빌드한 responseDTO : " + responseDTO);

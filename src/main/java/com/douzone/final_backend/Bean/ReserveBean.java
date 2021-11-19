@@ -21,4 +21,5 @@ public class ReserveBean {
     private String r_customOrder; //요청사항, 방문하는사람 등 기타사항
     private int r_count; // 해당 상품 몇개 예약했는지
     private String r_owner; // 해당 상품 가게의 사업자번호
+    private int r_pay;
 }

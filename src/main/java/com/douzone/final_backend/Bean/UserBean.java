@@ -19,4 +19,5 @@ public class UserBean {
     private int u_age; // 사용자 나이
     private int u_status; // 사용자 상태 0:기본 1:탈퇴 2:블랙리스트
     private int u_noShowCnt; // 노쇼 횟수. 로그인시 5이하인지 체크
+    private int u_point;
 }

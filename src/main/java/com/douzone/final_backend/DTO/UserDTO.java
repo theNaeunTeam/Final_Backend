@@ -19,6 +19,10 @@ public class UserDTO {
     private String u_email; // 사용자 이메일
     private String u_gender; // 사용자 성별
     private int u_age; // 사용자 나이
+    private int u_status; // 회원상태 0 정상 1 탈퇴 2 블랙리스트
+    private int u_point;
 
+    private int save; // 구매 완료한 횟수
+    private int reserve; //예약 완료
 
 }

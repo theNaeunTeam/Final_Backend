@@ -15,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -142,10 +144,11 @@ public class UserController {
                     .body(responseDTO);
         }
     }
+
     // 해당 가게 정보 상세보기
     @GetMapping("/storeView")
-    public ResponseEntity<?> storeView(@RequestParam String o_sNumber){
-        log.info("storeView 들어오는 값 : "+o_sNumber);
+    public ResponseEntity<?> storeView(@RequestParam String o_sNumber) {
+        log.info("storeView 들어오는 값 : " + o_sNumber);
         try {
             OwnerBean ownerBean = userService.findByStore(o_sNumber);
             OwnerDTO responseDTO = OwnerDTO.builder()
@@ -171,14 +174,14 @@ public class UserController {
 
     // 즐겨찾기 유무 확인
     @PostMapping("/favorCheck")
-    public ResponseEntity<?> favorView(@RequestBody FavoritesDTO favoritesDTO){
-        log.info("들어온 사업자번호,유저아이디:"+ favoritesDTO);
-        try{
+    public ResponseEntity<?> favorView(@RequestBody FavoritesDTO favoritesDTO) {
+        log.info("들어온 사업자번호,유저아이디:" + favoritesDTO);
+        try {
             boolean result = userService.favorCheck(favoritesDTO);
-            log.info("4444444"+result);
+            log.info("4444444" + result);
 
             return ResponseEntity.ok().body(result);
-        } catch(Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -188,28 +191,13 @@ public class UserController {
 
     // 즐겨찾기 추가
     @PostMapping("/addFavor")
-    public ResponseEntity<?> addFavor(@RequestBody FavoritesDTO favoritesDTO){
-        log.info("즐찾추-들어온 사업자번호,유저아이디:"+ favoritesDTO);
-        try{
+    public ResponseEntity<?> addFavor(@RequestBody FavoritesDTO favoritesDTO) {
+        log.info("즐찾추-들어온 사업자번호,유저아이디:" + favoritesDTO);
+        try {
             int result = userService.addFavorService(favoritesDTO);
-            log.info("즐찾추api결과:"+result);
+            log.info("즐찾추api결과:" + result);
             return ResponseEntity.ok().body(result);
-        } catch (Exception e){
-            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-    }
-    // 즐겨찾기 해제
-    @PostMapping("/FavorOff")
-    public ResponseEntity<?> FavorOff(@RequestBody FavoritesDTO favoritesDTO){
-        log.info("즐찾추-들어온 사업자번호,유저아이디:"+ favoritesDTO);
-        try{
-            int result = userService.FavorOffService(favoritesDTO);
-            log.info("즐찾해제api결과:"+result);
-            return ResponseEntity.ok().body(result);
-        } catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -217,6 +205,48 @@ public class UserController {
         }
     }
 
+    // 즐겨찾기 해제
+    @PostMapping("/FavorOff")
+    public ResponseEntity<?> FavorOff(@RequestBody FavoritesDTO favoritesDTO) {
+        log.info("즐찾추-들어온 사업자번호,유저아이디:" + favoritesDTO);
+        try {
+            int result = userService.FavorOffService(favoritesDTO);
+            log.info("즐찾해제api결과:" + result);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // user Mypage 로딩
+    @GetMapping("myPage")
+    public ResponseEntity<?> myPage(@AuthenticationPrincipal UserDetails userDetails) {
+        String u_id = userDetails.getUsername();
+        try {
+            // user 정보가 없을 시 예외 발생
+            UserBean user = userService.userData(u_id);
+            log.info("user 정보 "+user);
+            int save = userService.userSave(u_id);
+            int reserve = userService.userReserve(u_id);
+
+            UserDTO responseDTO = UserDTO.builder()
+                    .u_id(user.getU_id())
+                    .save(save)
+                    .u_point(user.getU_point())
+                    .reserve(reserve)
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
 
 }
 
