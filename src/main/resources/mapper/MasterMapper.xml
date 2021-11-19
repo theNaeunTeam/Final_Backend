@@ -11,7 +11,7 @@
     <update id="requestOK" parameterType="String">
         update owner
         set o_approval = 1,
-            o_time1     = now()
+            o_date     = now()
         where o_sNumber = #{o_sNumber}
     </update>
     <update id="requestNO" parameterType="String">

@@ -2,7 +2,10 @@ package com.douzone.final_backend.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -32,17 +35,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 log.info("wwwww");
                 String id = tokenProvider.getUserPk(token);
                 log.info("Authenticated user ID : " + id);
-//                AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-//                        u_id,
-//                        null,
-//                        AuthorityUtils.NO_AUTHORITIES //권한
-//                );
-                UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
+                String u_id = id.substring(0,id.indexOf("&"));
+                log.info("u_id : "+u_id);
+                AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                        u_id,
+                        null,
+                        AuthorityUtils.NO_AUTHORITIES //권한
+                );
+//                UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(auth);
-//                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-//                securityContext.setAuthentication(auth);
-//                SecurityContextHolder.setContext(securityContext);
+                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+                securityContext.setAuthentication(auth);
+                SecurityContextHolder.setContext(securityContext);
 
             }
         } catch (Exception ex) {

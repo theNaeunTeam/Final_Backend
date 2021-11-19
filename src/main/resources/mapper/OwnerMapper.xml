@@ -160,4 +160,70 @@
         where g_code = #{r_g_code}
     </select>
 
+    <!-- 예약 검색 예약 상태 선택 시 -->
+    <select id="searchReserve" resultType="com.douzone.final_backend.DTO.ReserveDTO">
+        select r.r_code,
+               r.r_u_id,
+               r.r_count,
+               r_firstTime,
+               r_g_code,
+               r.r_status,
+               r.r_customOrder,
+               g.g_name,
+               g.g_price,
+               g.g_discount,
+               g.g_expireDate,
+               g.g_category,
+               g.g_status,
+               g.g_count
+        from reserve as r
+                 join goods as g
+        where g.g_category LIKE '%${g_category}%'
+          and r.r_status = #{r_status}
+          and g.g_name LIKE '%${searchInput}%'
+          and r.r_owner = #{r_owner}
+        group by r.r_code;
+    </select>
+    <!-- 예약 검색 상태 선택 안했을 때  -->
+    <select id="searchReserveStatus" resultType="com.douzone.final_backend.DTO.ReserveDTO">
+        select r.r_code,
+               r.r_u_id,
+               r.r_count,
+               r_firstTime,
+               r_g_code,
+               r.r_status,
+               r.r_customOrder,
+               g.g_name,
+               g.g_price,
+               g.g_discount,
+               g.g_expireDate,
+               g.g_category,
+               g.g_status,
+               g.g_count
+        from reserve as r
+                 join goods as g
+        where g.g_category LIKE '%${g_category}%'
+          and g.g_name LIKE '%${searchInput}%'
+          and r.r_owner = #{r_owner}
+        group by r.r_code;
+    </select>
+
+    <!-- 상품검색에서 상태 선택 안했을 때 -->
+    <select id="search" resultType="com.douzone.final_backend.DTO.GoodsDTO">
+        select *
+        from goods
+        where g_category LIKE '%${g_category}%'
+          AND g_name LIKE '%${searchInput}%'
+          AND g_owner = #{g_owner}
+    </select>
+
+    <!-- 상품검색에서 상태 선택 했을 때 -->
+    <select id="searchStatus" resultType="com.douzone.final_backend.DTO.GoodsDTO">
+        select *
+        from goods
+        where g_category LIKE '%${g_category}%'
+          AND g_name LIKE '%${searchInput}%'
+          AND g_status = #{g_status}
+          AND g_owner = #{g_owner}
+    </select>
 </mapper>
