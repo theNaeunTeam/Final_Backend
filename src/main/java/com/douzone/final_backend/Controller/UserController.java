@@ -175,10 +175,41 @@ public class UserController {
         log.info("들어온 사업자번호,유저아이디:"+ favoritesDTO);
         try{
             boolean result = userService.favorCheck(favoritesDTO);
-            log.info(""+result);
+            log.info("4444444"+result);
 
             return ResponseEntity.ok().body(result);
         } catch(Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 즐겨찾기 추가
+    @PostMapping("/addFavor")
+    public ResponseEntity<?> addFavor(@RequestBody FavoritesDTO favoritesDTO){
+        log.info("즐찾추-들어온 사업자번호,유저아이디:"+ favoritesDTO);
+        try{
+            int result = userService.addFavorService(favoritesDTO);
+            log.info("즐찾추api결과:"+result);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+    // 즐겨찾기 해제
+    @PostMapping("/FavorOff")
+    public ResponseEntity<?> FavorOff(@RequestBody FavoritesDTO favoritesDTO){
+        log.info("즐찾추-들어온 사업자번호,유저아이디:"+ favoritesDTO);
+        try{
+            int result = userService.FavorOffService(favoritesDTO);
+            log.info("즐찾해제api결과:"+result);
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e){
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
