@@ -88,6 +88,7 @@ public class OwnerService {
     @Transactional
     public void reserveCheck(ReserveDTO reserveDTO) {
         int check = reserveDTO.getCheck();
+        // 예약 승인
         if (check == 1) {
             if (reserveDTO.getR_status() == 0) {
                 int r = ownerDAO.resOK(reserveDTO);
@@ -98,7 +99,7 @@ public class OwnerService {
                 throw new RuntimeException("예약 대기 중 일 때만 승인할 수 있음 r_status : " + reserveDTO.getR_status());
             }
 
-        } else if (check == 2) {
+        } else if (check == 2) { // 예약 거절
             if (reserveDTO.getR_status() == 0) {
                 int r = ownerDAO.resNoCount(reserveDTO);
                 int r1 = ownerDAO.resNo(reserveDTO);
@@ -109,17 +110,18 @@ public class OwnerService {
             } else {
                 throw new RuntimeException("예약 대기 중 일 때만 거절할 수 있음 r_status : " + reserveDTO.getR_status());
             }
-        } else if (check == 3) {
+        } else if (check == 3) { // 판매 완료
             if (reserveDTO.getR_status() == 1) {
                 int r = ownerDAO.resSu(reserveDTO);
-                if (r == 0) {
+                int r1 = ownerDAO.point(reserveDTO);
+                if (r == 0 || r1 == 0) {
                     throw new RuntimeException("판매완료 에러");
                 }
             } else {
                 throw new RuntimeException("예약 승인 되어있을 때만 판매 완료로 바꿀 수 있음 r_status : " + reserveDTO.getR_status());
             }
 
-        } else if (check == 4) {
+        } else if (check == 4) { // 노쇼
             if (reserveDTO.getR_status() == 1) {
                 int r = ownerDAO.resNoCount(reserveDTO);
                 int r1 = ownerDAO.reseNoShowStatus(reserveDTO);

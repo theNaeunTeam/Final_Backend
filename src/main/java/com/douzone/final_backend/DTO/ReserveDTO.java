@@ -20,7 +20,7 @@ public class ReserveDTO {
     private String r_firstTime; // 방문 예정 시간
     private int r_status;
     private String r_customOrder;
-
+    private int r_pay;
     private String r_owner; // o_sNumber
 
     // r_g_code로 검색한 상품 정보
