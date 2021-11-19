@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -129,15 +130,16 @@ public class OwnerController {
         String image = s3Service.upload(file);
         goodsDTO.setG_image(image);
 
+
         log.info("goodsDTO" + goodsDTO);
         try {
             GoodsBean goods = GoodsBean.builder()
                     .g_owner(goodsDTO.getG_owner())
 //                    .g_owner("123")
                     .g_name(goodsDTO.getG_name())
-                    .g_count(Integer.parseInt(goodsDTO.getG_count()))
-                    .g_price(Integer.parseInt(goodsDTO.getG_price()))
-                    .g_discount(Integer.parseInt(goodsDTO.getG_discount()))
+                    .g_count(goodsDTO.getG_count())
+                    .g_price(goodsDTO.getG_price())
+                    .g_discount(goodsDTO.getG_discount())
                     .g_detail(goodsDTO.getG_detail())
                     .g_image(goodsDTO.getG_image())
                     .g_expireDate(goodsDTO.getG_expireDate())
@@ -157,9 +159,9 @@ public class OwnerController {
                     .g_owner(registerGoods.getG_owner())
 //                    .g_owner("123")
                     .g_name(registerGoods.getG_name())
-                    .g_count(String.valueOf(registerGoods.getG_count()))
-                    .g_price(String.valueOf(registerGoods.getG_price()))
-                    .g_discount(String.valueOf(registerGoods.getG_discount()))
+                    .g_count(registerGoods.getG_count())
+                    .g_price(registerGoods.getG_price())
+                    .g_discount(registerGoods.getG_discount())
                     .g_detail(registerGoods.getG_detail())
                     .g_image(registerGoods.getG_image())
                     .g_expireDate(registerGoods.getG_expireDate())
@@ -186,6 +188,7 @@ public class OwnerController {
 
             log.info("사업자 번호" + o_sNumber);
 
+
             return ResponseEntity.ok().body(goodsList);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -196,8 +199,9 @@ public class OwnerController {
     }
 
     @GetMapping("reserveList")
-    public ResponseEntity<?> reservationView(@RequestParam String g_owner) {
+    public ResponseEntity<?> reservationView(@AuthenticationPrincipal String id, @RequestParam String g_owner) {
         log.info("g : " + g_owner);
+        log.info("reserveList 주인 :  " + id);
         try {
             List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
 
@@ -210,6 +214,16 @@ public class OwnerController {
                 log.info("반복문");
                 GoodsBean goods = ownerService.goodsData(r.getR_g_code());
 
+//                GoodsDTO goods = GoodsDTO.builder()
+//                        .g_name(goodsBean.getG_name())
+//                        .g_price(goodsBean.getG_price())
+//                        .g_discount(goodsBean.getG_discount())
+//                        .g_expireDate(goodsBean.getG_expireDate())
+//                        .g_category(goodsBean.getG_category())
+//                        .g_status(goodsBean.getG_status())
+//                        .g_count(goodsBean.getG_count())
+//                        .build();
+
                 ReserveDTO responseDTO = ReserveDTO.builder()
                         .r_code(r.getR_code())
                         .r_u_id(r.getR_u_id())
@@ -218,10 +232,8 @@ public class OwnerController {
                         .r_firstTime(r.getR_firstTime())
                         .r_status(r.getR_status())
                         .r_customOrder(r.getR_customOrder())
-                        .r_g_code(r.getR_g_code())
+//                        .goodsDTO(goods)
                         .g_name(goods.getG_name())
-                        .g_price(goods.getG_price())
-                        .g_discount(goods.getG_discount())
                         .g_expireDate(goods.getG_expireDate())
                         .g_category(goods.getG_category())
                         .g_status(goods.getG_status())
@@ -260,7 +272,7 @@ public class OwnerController {
                     .r_status(reserveBean.getR_status())
                     .check(reserve.getCheck())
                     .build();
-            log.info("빌드한 responseDTO : "+responseDTO);
+            log.info("빌드한 responseDTO : " + responseDTO);
             ownerService.reserveCheck(responseDTO);
 
             return ResponseEntity.ok().body(true);
@@ -295,5 +307,69 @@ public class OwnerController {
         }
     }
 
-    //
+    // 예약 현황에서 검색
+    @GetMapping("searchReserve")
+    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal String o_sNumber, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
+        log.info("예약현황에서 검색" + g_category + r_status + searchInput);
+        // 넘어오는 값 g_category, r_status, searchInput(상품명)
+
+        ReserveDTO r;
+        if (r_status.equals("")) {
+            r = ReserveDTO.builder()
+                    .g_category(g_category)
+                    .searchInput(searchInput)
+                    .r_status(9999)
+                    .r_owner(o_sNumber)
+                    .build();
+        } else {
+            r = ReserveDTO.builder()
+                    .g_category(g_category)
+                    .r_status(Integer.parseInt(r_status))
+                    .searchInput(searchInput)
+                    .r_owner(o_sNumber)
+                    .build();
+        }
+        log.info("만들어진 r : " + r);
+
+        log.info("###################");
+        List<ReserveDTO> responseDTO = ownerService.searchReserve(r);
+        log.info("searchReserve : " + o_sNumber + g_category);
+        log.info("responseDTO : " + responseDTO);
+
+        return ResponseEntity.ok().body(responseDTO);
+
+    }
+
+    // 상품 조회에서 검색
+    @GetMapping("search")
+    public ResponseEntity<?> seaech(@AuthenticationPrincipal String g_owner, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
+        log.info("search 넘어온 값 : " + g_owner + g_category + g_status + searchInput);
+
+        GoodsDTO g;
+        if (g_status.equals("")) {
+            g = GoodsDTO.builder()
+                    .g_owner(g_owner)
+                    .g_category(g_category)
+                    .g_status(9999)
+                    .searchInput(searchInput)
+                    .build();
+            log.info("status 값 공백");
+        } else {
+            g = GoodsDTO.builder()
+                    .g_owner(g_owner)
+                    .g_category(g_category)
+                    .g_status(Integer.parseInt(g_status))
+                    .searchInput(searchInput)
+                    .build();
+            log.info("stauts 값 : "+g_status);
+        }
+
+        log.info("search Build 성공");
+
+        List<GoodsDTO> responseDTO = ownerService.search(g);
+
+
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
 }

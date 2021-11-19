@@ -58,9 +58,11 @@ public class OwnerDAO {
     public int resNoCount(ReserveDTO reserveDTO) {
         return sqlSession.update("resNoCount", reserveDTO);
     }
+
     public int resNo(ReserveDTO reserveDTO) {
         return sqlSession.update("resNo", reserveDTO);
     }
+
     public int reNoSt(ReserveDTO reserveDTO) {
         return sqlSession.update("reNoSt", reserveDTO);
     }
@@ -74,9 +76,11 @@ public class OwnerDAO {
     public int reseNoShowStatus(ReserveDTO reserveDTO) {
         return sqlSession.update("reseNoShowStatus", reserveDTO);
     }
+
     public int resNoShowCount(ReserveDTO reserveDTO) {
         return sqlSession.update("resNoShowCount", reserveDTO);
     }
+
     public int resNSSt(ReserveDTO reserveDTO) {
         return sqlSession.update("resNSSt", reserveDTO);
     }
@@ -95,19 +99,35 @@ public class OwnerDAO {
     }
 
     public int deleteGoods(GoodsDTO goodsDTO) {
-        return sqlSession.update("deleteGoods",goodsDTO);
+        return sqlSession.update("deleteGoods", goodsDTO);
     }
 
     public List<ReserveBean> reserveList(String g_owner) {
 
-        return sqlSession.selectList("reserveList",g_owner);
+        return sqlSession.selectList("reserveList", g_owner);
     }
 
     public GoodsBean goodsData(int r_g_code) {
-        return sqlSession.selectOne("goodsData",r_g_code);
+        return sqlSession.selectOne("goodsData", r_g_code);
     }
 
     public ReserveBean reserveOne(ReserveDTO reserve) {
-        return sqlSession.selectOne("reserveOne",reserve);
+        return sqlSession.selectOne("reserveOne", reserve);
+    }
+
+    public List<ReserveDTO> searchReserve(ReserveDTO reserveDTO) {
+        return sqlSession.selectList("searchReserve", reserveDTO);
+    }
+
+    public List<ReserveDTO> searchReserveStatus(ReserveDTO reserveDTO) {
+        return sqlSession.selectList("searchReserveStatus", reserveDTO);
+    }
+
+    public List<GoodsDTO> search(GoodsDTO g) {
+        return sqlSession.selectList("search", g);
+    }
+
+    public List<GoodsDTO> searchStatus(GoodsDTO g) {
+        return sqlSession.selectList("searchStatus", g);
     }
 }

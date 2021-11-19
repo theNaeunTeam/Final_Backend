@@ -32,4 +32,6 @@ public class ReserveDTO {
     private int g_status;
     private int g_count;
 
+    //    private GoodsDTO goodsDTO;
+    private String searchInput;
 }
