@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -50,8 +51,9 @@ public class OwnerController {
 
     // owner Main page
     @GetMapping
-    public ResponseEntity<?> main(@AuthenticationPrincipal String o_sNumber) {
-        log.info("여기 들어옴" + o_sNumber);
+    public ResponseEntity<?> main(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("여기 들어옴" + userDetails.getUsername());
+        String  o_sNumber = userDetails.getUsername();
         OwnerBean owner = ownerService.getOwner(o_sNumber);
         int total = ownerService.total(o_sNumber);
         int goods = ownerService.goods(o_sNumber);
@@ -219,9 +221,9 @@ public class OwnerController {
     }
 
     @GetMapping("reserveList")
-    public ResponseEntity<?> reservationView(@AuthenticationPrincipal String id, @RequestParam String g_owner) {
+    public ResponseEntity<?> reservationView(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String g_owner) {
         log.info("g : " + g_owner);
-        log.info("reserveList 주인 :  " + id);
+        log.info("reserveList 주인 :  " + userDetails.getUsername());
         try {
             List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
 
@@ -329,10 +331,10 @@ public class OwnerController {
 
     // 예약 현황에서 검색
     @GetMapping("searchReserve")
-    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal String o_sNumber, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
+    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
         log.info("예약현황에서 검색" + g_category + r_status + searchInput);
         // 넘어오는 값 g_category, r_status, searchInput(상품명)
-
+        String o_sNumber = userDetails.getUsername();
         ReserveDTO r;
         if (r_status.equals("")) {
             r = ReserveDTO.builder()
@@ -362,8 +364,9 @@ public class OwnerController {
 
     // 상품 조회에서 검색
     @GetMapping("search")
-    public ResponseEntity<?> seaech(@AuthenticationPrincipal String g_owner, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
-        log.info("search 넘어온 값 : " + g_owner + g_category + g_status + searchInput);
+    public ResponseEntity<?> seaech(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
+        String g_owner = userDetails.getUsername();
+        log.info("search 넘어온 값 : " + userDetails + g_category + g_status + searchInput);
 
         GoodsDTO g;
         if (g_status.equals("")) {
