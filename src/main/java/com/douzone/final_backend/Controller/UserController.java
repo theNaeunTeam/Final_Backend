@@ -170,11 +170,12 @@ public class UserController {
     }
 
     // 즐겨찾기 유무 확인
-    @PostMapping("/")
-    public ResponseEntity favorView(@RequestBody FavoritesDTO favoritesDTO){
+    @PostMapping("/favorCheck")
+    public ResponseEntity<?> favorView(@RequestBody FavoritesDTO favoritesDTO){
         log.info("들어온 사업자번호,유저아이디:"+ favoritesDTO);
         try{
             boolean result = userService.favorCheck(favoritesDTO);
+            log.info(""+result);
 
             return ResponseEntity.ok().body(result);
         } catch(Exception e){

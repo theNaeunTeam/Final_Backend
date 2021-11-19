@@ -63,6 +63,7 @@ public class UserService {
         return userDAO.findByStore(o_sNumber);
     }
 
+    // 즐겨찾기 유무 체크 하기
     public boolean favorCheck(FavoritesDTO favoritesDTO){
         return userDAO.favorCheck(favoritesDTO);
     }
