@@ -42,4 +42,21 @@
         from owner
         where o_sNumber = #{o_sNumber}
     </select>
+
+    <select id="favorView" resultType="boolean">
+        select count(*)
+        from favorites
+        where f_o_sNumber = #{f_o_sNumber} and f_p_user_id = #{f_p_user_id}
+    </select>
+
+    <insert id="addFavor" parameterType="com.douzone.final_backend.DTO.FavoritesDTO">
+        insert into favorites(f_o_sNumber,f_p_user_id)
+            value(#{f_o_sNumber}, #{f_p_user_id})
+    </insert>
+
+    <delete id="favorOff" parameterType="com.douzone.final_backend.DTO.FavoritesDTO">
+        delete from favorites
+        where f_o_sNumber = #{f_o_sNumber} and f_p_user_id = #{f_p_user_id}
+    </delete>
+
 </mapper>

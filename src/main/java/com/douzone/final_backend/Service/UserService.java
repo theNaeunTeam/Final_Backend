@@ -1,10 +1,12 @@
 package com.douzone.final_backend.Service;
 
+import com.douzone.final_backend.Bean.FavoritesBean;
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
+import com.douzone.final_backend.DTO.FavoritesDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -60,5 +62,18 @@ public class UserService {
     // 해당 가게 정보 상세보기
     public OwnerBean findByStore(String o_sNumber) {
         return userDAO.findByStore(o_sNumber);
+    }
+
+    // 즐겨찾기 유무 체크 하기
+    public boolean favorCheck(FavoritesDTO favoritesDTO) {return userDAO.favorCheck(favoritesDTO);}
+
+    // 유저 즐겨찾기 추가 하기
+    public int addFavorService(FavoritesDTO favoritesDTO){
+        return  userDAO.addFavorDAO(favoritesDTO);
+    }
+
+    // 유저 즐겨찾기 해제
+    public int FavorOffService(FavoritesDTO favoritesDTO){
+        return  userDAO.FavorOffDAO(favoritesDTO);
     }
 }

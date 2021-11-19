@@ -3,12 +3,15 @@ package com.douzone.final_backend.DAO;
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.DTO.FavoritesDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Slf4j
 @Repository
 public class UserDAO {
     @Autowired
@@ -43,6 +46,17 @@ public class UserDAO {
         return sqlSession.selectOne("storeView", o_sNumber);
     }
 
+    // 즐겨찾기 유무 체크
+    public boolean favorCheck(FavoritesDTO favoritesDTO){
+        System.out.println(sqlSession.selectOne("favorView", favoritesDTO)+"");
+        return sqlSession.selectOne("favorView", favoritesDTO);}
 
+    // 유저 즐겨찾기 추가
+    public int addFavorDAO(FavoritesDTO favoritesDTO){
+        return sqlSession.insert("addFavor", favoritesDTO);}
 
+    // 유저 즐겨찾기 해제
+    public int FavorOffDAO(FavoritesDTO favoritesDTO){
+        return sqlSession.delete("favorOff", favoritesDTO);
+    }
 }
