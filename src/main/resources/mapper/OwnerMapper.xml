@@ -226,4 +226,26 @@
           AND g_status = #{g_status}
           AND g_owner = #{g_owner}
     </select>
+    <select id="getOwner" resultType="com.douzone.final_backend.Bean.OwnerBean">
+        select *
+        from owner
+        where o_sNumber = #{o_sNumber}
+    </select>
+    <select id="total" resultType="int">
+        select sum(r_pay)
+        from reserve
+        where r_status = 3
+          and r_owner = #{o_sNumber}
+    </select>
+    <select id="goods" resultType="int">
+        select count(*)
+        from goods
+        where g_owner = #{o_sNumber}
+    </select>
+    <select id="reserve" resultType="int">
+        select count(*)
+        from reserve
+        where r_owner = #{o_sNumber}
+          and r_status = 1
+    </select>
 </mapper>

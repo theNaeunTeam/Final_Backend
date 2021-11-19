@@ -28,6 +28,9 @@ public class OwnerDTO{
     private String o_time2; // 영업 종료 시간
     private String o_image; // 가게 대표 사진
 
+    private int goods;
+    private int total;
+    private int reserve;
 
     private String checkStatus;
 

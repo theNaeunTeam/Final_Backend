@@ -191,4 +191,21 @@ public class OwnerService {
             return ownerDAO.searchStatus(g);
         }
     }
+
+    public OwnerBean getOwner(String o_sNumber) {
+        return ownerDAO.getOwner(o_sNumber);
+    }
+
+    // 등록한 상품 수
+    public int goods(String o_sNumber) {
+        return ownerDAO.goods(o_sNumber);
+    }
+
+    public int total(String o_sNumber) {
+        return ownerDAO.total(o_sNumber);
+    }
+
+    public int reserve(String o_sNumber) {
+        return ownerDAO.reserve(o_sNumber);
+    }
 }

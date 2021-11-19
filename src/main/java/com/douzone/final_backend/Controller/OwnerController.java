@@ -48,6 +48,26 @@ public class OwnerController {
         return "success";
     }
 
+    // owner Main page
+    @GetMapping
+    public ResponseEntity<?> main(@AuthenticationPrincipal String o_sNumber) {
+        log.info("여기 들어옴" + o_sNumber);
+        OwnerBean owner = ownerService.getOwner(o_sNumber);
+        int total = ownerService.total(o_sNumber);
+        int goods = ownerService.goods(o_sNumber);
+        int reserve = ownerService.reserve(o_sNumber);
+        OwnerDTO responseDTO = OwnerDTO.builder()
+                .o_name(owner.getO_name())
+                .total(total)
+                .goods(goods)
+                .o_latitude(owner.getO_latitude())
+                .o_longitude(owner.getO_longitude())
+                .reserve(reserve)
+                .build();
+        log.info("total : " + total + ", goods : " + goods);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
     // 입점 신청
     @PostMapping("/request")
     public ResponseEntity<?> ownerRequest(OwnerDTO ownerDTO, MultipartFile file) {
@@ -361,7 +381,7 @@ public class OwnerController {
                     .g_status(Integer.parseInt(g_status))
                     .searchInput(searchInput)
                     .build();
-            log.info("stauts 값 : "+g_status);
+            log.info("stauts 값 : " + g_status);
         }
 
         log.info("search Build 성공");
