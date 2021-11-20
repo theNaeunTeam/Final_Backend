@@ -97,4 +97,8 @@ public class UserDAO {
     public List<ReserveDTO> userSearchReserve(ReserveDTO r) {
         return sqlSession.selectList("userSearchReserve", r);
     }
+
+    public List<FavoritesDTO> favorList(String u_id) {
+        return sqlSession.selectList("favorList",u_id);
+    }
 }
