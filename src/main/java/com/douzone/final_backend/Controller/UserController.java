@@ -209,8 +209,9 @@ public class UserController {
 
     // 즐겨찾기 해제
     @PostMapping("/FavorOff")
-    public ResponseEntity<?> FavorOff(@RequestBody FavoritesDTO favoritesDTO) {
+    public ResponseEntity<?> FavorOff(@AuthenticationPrincipal UserDetails userDetails, @RequestBody FavoritesDTO favoritesDTO) {
         log.info("즐찾추-들어온 사업자번호,유저아이디:" + favoritesDTO);
+        favoritesDTO.setF_p_user_id(userDetails.getUsername());
         try {
             int result = userService.FavorOffService(favoritesDTO);
             log.info("즐찾해제api결과:" + result);
@@ -330,5 +331,16 @@ public class UserController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    // user 즐겨찾는 가게 목록
+    @GetMapping("favorList")
+    public ResponseEntity<?> favorList(@AuthenticationPrincipal UserDetails userDetails){
+        String u_id = userDetails.getUsername();
+        // 필요한 정보 -> o_name, o_address, o_time1, o_time2 , o_phone, o_approval
+        List<FavoritesDTO> dto = userService.favorList(u_id);
+
+        log.info("favorList : "+dto);
+
+        return ResponseEntity.ok().body(dto);
+    }
 }
 

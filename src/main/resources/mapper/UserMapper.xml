@@ -100,7 +100,8 @@
                g.g_count
         from reserve as r
                  join goods as g
-        where r.r_u_id = #{r_u_id} and g_code = r.r_g_code
+        where r.r_u_id = #{r_u_id}
+          and g_code = r.r_g_code
         group by r.r_code;
     </select>
 
@@ -163,5 +164,14 @@
           and r.r_u_id = #{r_u_id}
           and g_code = r.r_g_code
         group by r.r_code;
+    </select>
+
+    <select id="favorList" resultType="com.douzone.final_backend.DTO.FavoritesDTO">
+        select o.o_name, o.o_sNumber as f_o_sNumber, o.o_approval, o.o_phone, o.o_address, o.o_time1, o.o_time2
+        from owner as o,
+             favorites as f
+        where f.f_p_user_id = #{u_id}
+          and o.o_sNumber = f.f_o_sNumber
+        group by f.f_o_sNumber;
     </select>
 </mapper>

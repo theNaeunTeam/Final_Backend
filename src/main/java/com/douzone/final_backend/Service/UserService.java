@@ -73,12 +73,20 @@ public class UserService {
 
     // 유저 즐겨찾기 추가 하기
     public int addFavorService(FavoritesDTO favoritesDTO) {
-        return userDAO.addFavorDAO(favoritesDTO);
+        int r =  userDAO.addFavorDAO(favoritesDTO);
+        if(r == 0){
+            throw new RuntimeException("즐겨찾기 추가 실패");
+        }
+        return r;
     }
 
     // 유저 즐겨찾기 해제
     public int FavorOffService(FavoritesDTO favoritesDTO) {
-        return userDAO.FavorOffDAO(favoritesDTO);
+        int r = userDAO.FavorOffDAO(favoritesDTO);
+        if(r == 0){
+            throw new RuntimeException("즐겨찾기 해제 실패");
+        }
+        return r;
     }
 
     public UserBean userData(String u_id) {
@@ -130,5 +138,9 @@ public class UserService {
         } else { // 상태 입력 됐을때
             return userDAO.userSearchReserve(r);
         }
+    }
+
+    public List<FavoritesDTO> favorList(String u_id) {
+        return userDAO.favorList(u_id);
     }
 }
