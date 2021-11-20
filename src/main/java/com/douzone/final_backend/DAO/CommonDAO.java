@@ -1,5 +1,6 @@
 package com.douzone.final_backend.DAO;
 
+import com.douzone.final_backend.DTO.ShopListDTO;
 import com.douzone.final_backend.DTO.ShoppingCartDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -17,6 +18,10 @@ public class CommonDAO {
 
     public ShoppingCartDTO getShoppingCart(String g_code) {
         return sqlSession.selectOne("getShoppingCart", g_code);
+    }
+
+    public List<ShopListDTO> getShopList(ShopListDTO s){
+        return sqlSession.selectList("getShopList", s);
     }
 
 }
