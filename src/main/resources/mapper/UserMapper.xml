@@ -174,4 +174,26 @@
           and o.o_sNumber = f.f_o_sNumber
         group by f.f_o_sNumber;
     </select>
+
+    <!-- 예약 신청 시 예약 테이블에 추가 -->
+    <insert id="insertReserve" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
+        insert into reserve(r_u_id, r_g_code, r_firstTime, r_count, r_customOrder, r_owner, r_pay)
+        values (#{r_u_id}, #{r_g_code}, #{r_firstTime}, #{r_count}, #{r_customOrder}, #{r_owner}, #{r_pay})
+    </insert>
+    <!-- insert 되면 goods 테이블에 해당 상품 수량 빼기 -->
+    <update id="updateGoodsCount" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
+        update goods
+        set g_count = g_count - #{r_count}
+        where g_code = #{r_g_code}
+    </update>
+
+    <!-- 상품수량이 0이하면 판매 완료로 상태 바꾸기 -->
+    <update id="updateGoodsStatus" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
+        update goods
+        set g_status = if(g_count = 0 AND g_status != 2, 1, g_status)
+        where g_code = #{r_g_code}
+    </update>
+    <select id="noShowCount" resultType="int">
+        select u_noShowCnt from user where u_id=#{u_id}
+    </select>
 </mapper>

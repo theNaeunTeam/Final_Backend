@@ -333,14 +333,43 @@ public class UserController {
 
     // user 즐겨찾는 가게 목록
     @GetMapping("favorList")
-    public ResponseEntity<?> favorList(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> favorList(@AuthenticationPrincipal UserDetails userDetails) {
         String u_id = userDetails.getUsername();
         // 필요한 정보 -> o_name, o_address, o_time1, o_time2 , o_phone, o_approval
         List<FavoritesDTO> dto = userService.favorList(u_id);
 
-        log.info("favorList : "+dto);
+        log.info("favorList : " + dto);
 
         return ResponseEntity.ok().body(dto);
+    }
+
+    @PostMapping("orderConfirm")
+    public ResponseEntity<?> orderConfirm(@AuthenticationPrincipal UserDetails userDetails, @RequestBody List<ReserveDTO> reserveDTO) {
+        // r_u_id, r_count, r_g_code, r_customOrder, r_pay, r_owner, r_firstTime,
+        log.info("들어오는 값 : " + reserveDTO);
+        String u_id = userDetails.getUsername();
+
+        int noShowCount = userService.noShowCount(u_id);
+        log.info("노쇼 카운트 : " + noShowCount);
+        if (noShowCount < 5) {
+            try {// 테이블에 insert, goods 테이블에 상품수 빼고 상품수 0 이면 판매완료로 상태값 바꾸기
+                for (ReserveDTO reserve : reserveDTO) {
+                    log.info("for문 안");
+                    userService.insertReserve(reserve);
+                }
+                return ResponseEntity.ok().body(true);
+            } catch (Exception e) {
+                ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+                return ResponseEntity
+                        .badRequest()
+                        .body(responseDTO);
+            }
+        }else {
+            return ResponseEntity
+                    .ok()
+                    .body(false);
+        }
+
     }
 }
 

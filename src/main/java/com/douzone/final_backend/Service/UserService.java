@@ -73,8 +73,8 @@ public class UserService {
 
     // 유저 즐겨찾기 추가 하기
     public int addFavorService(FavoritesDTO favoritesDTO) {
-        int r =  userDAO.addFavorDAO(favoritesDTO);
-        if(r == 0){
+        int r = userDAO.addFavorDAO(favoritesDTO);
+        if (r == 0) {
             throw new RuntimeException("즐겨찾기 추가 실패");
         }
         return r;
@@ -83,7 +83,7 @@ public class UserService {
     // 유저 즐겨찾기 해제
     public int FavorOffService(FavoritesDTO favoritesDTO) {
         int r = userDAO.FavorOffDAO(favoritesDTO);
-        if(r == 0){
+        if (r == 0) {
             throw new RuntimeException("즐겨찾기 해제 실패");
         }
         return r;
@@ -142,5 +142,26 @@ public class UserService {
 
     public List<FavoritesDTO> favorList(String u_id) {
         return userDAO.favorList(u_id);
+    }
+
+    @Transactional
+    public void insertReserve(ReserveDTO reserve) {
+        log.info("insertReserve 안");
+        int r = userDAO.insertReserve(reserve); // 데이터 삽입
+        log.info("insert"+r);
+
+        int r1 = userDAO.updateGoodsCount(reserve); // goods 테이블 상품수 빼기. 수량이 0이상이여야함
+        log.info("update1"+r1);
+
+        int r2 = userDAO.updateGoodsStatus(reserve); //수량 확인하고 수량 0이면 판매완료로 바꾸기
+
+        if(r != 1 || r1 != 1 || r2 != 1){
+            throw new RuntimeException("예약 데이터 삽입 또는 수량 줄이기 실패");
+        }
+        log.info("삽입/상품수량빼기/상태 변화" + r+"/"+r1);
+    }
+
+    public int noShowCount(String u_id) {
+        return userDAO.noShowCount(u_id);
     }
 }

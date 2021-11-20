@@ -126,7 +126,7 @@ public class OwnerService {
                 int r = ownerDAO.resNoCount(reserveDTO);
                 int r1 = ownerDAO.reseNoShowStatus(reserveDTO);
                 int r2 = ownerDAO.resNoShowCount(reserveDTO);
-                int r3 = ownerDAO.resNSSt(reserveDTO);
+                int r3 = ownerDAO.reNoSt(reserveDTO);
                 log.info("r_code" + reserveDTO.getR_code());
                 log.info("" + r + "/" + r1 + "/" + r2 + "/" + r3);
                 if (r == 0 || r1 == 0 || r2 == 0 || r3 == 0) {
