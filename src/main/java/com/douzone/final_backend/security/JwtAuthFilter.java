@@ -2,9 +2,7 @@ package com.douzone.final_backend.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,12 +42,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 log.info("u_id : "+u_id);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(tokenProvider.validateAndGetUserId(token));
                 log.info("uuuuuuuuu : "+userDetails);
-                AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        AuthorityUtils.NO_AUTHORITIES //권한
-                );
-//                UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
+//                AbstractAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+//                        userDetails,
+//                        null,
+//                        AuthorityUtils.NO_AUTHORITIES //권한
+//                );
+                UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(auth);
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();

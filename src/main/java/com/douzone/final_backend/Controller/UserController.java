@@ -2,10 +2,12 @@ package com.douzone.final_backend.Controller;
 
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import com.douzone.final_backend.Service.UserService;
 import com.douzone.final_backend.security.TokenProvider;
@@ -228,7 +230,7 @@ public class UserController {
         try {
             // user 정보가 없을 시 예외 발생
             UserBean user = userService.userData(u_id);
-            log.info("user 정보 "+user);
+            log.info("user 정보 " + user);
             int save = userService.userSave(u_id);
             int reserve = userService.userReserve(u_id);
 
@@ -246,6 +248,86 @@ public class UserController {
                     .badRequest()
                     .body(responseDTO);
         }
+    }
+
+
+    // 해당 유저 예약 리스트
+    @GetMapping("reserveList")
+    public ResponseEntity<?> reserveList(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("user reserveList" + userDetails);
+        String u_id = userDetails.getUsername();
+        try {
+            List<ReserveDTO> reserve = userService.reserveList(u_id);
+            log.info("user Reserve List : " + reserve);
+            return ResponseEntity.ok().body(reserve);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(false);
+        }
+    }
+
+    // 유저 예약 취소
+    @PatchMapping("changeReserveStatus")
+    public ResponseEntity<?> changeReserveStatus(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ReserveDTO reserveDTO) {
+        log.info("들어온 r_code : " + reserveDTO.getR_code());
+        String u_id = userDetails.getUsername();
+        reserveDTO.setR_u_id(u_id);
+
+        try {
+            ReserveBean reserve = userService.getReserve(reserveDTO);
+
+            ReserveDTO responseDTO = ReserveDTO.builder()
+                    .r_count(reserve.getR_count())
+                    .r_code(reserve.getR_code())
+                    .r_g_code(reserve.getR_g_code())
+                    .r_u_id(reserve.getR_u_id())
+                    .r_status(reserve.getR_status())
+                    .build();
+            // r_code 로 검색하고 r_status  1 일 때만 취소됨
+            log.info("빌드한 responseDTO : " + responseDTO);
+
+            userService.changeReserveStatus(responseDTO);
+
+            return ResponseEntity.ok().body(true);
+        } catch (Exception e) {
+            log.error("예약 취소하기에서 에러" + e.getMessage());
+
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+
+    }
+
+    // user 예약 현황에서 검색
+    @GetMapping("searchReserve")
+    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
+        log.info("유저 예약 현황에서 검색 : " + g_category + r_status + searchInput);
+
+        String u_id = userDetails.getUsername();
+        ReserveDTO r;
+        if (r_status.equals("")) {
+            r = ReserveDTO.builder()
+                    .g_category((g_category))
+                    .searchInput(searchInput)
+                    .r_status(9999)
+                    .r_u_id(u_id)
+                    .build();
+        } else {
+            r = ReserveDTO.builder()
+                    .g_category(g_category)
+                    .searchInput(searchInput)
+                    .r_status(Integer.parseInt(r_status))
+                    .r_u_id(u_id)
+                    .build();
+        }
+        log.info("빌드한 r : " + r);
+
+        List<ReserveDTO> responseDTO = userService.searchReserve(r);
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 
 }

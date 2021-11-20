@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ReserveDTO {
 
     private int r_code; // 예약 변호
@@ -34,4 +35,7 @@ public class ReserveDTO {
 
     //    private GoodsDTO goodsDTO;
     private String searchInput;
+
+
+
 }

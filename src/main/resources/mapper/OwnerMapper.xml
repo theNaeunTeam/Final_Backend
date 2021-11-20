@@ -137,7 +137,6 @@
         set g_status = 2
         where g_code = #{g_code}
     </update>
-
     <!-- 예약 번호로 예약정보 부르기 -->
     <select id="reserveOne" resultType="com.douzone.final_backend.Bean.ReserveBean">
         select *
@@ -171,8 +170,8 @@
         select r.r_code,
                r.r_u_id,
                r.r_count,
-               r_firstTime,
-               r_g_code,
+               r.r_firstTime,
+               r.r_g_code,
                r.r_status,
                r.r_customOrder,
                g.g_name,
@@ -188,6 +187,7 @@
           and r.r_status = #{r_status}
           and g.g_name LIKE '%${searchInput}%'
           and r.r_owner = #{r_owner}
+          and g_code = r.r_g_code
         group by r.r_code;
     </select>
     <!-- 예약 검색 상태 선택 안했을 때  -->
@@ -195,8 +195,8 @@
         select r.r_code,
                r.r_u_id,
                r.r_count,
-               r_firstTime,
-               r_g_code,
+               r.r_firstTime,
+               r.r_g_code,
                r.r_status,
                r.r_customOrder,
                g.g_name,
@@ -211,6 +211,7 @@
         where g.g_category LIKE '%${g_category}%'
           and g.g_name LIKE '%${searchInput}%'
           and r.r_owner = #{r_owner}
+          and g_code = r.r_g_code
         group by r.r_code;
     </select>
 
@@ -254,4 +255,11 @@
         where r_owner = #{o_sNumber}
           and r_status = 1
     </select>
+
+    <!-- 판매 중지 됐을 때 예약중인거 예약 거절로 변경 -->
+    <update id="deleteStatus" parameterType="int">
+        update reserve
+        set r_status = 2
+        where r_g_code = #{g_code}
+    </update>
 </mapper>

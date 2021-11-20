@@ -2,14 +2,17 @@ package com.douzone.final_backend.Service;
 
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
+import com.douzone.final_backend.DTO.ReserveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -92,5 +95,40 @@ public class UserService {
 
     public int userReserve(String u_id) {
         return userDAO.userReserve(u_id);
+    }
+
+    public List<ReserveDTO> reserveList(String u_id) {
+        return userDAO.reserveList(u_id);
+    }
+
+    public ReserveBean getReserve(ReserveDTO reserveDTO) {
+        return userDAO.getReserve(reserveDTO);
+    }
+
+    @Transactional
+    public void changeReserveStatus(ReserveDTO responseDTO) {
+        if (responseDTO.getR_status() == 1 || responseDTO.getR_status() == 0) {
+            // 예약상태 5 취소로 변경
+            int r = userDAO.changeReserveStatus(responseDTO);
+            // goods에 남은 수량 더하기
+            int r1 = ownerDAO.resNoCount(responseDTO);
+            // goods 수량 확인하고 판매중으로 변경
+            int r2 = ownerDAO.reNoSt(responseDTO);
+
+            if (r == 0 || r1 == 0 || r2 == 0) {
+                throw new RuntimeException("예약 취소 실패");
+            }
+        } else {
+            throw new RuntimeException("예약 승인대기/승인 상태에서만 취소할 수 있습니다.");
+        }
+    }
+
+    public List<ReserveDTO> searchReserve(ReserveDTO r) {
+        // 상태가 입력안됐을 때
+        if (r.getR_status() == 9999) {
+            return userDAO.searchReserve(r);
+        } else { // 상태 입력 됐을때
+            return userDAO.userSearchReserve(r);
+        }
     }
 }

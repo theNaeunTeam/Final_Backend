@@ -28,13 +28,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/common/shoppingcart","/static/**", "/", "/test", "/user/userlogin", "/user/userjoin", "/owner/register", "/master/masterlogin").permitAll()
-                .antMatchers("/user/**").permitAll()
-//                .antMatchers("/user/**").hasAnyRole("USER","MASTER")
+                .antMatchers("/common/shoppingcart","/static/**", "/", "/test", "/user/userlogin", "/user/userjoin", "/owner/register","/owner/ownerlogin", "/master/masterlogin").permitAll()
+//                .antMatchers("/user/**").permitAll()
+                .antMatchers("/user/**").hasAnyRole("USER","MASTER")
 //                .antMatchers("/master/**").permitAll()
                 .antMatchers("/master/**").hasAnyRole("MASTER")
-//                .antMatchers("/owner/**").hasAnyRole("OWNER")
-                .antMatchers("/owner/**").permitAll()
+                .antMatchers("/owner/**").hasAnyRole("OWNER")
+//                .antMatchers("/owner/**").permitAll()
                 .anyRequest()
                 .authenticated();
         http.addFilterAfter(

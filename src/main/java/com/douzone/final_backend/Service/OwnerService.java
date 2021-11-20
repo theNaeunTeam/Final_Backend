@@ -148,9 +148,7 @@ public class OwnerService {
         return ownerDAO.allGoodList();
     }
 
-    public void changeStatus(int g_code) {
-        ownerDAO.changeStatus(g_code);
-    }
+
 
     public void deleteGoods(GoodsDTO goodsDTO) {
         int r = ownerDAO.deleteGoods(goodsDTO);
@@ -210,5 +208,13 @@ public class OwnerService {
     public int reserve(String o_sNumber) {
 
         return ownerDAO.reserve(o_sNumber);
+    }
+
+    public void changeStatus(int g_code) {
+        ownerDAO.changeStatus(g_code);
+    }
+
+    public void deleteStatus(int g_code) {
+        ownerDAO.deleteStatus(g_code);
     }
 }

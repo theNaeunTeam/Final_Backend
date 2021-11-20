@@ -82,4 +82,86 @@
         where r_status = 1
           and r_u_id = #{u_id}
     </select>
+
+    <!-- 해당 유저의 예약 리스트 -->
+    <select id="userReserveList" resultType="com.douzone.final_backend.DTO.ReserveDTO">
+        select r.r_code,
+               r.r_u_id,
+               r.r_count,
+               r.r_firstTime,
+               r.r_g_code,
+               r.r_status,
+               r.r_customOrder,
+               r.r_pay,
+               g.g_name,
+               g.g_expireDate,
+               g.g_category,
+               g.g_status,
+               g.g_count
+        from reserve as r
+                 join goods as g
+        where r.r_u_id = #{r_u_id} and g_code = r.r_g_code
+        group by r.r_code;
+    </select>
+
+    <select id="getReserve" resultType="com.douzone.final_backend.Bean.ReserveBean">
+        select *
+        from reserve
+        where r_code = #{r_code}
+          and r_u_id = #{r_u_id};
+    </select>
+
+    <update id="changeReserveStatus" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
+        update reserve
+        set r_status = 5
+        where r_code = #{r_code}
+    </update>
+
+    <!-- 예약 상태 선택 안했을 때 -->
+    <select id="searchReserveU" resultType="com.douzone.final_backend.DTO.ReserveDTO">
+        select r.r_code,
+               r.r_u_id,
+               r.r_count,
+               r.r_firstTime,
+               r.r_g_code,
+               r.r_status,
+               r.r_customOrder,
+               r.r_pay,
+               g.g_name,
+               g.g_expireDate,
+               g.g_category,
+               g.g_status,
+               g.g_count
+        from reserve as r
+                 join goods as g
+        where g.g_category LIKE '%${g_category}%'
+          and g.g_name LIKE '%${searchInput}%'
+          and r.r_u_id = #{r_u_id}
+          and g_code = r.r_g_code
+        group by r.r_code;
+    </select>
+    <!-- 예약 상태 선택 했을 때 -->
+    <select id="userSearchReserve" resultType="com.douzone.final_backend.DTO.ReserveDTO">
+        select r.r_code,
+               r.r_u_id,
+               r.r_count,
+               r.r_firstTime,
+               r.r_g_code,
+               r.r_status,
+               r.r_customOrder,
+               r.r_pay,
+               g.g_name,
+               g.g_expireDate,
+               g.g_category,
+               g.g_status,
+               g.g_count
+        from reserve as r
+                 join goods as g
+        where g.g_category LIKE '%${g_category}%'
+          and r.r_status = #{r_status}
+          and g.g_name LIKE '%${searchInput}%'
+          and r.r_u_id = #{r_u_id}
+          and g_code = r.r_g_code
+        group by r.r_code;
+    </select>
 </mapper>

@@ -2,8 +2,10 @@ package com.douzone.final_backend.DAO;
 
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
+import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DTO.FavoritesDTO;
+import com.douzone.final_backend.DTO.ReserveDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,5 +74,27 @@ public class UserDAO {
 
     public int userReserve(String u_id) {
         return sqlSession.selectOne("userReserve", u_id);
+    }
+
+    public List<ReserveDTO> reserveList(String u_id) {
+        return sqlSession.selectList("userReserveList", u_id);
+    }
+
+    public ReserveBean getReserve(ReserveDTO reserveDTO) {
+        return sqlSession.selectOne("getReserve", reserveDTO);
+    }
+
+    public int changeReserveStatus(ReserveDTO responseDTO) {
+        return sqlSession.update("changeReserveStatus", responseDTO);
+    }
+
+    // 예약 상태 입력 안됐을 때
+    public List<ReserveDTO> searchReserve(ReserveDTO r) {
+        return sqlSession.selectList("searchReserveU", r);
+    }
+
+    // 예약 상태 입력 됐을 때
+    public List<ReserveDTO> userSearchReserve(ReserveDTO r) {
+        return sqlSession.selectList("userSearchReserve", r);
     }
 }

@@ -98,9 +98,6 @@ public class OwnerDAO {
         return sqlSession.selectList("allGoodsList");
     }
 
-    public void changeStatus(int g_code) {
-        sqlSession.update("changeStatus", g_code);
-    }
 
     public int deleteGoods(GoodsDTO goodsDTO) {
         return sqlSession.update("deleteGoods", goodsDTO);
@@ -152,4 +149,12 @@ public class OwnerDAO {
     }
 
 
+    //스케줄러가 유통기한 지나면 상태 변환
+    public void changeStatus(int g_code) {
+        sqlSession.update("changeStatus", g_code);
+    }
+
+    public void deleteStatus(int g_code) {
+        sqlSession.update("deleteStatus",g_code);
+    }
 }
