@@ -306,7 +306,7 @@ public class UserController {
     @GetMapping("searchReserve")
     public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
         log.info("유저 예약 현황에서 검색 : " + g_category + r_status + searchInput);
-
+ 
         String u_id = userDetails.getUsername();
         ReserveDTO r;
         if (r_status.equals("")) {
