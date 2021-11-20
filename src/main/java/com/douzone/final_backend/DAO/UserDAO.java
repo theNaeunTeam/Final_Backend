@@ -101,4 +101,19 @@ public class UserDAO {
     public List<FavoritesDTO> favorList(String u_id) {
         return sqlSession.selectList("favorList",u_id);
     }
+
+    public int insertReserve(ReserveDTO reserve){
+        return sqlSession.insert("insertReserve",reserve);
+    }
+    public int updateGoodsCount(ReserveDTO reserve) {
+        return sqlSession.update("updateGoodsCount",reserve);
+    }
+
+    public int updateGoodsStatus(ReserveDTO reserve) {
+        return sqlSession.update("updateGoodsStatus",reserve);
+    }
+
+    public int noShowCount(String u_id) {
+        return sqlSession.selectOne("noShowCount",u_id);
+    }
 }
