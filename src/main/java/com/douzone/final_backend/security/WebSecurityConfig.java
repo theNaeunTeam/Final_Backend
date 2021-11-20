@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/common/shoppingcart","/static/**", "/", "/test", "/user/userlogin", "/user/userjoin", "/owner/register","/owner/ownerlogin", "/master/masterlogin").permitAll()
+                .antMatchers("/common/shoppingcart","/static/**", "/", "/test", "/user/userlogin", "/user/userjoin", "/owner/register","/owner/ownerlogin", "/master/masterlogin","/user/storeView","/user/storeGoodsView").permitAll()
 //                .antMatchers("/user/**").permitAll()
                 .antMatchers("/user/**").hasAnyRole("USER","MASTER")
 //                .antMatchers("/master/**").permitAll()
