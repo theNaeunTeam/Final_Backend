@@ -235,7 +235,7 @@
         where o_sNumber = #{o_sNumber}
     </select>
     <select id="total" resultType="int">
-        select sum(r_pay)
+        select ifnull(sum(r_pay),0)
         from reserve
         where r_status = 3
           and r_owner = #{o_sNumber}
