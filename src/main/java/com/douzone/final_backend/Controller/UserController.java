@@ -10,6 +10,9 @@ import com.douzone.final_backend.Service.UserService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.Charset;
 import java.util.List;
 
 @Slf4j
@@ -215,6 +219,57 @@ public class UserController {
         return ResponseEntity.ok().body(dto);
     }
 
+    // user 회원정보 불러오기
+    @GetMapping("userData")
+    public ResponseEntity<?> userData(@AuthenticationPrincipal UserDetails userDetails){
+        String u_id = userDetails.getUsername();
+        // 필요한 정보 -> u_id, u_pw, u_cellPhone, u_email, u_gender, u_age
+        try {
+
+            UserBean user = userService.userData(u_id);
+            log.info("user 정보"+ user);
+
+            UserDTO responseDTO = UserDTO.builder()
+                    .u_id(user.getU_id())
+                    .u_cellPhone(user.getU_cellPhone())
+                    .u_email(user.getU_email())
+                    .u_gender(user.getU_gender())
+                    .u_age(user.getU_age())
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 회원 정보 수정
+    @PostMapping("userUpdate")
+    public ResponseEntity<?> userUpdate(@RequestBody UserDTO userDTO){
+        log.info("회원정보 수정 들어옴  :"+userDTO);
+        try {
+            String encodePW = passwordEncoder.encode(userDTO.getU_pw());
+            UserBean user = UserBean.builder()
+                    .u_id(userDTO.getU_id())
+                    .u_pw(encodePW)
+                    .u_cellPhone(userDTO.getU_cellPhone())
+                    .u_email(userDTO.getU_email())
+                    .u_gender(userDTO.getU_gender())
+                    .u_age(userDTO.getU_age())
+                    .build();
+            int res = userService.update(user);
+            log.info("업데이트 결과:"+res);
+            return ResponseEntity.ok().body(res);
+        } catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
     @PostMapping("orderConfirm")
     public ResponseEntity<?> orderConfirm(@AuthenticationPrincipal UserDetails userDetails, @RequestBody List<ReserveDTO> reserveDTO) {
         // r_u_id, r_count, r_g_code, r_customOrder, r_pay, r_owner, r_firstTime,
@@ -241,7 +296,30 @@ public class UserController {
                     .ok()
                     .body(false);
         }
+    }
+
+    //회원탈퇴
+    @PostMapping("userDelete")
+    public ResponseEntity<?> userDelete(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserDTO userDTO, String u_pw){
+        String u_id = userDetails.getUsername();
+        UserBean user = userService.userDelete(
+                u_id,
+                userDTO.getU_pw(),
+                passwordEncoder
+        );
+        log.info("회원탈퇴user : " + userDTO.getU_pw() + user);
+
+        if (user != null) {
+            return ResponseEntity.ok().body(true);
+        } else {
+            return ResponseEntity.ok().body(false);
+        }
 
     }
+
+
+
+
+
 }
 

@@ -8,6 +8,7 @@ import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,6 +90,7 @@ public class UserService {
         return r;
     }
 
+    // 유저 회원정보
     public UserBean userData(String u_id) {
 
         if (userDAO.userData(u_id) == null) {
@@ -164,4 +166,32 @@ public class UserService {
     public int noShowCount(String u_id) {
         return userDAO.noShowCount(u_id);
     }
+
+    // 회원정보 업데이트
+    public int update(final UserBean userBean){
+        if (userBean == null || userBean.getU_id() == null) {
+            log.warn("데이터 누락");
+            throw new RuntimeException("데이터 누락");
+        }
+        return userDAO.updateUser(userBean);
+    }
+
+    // 회원 탈퇴
+        public UserBean userDelete(final String u_id, final String u_pw, PasswordEncoder encoder) {
+            final UserBean originalUser = userDAO.findByUId(u_id);
+            log.info("PW : " + encoder.matches(u_pw, originalUser.getU_pw()));
+            log.info("PW?? " + originalUser.getU_pw());
+
+            if (originalUser != null && encoder.matches(u_pw, originalUser.getU_pw())) {
+                log.info("originalUser : " + originalUser);
+                //회원 탈퇴로 상태 수정DAO
+                userDAO.userDelete(u_id);
+                return originalUser;
+            }
+            return null;
+        }
+
+
+
+
 }

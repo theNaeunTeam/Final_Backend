@@ -202,4 +202,24 @@
     <select id="noShowCount" resultType="int">
         select u_noShowCnt from user where u_id=#{u_id}
     </select>
+
+    <update id="updateUser" parameterType="com.douzone.final_backend.Bean.UserBean">
+        update user
+        set u_pw = #{u_pw},
+            u_cellPhone = #{u_cellPhone},
+            u_email = #{u_email},
+            u_gender = #{u_gender},
+            u_age = #{u_age}
+        where u_id = #{u_id}
+    </update>
+
+    <update id="deleteUser" parameterType="String">
+        update user
+        set u_status = 2
+        where  u_id = #{u_id}
+    </update>
+
+
+
+
 </mapper>
