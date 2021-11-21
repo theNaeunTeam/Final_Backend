@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -312,6 +313,20 @@ public class CommonController {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .error("masterLoing Failed")
                     .build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    @GetMapping("/getCategory")
+    public ResponseEntity<?> getCategory(@RequestParam String g_owner) {
+        try {
+            HashMap<String, Object> list = commonService.getCategory(g_owner);
+            list.put("g_owner", g_owner);
+            return ResponseEntity.ok().body(list);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
                     .body(responseDTO);

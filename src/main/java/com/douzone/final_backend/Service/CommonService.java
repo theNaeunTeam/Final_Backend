@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -20,8 +21,12 @@ public class CommonService {
         return commonDAO.getShoppingCart(g_code);
     }
 
-    public List<ShopListDTO> getShopList(ShopListDTO s){
+    public List<ShopListDTO> getShopList(ShopListDTO s) {
         return commonDAO.getShopList(s);
+    }
+
+    public HashMap<String, Object> getCategory(String g_owner) {
+        return commonDAO.getCategory(g_owner);
     }
 
 }
