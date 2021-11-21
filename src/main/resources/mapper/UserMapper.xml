@@ -212,7 +212,7 @@
 
     <update id="deleteUser" parameterType="String">
         update user
-        set u_status = 2
+        set u_status = 1
         where  u_id = #{u_id}
     </update>
 
