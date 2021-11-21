@@ -12,9 +12,6 @@ import com.douzone.final_backend.Service.OwnerService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,80 +66,6 @@ public class OwnerController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    // 입점 신청
-    @PostMapping("/request")
-    public ResponseEntity<?> ownerRequest(OwnerDTO ownerDTO, MultipartFile file) {
-        try {
-            String image = s3Service.upload(file);
-            ownerDTO.setO_image(image);
-
-            String encodePW = passwordEncoder.encode(ownerDTO.getO_pw());
-            OwnerBean owner = OwnerBean.builder()
-                    .o_sNumber(ownerDTO.getO_sNumber())
-                    .o_pw(encodePW)
-                    .o_address(ownerDTO.getO_address())
-                    .o_phone(ownerDTO.getO_phone())
-                    .o_cellPhone(ownerDTO.getO_cellPhone())
-                    .o_image(ownerDTO.getO_image())
-                    .o_name(ownerDTO.getO_name())
-                    .o_time1(ownerDTO.getO_time1())
-                    .o_time2(ownerDTO.getO_time2())
-                    .o_latitude(ownerDTO.getO_latitude())
-                    .o_longitude(ownerDTO.getO_longitude())
-                    .build();
-            ownerService.create(owner);
-
-            log.info("owner 입점 신청 성공");
-            return ResponseEntity.ok().body(true);
-        } catch (Exception e) {
-            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-    }
-
-
-    // 가게 로그인
-    @PostMapping("/ownerlogin")
-    public ResponseEntity<?> ownerlogin(@RequestBody OwnerDTO ownerDTO) {
-        log.info("들어온 정보 : " + ownerDTO);
-        OwnerBean owner = ownerService.getByCredentials(
-                ownerDTO.getO_sNumber(),
-                ownerDTO.getO_pw(),
-                passwordEncoder
-        );
-        log.info(ownerDTO.getO_pw());
-
-        if (owner != null) {
-            final String id = owner.getO_sNumber() + "&" + "OWNER";
-            final String token = tokenProvider.create(id);
-            log.info(token);
-
-            final OwnerDTO responseOwnerDTO = OwnerDTO.builder()
-                    .o_sNumber(owner.getO_sNumber())
-                    .o_approval(owner.getO_approval())
-                    .o_pw(owner.getO_pw())
-                    .token(token)
-                    .build();
-            log.info("로그인 성공");
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-            headers.add("X-AUTH-TOKEN", token);
-            return new ResponseEntity<>(responseOwnerDTO, headers, HttpStatus.OK);
-//            return ResponseEntity.ok().body(responseOwnerDTO);
-        } else {
-            ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("Login Failed")
-                    .build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-
-
-    }
 
     @PostMapping("/addGoods")
     public ResponseEntity<?> addGoods(GoodsDTO goodsDTO, MultipartFile file) throws IOException {

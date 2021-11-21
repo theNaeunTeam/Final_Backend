@@ -1,23 +1,16 @@
 package com.douzone.final_backend.Controller;
 
-import com.douzone.final_backend.Bean.MasterBean;
-import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Bean.OwnerBean;
-import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.Bean.UserBean;
-import com.douzone.final_backend.DTO.MasterDTO;
+import com.douzone.final_backend.Common.ResponseDTO;
+import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.Service.MasterService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -77,45 +70,8 @@ public class MasterController {
                     .body(responseDTO);
         }
 
-
-
-
     }
 
-
-    // 마스터 로그인 true, false
-    @PostMapping("masterlogin")
-    public ResponseEntity<?> masterLogin(@RequestBody MasterDTO masterDTO) {
-        log.info("masterDTO : " + masterDTO);
-        MasterBean master = masterService.login(masterDTO);
-//        MasterDTO master = masterService.findMaster(masterDTO);
-        log.info("master ??" + master);
-        if (master != null) {
-            final String id = master.getM_id() + "&MASTER";
-            final String token = tokenProvider.create(id);
-            log.info(token);
-            log.info("master login success");
-            List<String> list = new ArrayList<>();
-            list.add("ROLE_MASTER");
-            final MasterDTO responseDTO = masterDTO.builder()
-                    .token(token)
-                    .roles(list)
-                    .build();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-            headers.add("X-AUTH-TOKEN", token);
-
-            return new ResponseEntity<>(responseDTO, headers, HttpStatus.OK);
-
-        } else {
-            ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("masterLoing Failed")
-                    .build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-    }
 
     // 전체 회원 리스트 출력
     @GetMapping("userList")
