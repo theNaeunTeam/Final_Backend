@@ -31,13 +31,7 @@
 
     <!-- 해당 가게 클릭시 판매중인 상품 리스트 보기-->
     <select id="storeGoodsView" resultType="com.douzone.final_backend.Bean.GoodsBean">
-        select *,
-               count(case when g_category = '가공식품' then 1 end) as 'gagong',
-               count(case when g_category = '신선식품' then 1 end) as 'fresh',
-               count(case when g_category = '마실것' then 1 end) as 'drink',
-               count(case when g_category = '냉동식품' then 1 end) as 'freeze',
-               count(case when g_category = '조리/반조리' then 1 end) as 'cooked',
-               count(case when g_category = '식품외 기타' then 1 end) as 'other'
+        select *
         from goods
         where g_owner = #{o_sNumber}
           and g_status = 0
