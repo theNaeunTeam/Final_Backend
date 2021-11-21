@@ -116,4 +116,20 @@ public class UserDAO {
     public int noShowCount(String u_id) {
         return sqlSession.selectOne("noShowCount",u_id);
     }
+
+    // 유저정보 업데이트
+    public int updateUser(UserBean userBean) {return sqlSession.update("updateUser", userBean);}
+
+    // 유저 정보 삭제
+    public void userDelete(final String u_id){
+        log.info("삭제유저 아이디 :"+ u_id);
+        int res = sqlSession.update("deleteUser",u_id);
+
+        log.info("유저 탈퇴 상태변경 결과:"+res);
+    }
+
+
+
+
+
 }
