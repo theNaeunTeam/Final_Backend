@@ -4,6 +4,7 @@ import com.douzone.final_backend.Bean.MasterBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DAO.MasterDAO;
+import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.MasterDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,7 @@ public class MasterService {
         return masterDAO.userAll();
     }
 
+
     public List<OwnerBean> findApproval() {
         return masterDAO.findApproval();
     }
@@ -84,5 +86,10 @@ public class MasterService {
 
 
 
+
+
+    public List<BannerDTO> getBanner(){
+        return masterDAO.getBanner();
+    }
 
 }

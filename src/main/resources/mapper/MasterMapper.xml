@@ -37,6 +37,7 @@
         from user
     </select>
 
+
     <select id="findApproval" resultType="com.douzone.final_backend.Bean.OwnerBean">
         select *
         from owner
@@ -73,6 +74,10 @@
         where o_sNumber = #{o_sNumber}
     </update>
 
+
+    <select id="getBanner" resultType="com.douzone.final_backend.DTO.BannerDTO">
+    select * from banner
+    </select>
 
 
 </mapper>

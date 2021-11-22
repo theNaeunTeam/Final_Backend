@@ -5,7 +5,9 @@ import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DTO.GoodsDTO;
+import com.douzone.final_backend.DTO.OwnerPageDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.SaleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -149,7 +151,6 @@ public class OwnerService {
     }
 
 
-
     public void deleteGoods(GoodsDTO goodsDTO) {
         int r = ownerDAO.deleteGoods(goodsDTO);
     }
@@ -192,7 +193,7 @@ public class OwnerService {
         }
     }
 
-    public OwnerBean getOwner(String o_sNumber) {
+    public OwnerPageDTO getOwner(String o_sNumber) {
         return ownerDAO.getOwner(o_sNumber);
     }
 
@@ -216,5 +217,17 @@ public class OwnerService {
 
     public void deleteStatus(int g_code) {
         ownerDAO.deleteStatus(g_code);
+    }
+
+    public List<SaleDTO> getDay(String o_sNumber) {
+        return ownerDAO.getDay(o_sNumber);
+    }
+
+    public List<SaleDTO> getMon(String o_sNumber) {
+        return ownerDAO.getMon(o_sNumber);
+    }
+
+    public List<SaleDTO> getYear(String o_sNumber) {
+        return ownerDAO.getYear(o_sNumber);
     }
 }

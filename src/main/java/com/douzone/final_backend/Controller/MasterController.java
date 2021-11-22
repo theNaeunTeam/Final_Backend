@@ -3,6 +3,8 @@ package com.douzone.final_backend.Controller;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Common.ResponseDTO;
+import com.douzone.final_backend.Common.S3Service;
+import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
 import com.douzone.final_backend.Service.MasterService;
 import com.douzone.final_backend.security.TokenProvider;
@@ -12,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -24,6 +28,9 @@ public class MasterController {
     private MasterService masterService;
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
+    private S3Service s3Service;
 
     @GetMapping("/tokencheck")
     public String UserTokenCheck() {
@@ -51,7 +58,7 @@ public class MasterController {
         log.info("requestOK ok?no?" + ownerDTO.getCheckStatus());
         String checkStatus = ownerDTO.getCheckStatus();
         log.info("checkStatus : " + checkStatus);
-        try{
+        try {
             if (checkStatus.equals("ok")) {
                 log.info("ok 들어옴");
                 for (String selected : ownerDTO.getSelectedRow()) {
@@ -60,12 +67,12 @@ public class MasterController {
             } else if (checkStatus.equals("no")) {
                 log.info("no 들어옴");
                 for (String selected : ownerDTO.getSelectedRow()) {
-                   masterService.requestNO(selected);
+                    masterService.requestNO(selected);
                 }
             }
 
             return ResponseEntity.ok().body(true);
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -91,6 +98,7 @@ public class MasterController {
         }
     }
 
+
     // 가게 승인대기중 리스트 불러오기
     @GetMapping("/approvalWaiting")
     public ResponseEntity<?> getApprovalWaiting() {
@@ -99,6 +107,21 @@ public class MasterController {
             List<OwnerBean> requestList = masterService.findApproval();
             log.info("가게 승인중 리스트 불러오기 성공: "+requestList);
             return ResponseEntity.ok().body(requestList);
+
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    @GetMapping("/banner")
+    public ResponseEntity<?> getBanner() throws IOException {
+        try {
+            List<BannerDTO> list = masterService.getBanner();
+            return ResponseEntity.ok().body(list);
+
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
@@ -204,6 +227,28 @@ public class MasterController {
 
 
 
+
+
+
+    @PostMapping("/banner")
+    public ResponseEntity<?> insertBanner(BannerDTO bannerDTO, MultipartFile file) throws IOException {
+        log.info("file 정보 :" + file);
+        log.info("배너디티오 LIST : " + bannerDTO);
+
+//        if (!files.isEmpty()) {
+//            files.forEach((multipartFile) -> {
+//                try {
+//                    String image = s3Service.upload(multipartFile);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            });
+//        }
+
+        return null;
+
+    }
 
 
 
