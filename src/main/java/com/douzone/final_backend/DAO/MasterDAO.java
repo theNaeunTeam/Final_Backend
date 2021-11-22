@@ -3,6 +3,7 @@ package com.douzone.final_backend.DAO;
 import com.douzone.final_backend.Bean.MasterBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.MasterDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -44,5 +45,9 @@ public class MasterDAO {
 
     public List<UserBean> userAll() {
         return sqlSession.selectList("userAll");
+    }
+
+    public List<BannerDTO> getBanner(){
+        return sqlSession.selectList("getBanner");
     }
 }
