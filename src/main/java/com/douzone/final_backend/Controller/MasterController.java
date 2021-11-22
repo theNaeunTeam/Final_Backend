@@ -116,20 +116,6 @@ public class MasterController {
         }
     }
 
-    @GetMapping("/banner")
-    public ResponseEntity<?> getBanner() throws IOException {
-        try {
-            List<BannerDTO> list = masterService.getBanner();
-            return ResponseEntity.ok().body(list);
-
-        } catch (Exception e) {
-            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-    }
-
     // 가게 승인대기중 리스트 불러오기
     @GetMapping("/approvalCompletion")
     public ResponseEntity<?> approvalWaiting() {

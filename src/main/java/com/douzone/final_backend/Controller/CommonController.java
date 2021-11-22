@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -325,6 +326,20 @@ public class CommonController {
             HashMap<String, Object> list = commonService.getCategory(g_owner);
             list.put("g_owner", g_owner);
             return ResponseEntity.ok().body(list);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    @GetMapping("/banner")
+    public ResponseEntity<?> getBanner() throws IOException {
+        try {
+            List<BannerDTO> list = masterService.getBanner();
+            return ResponseEntity.ok().body(list);
+
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
