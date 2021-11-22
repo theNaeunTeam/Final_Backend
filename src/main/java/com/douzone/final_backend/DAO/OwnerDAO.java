@@ -3,9 +3,7 @@ package com.douzone.final_backend.DAO;
 import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.ReserveBean;
-import com.douzone.final_backend.DTO.GoodsDTO;
-import com.douzone.final_backend.DTO.OwnerDTO;
-import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +130,7 @@ public class OwnerDAO {
         return sqlSession.selectList("searchStatus", g);
     }
 
-    public OwnerBean getOwner(String o_sNumber) {
+    public OwnerPageDTO getOwner(String o_sNumber) {
         return sqlSession.selectOne("getOwner", o_sNumber);
     }
 
@@ -155,6 +153,18 @@ public class OwnerDAO {
     }
 
     public void deleteStatus(int g_code) {
-        sqlSession.update("deleteStatus",g_code);
+        sqlSession.update("deleteStatus", g_code);
+    }
+
+    public List<SaleDTO> getDay(String o_sNumber) {
+        return sqlSession.selectList("getDay", o_sNumber);
+    }
+
+    public List<SaleDTO> getMon(String o_sNumber) {
+        return sqlSession.selectList("getMon",o_sNumber);
+    }
+
+    public List<SaleDTO> getYear(String o_sNumber) {
+        return sqlSession.selectList("getYear",o_sNumber);
     }
 }
