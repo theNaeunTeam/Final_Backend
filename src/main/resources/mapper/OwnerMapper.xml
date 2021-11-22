@@ -229,22 +229,22 @@
           AND g_status = #{g_status}
           AND g_owner = #{g_owner}
     </select>
-    <select id="getOwner" resultType="com.douzone.final_backend.Bean.OwnerBean">
-        select *
-        from owner
-        where o_sNumber = #{o_sNumber}
-    </select>
+
+
+    <!-- 해당 가게 총 수익 -->
     <select id="total" resultType="int">
-        select ifnull(sum(r_pay),0)
+        select ifnull(sum(r_pay), 0)
         from reserve
         where r_status = 3
           and r_owner = #{o_sNumber}
     </select>
+    <!-- 해당가게 총 등록 상품 수 -->
     <select id="goods" resultType="int">
         select count(*)
         from goods
         where g_owner = #{o_sNumber}
     </select>
+    <!-- 해당 가게 예약테이블 카운트 -->
     <select id="reserve" resultType="int">
         select count(*)
         from reserve
@@ -258,4 +258,45 @@
         set r_status = 2
         where r_g_code = #{g_code}
     </update>
+
+    <!-- 이번달 수익 -->
+    <!-- 총 구매자 -->
+    <!-- 총 수익 -->
+    <select id="getOwner" resultType="com.douzone.final_backend.DTO.OwnerPageDTO">
+        select d.o_name, sum(a.r_pay) as total, b.monTotal, c.cnt as buyTotal
+        from (select r_pay from reserve where r_owner = #{o_sNumber} and r_status = 3) as a,
+             (select sum(r_pay) as monTotal
+              from reserve
+              where r_owner = #{o_sNumber}
+                and date_format(r_lastTime, '%Y-%m') = date_format(now(), '%Y-%m')) as b,
+             (select count(*) as cnt from reserve where r_owner = #{o_sNumber} and r_status = 3) as c,
+             (select o_name from owner where o_sNumber = #{o_sNumber}) as d
+    </select>
+
+    <!-- 일별 수익 -->
+    <select id="getDay" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select date_format(r_lastTime, '%Y-%m-%d') as date, sum(r_pay) as sum
+        from reserve
+        where r_owner = #{o_sNumber}
+          and r_status = 3
+        group by date
+        order by date;
+    </select>
+
+    <!-- 월별 수익 -->
+    <select id="getMon" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select date_format(r_lastTime, '%Y-%m') as date, sum(r_pay) as sum
+        from reserve
+        where r_owner = #{o_sNumber}
+          and r_status = 3
+        group by date;
+    </select>
+    <!-- 연도별 수익-->
+    <select id="getYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select year(r_lastTime) as date, sum(r_pay) as sum
+        from reserve
+        where r_owner = #{o_sNumber}
+          and r_status = 3
+        group by date;
+    </select>
 </mapper>

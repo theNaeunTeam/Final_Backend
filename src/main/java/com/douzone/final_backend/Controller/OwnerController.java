@@ -1,13 +1,13 @@
 package com.douzone.final_backend.Controller;
 
 import com.douzone.final_backend.Bean.GoodsBean;
-import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
 import com.douzone.final_backend.DTO.GoodsDTO;
-import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DTO.OwnerPageDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.SaleDTO;
 import com.douzone.final_backend.Service.OwnerService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -50,20 +50,30 @@ public class OwnerController {
     public ResponseEntity<?> main(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("여기 들어옴" + userDetails.getUsername());
         String  o_sNumber = userDetails.getUsername();
-        OwnerBean owner = ownerService.getOwner(o_sNumber);
-        int total = ownerService.total(o_sNumber);
-        int goods = ownerService.goods(o_sNumber);
-        int reserve = ownerService.reserve(o_sNumber);
-        OwnerDTO responseDTO = OwnerDTO.builder()
-                .o_name(owner.getO_name())
-                .total(total)
-                .goods(goods)
-                .o_latitude(owner.getO_latitude())
-                .o_longitude(owner.getO_longitude())
-                .reserve(reserve)
-                .build();
-        log.info("total : " + total + ", goods : " + goods);
-        return ResponseEntity.ok().body(responseDTO);
+        OwnerPageDTO owner = ownerService.getOwner(o_sNumber);
+        log.info("ownerPage : "+owner);
+        return ResponseEntity.ok().body(owner);
+    }
+    @GetMapping("getDay")
+    public ResponseEntity<?> getDay(@AuthenticationPrincipal UserDetails userDetails){
+        log.info("getDay 들어옴");
+        String o_sNumber = userDetails.getUsername();
+        List<SaleDTO> day = ownerService.getDay(o_sNumber);
+        return ResponseEntity.ok().body(day);
+    }
+    @GetMapping("getMon")
+    public ResponseEntity<?> getMon(@AuthenticationPrincipal UserDetails userDetails){
+        log.info("getMon 들어옴");
+        String o_sNumber = userDetails.getUsername();
+        List<SaleDTO> mon = ownerService.getMon(o_sNumber);
+        return ResponseEntity.ok().body(mon);
+    }
+    @GetMapping("getYear")
+    public ResponseEntity<?> getYear(@AuthenticationPrincipal UserDetails userDetails){
+        log.info("getYear 들어옴");
+        String o_sNumber = userDetails.getUsername();
+        List<SaleDTO> year = ownerService.getYear(o_sNumber);
+        return ResponseEntity.ok().body(year);
     }
 
 
@@ -314,8 +324,10 @@ public class OwnerController {
 
         List<GoodsDTO> responseDTO = ownerService.search(g);
 
-
         return ResponseEntity.ok().body(responseDTO);
     }
+
+
+
 
 }
