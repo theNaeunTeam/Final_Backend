@@ -36,6 +36,11 @@
         select*
         from user
     </select>
+
+    <select id="getBanner" resultType="com.douzone.final_backend.DTO.BannerDTO">
+    select * from banner
+    </select>
+
 </mapper>
 
 
