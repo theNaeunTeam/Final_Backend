@@ -45,4 +45,31 @@ public class MasterDAO {
     public List<UserBean> userAll() {
         return sqlSession.selectList("userAll");
     }
+
+    public List<OwnerBean> findApproval() {
+        return sqlSession.selectList("findApproval");
+    }
+
+    public List<OwnerBean> approvalCompletion() {return sqlSession.selectList("approvalCompletion"); }
+
+    public List<OwnerBean> terminationWaiting() {return sqlSession.selectList("terminationWaiting"); }
+
+    public int terminationOK(String o_sNumber) {
+        log.info("master : " + sqlSession.update("terminationOK", o_sNumber));
+        return sqlSession.update("terminationOK", o_sNumber);
+    }
+
+    public List<OwnerBean> terminationCompletion() {return sqlSession.selectList("terminationCompletion"); }
+
+    public int terminationCancle(String o_sNumber) {
+        log.info("master : " + sqlSession.update("terminationCancle", o_sNumber));
+        return sqlSession.update("terminationCancle", o_sNumber);
+    }
+
+
+
+
+
+
+
 }

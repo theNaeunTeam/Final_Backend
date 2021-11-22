@@ -52,4 +52,37 @@ public class MasterService {
     public List<UserBean> userAll() {
         return masterDAO.userAll();
     }
+
+    public List<OwnerBean> findApproval() {
+        return masterDAO.findApproval();
+    }
+
+    public List<OwnerBean> approvalCompletion() {return masterDAO.approvalCompletion();}
+
+    public List<OwnerBean> terminationWaiting() {return masterDAO.terminationWaiting();}
+
+    public void terminationOK(String o_sNumber) {
+        log.info("service : " + masterDAO.terminationOK(o_sNumber));
+        if(masterDAO.terminationOK(o_sNumber) == 0)
+            throw new RuntimeException("해지 신청 수락 에러");
+
+        masterDAO.terminationOK(o_sNumber);
+    }
+
+    public List<OwnerBean> terminationCompletion() {return masterDAO.terminationCompletion();}
+
+    public void terminationCancle(String o_sNumber) {
+        log.info("service : " + masterDAO.terminationCancle(o_sNumber));
+        if(masterDAO.terminationCancle(o_sNumber) == 0)
+            throw new RuntimeException("해지 반려 신청 수락 에러");
+
+        masterDAO.terminationCancle(o_sNumber);
+    }
+
+
+
+
+
+
+
 }
