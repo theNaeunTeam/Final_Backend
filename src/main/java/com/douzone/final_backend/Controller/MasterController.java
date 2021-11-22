@@ -11,6 +11,8 @@ import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -96,11 +98,16 @@ public class MasterController {
         }
     }
 
-    @GetMapping("/banner")
-    public ResponseEntity<?> getBanner() throws IOException {
+
+    // 가게 승인대기중 리스트 불러오기
+    @GetMapping("/approvalWaiting")
+    public ResponseEntity<?> getApprovalWaiting() {
+
         try {
-            List<BannerDTO> list = masterService.getBanner();
-            return ResponseEntity.ok().body(list);
+            List<OwnerBean> requestList = masterService.findApproval();
+            log.info("가게 승인중 리스트 불러오기 성공: "+requestList);
+            return ResponseEntity.ok().body(requestList);
+
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
@@ -108,6 +115,120 @@ public class MasterController {
                     .body(responseDTO);
         }
     }
+
+    @GetMapping("/banner")
+    public ResponseEntity<?> getBanner() throws IOException {
+        try {
+            List<BannerDTO> list = masterService.getBanner();
+            return ResponseEntity.ok().body(list);
+
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 가게 승인대기중 리스트 불러오기
+    @GetMapping("/approvalCompletion")
+    public ResponseEntity<?> approvalWaiting() {
+
+        try {
+            List<OwnerBean> requestList = masterService.approvalCompletion();
+            log.info("가게 승인중 리스트 불러오기 성공: "+requestList);
+            return ResponseEntity.ok().body(requestList);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 가게 해지대기중 리스트 불러오기
+    @GetMapping("/terminationwaiting")
+    public ResponseEntity<?> terminationWaiting() {
+
+        try {
+            List<OwnerBean> requestList = masterService.terminationWaiting();
+            log.info("가게 승인중 리스트 불러오기 성공: "+requestList);
+            return ResponseEntity.ok().body(requestList);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 가게 해지승인 처리
+    @PatchMapping("/terminationOK")
+    public ResponseEntity<?> terminationOK(@RequestBody OwnerDTO ownerDTO) {
+        log.info("terminationOK 넘어오는 배열 : " + ownerDTO.getSelectedRow());
+        log.info("terminationOK ok?no?" + ownerDTO.getCheckStatus());
+        String checkStatus = ownerDTO.getCheckStatus();
+        log.info("checkStatus : " + checkStatus);
+        try {
+            if (checkStatus.equals("ok")) {
+                log.info("ok 들어옴");
+                for (String selected : ownerDTO.getSelectedRow()) {
+                    masterService.terminationOK(selected);
+                }
+            }
+            return ResponseEntity.ok().body(true);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 가게 해지완료 리스트 불러오기
+    @GetMapping("/terminationcompletion")
+    public ResponseEntity<?> terminationCompletion() {
+        try {
+            List<OwnerBean> requestList = masterService.terminationCompletion();
+            log.info("가게 해지완료 리스트 불러오기 성공: "+requestList);
+            return ResponseEntity.ok().body(requestList);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+
+    // 가게 해지반려 처리
+    @PatchMapping("/terminationcancle")
+    public ResponseEntity<?> terminationCancle(@RequestBody OwnerDTO ownerDTO) {
+        log.info("terminationCancle 넘어오는 배열 : " + ownerDTO.getSelectedRow());
+        log.info("terminationCancle ok?no?" + ownerDTO.getCheckStatus());
+        String checkStatus = ownerDTO.getCheckStatus();
+        log.info("checkStatus : " + checkStatus);
+        try {
+            if (checkStatus.equals("ok")) {
+                log.info("ok 들어옴");
+                for (String selected : ownerDTO.getSelectedRow()) {
+                    masterService.terminationCancle(selected);
+                }
+            }
+            return ResponseEntity.ok().body(true);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+
+
+
+
+
 
     @PostMapping("/banner")
     public ResponseEntity<?> insertBanner(BannerDTO bannerDTO, MultipartFile file) throws IOException {
@@ -128,6 +249,7 @@ public class MasterController {
         return null;
 
     }
+
 
 
 }
