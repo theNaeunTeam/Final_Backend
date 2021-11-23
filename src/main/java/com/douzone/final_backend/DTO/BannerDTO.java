@@ -15,4 +15,5 @@ public class BannerDTO {
     private String header;
     private String description;
     private String link;
+    private int pk;
 }

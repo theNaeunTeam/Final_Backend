@@ -11,12 +11,11 @@ import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -105,7 +104,7 @@ public class MasterController {
 
         try {
             List<OwnerBean> requestList = masterService.findApproval();
-            log.info("가게 승인중 리스트 불러오기 성공: "+requestList);
+            log.info("가게 승인중 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
 
         } catch (Exception e) {
@@ -122,7 +121,7 @@ public class MasterController {
 
         try {
             List<OwnerBean> requestList = masterService.approvalCompletion();
-            log.info("가게 승인중 리스트 불러오기 성공: "+requestList);
+            log.info("가게 승인중 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -138,7 +137,7 @@ public class MasterController {
 
         try {
             List<OwnerBean> requestList = masterService.terminationWaiting();
-            log.info("가게 승인중 리스트 불러오기 성공: "+requestList);
+            log.info("가게 승인중 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -176,7 +175,7 @@ public class MasterController {
     public ResponseEntity<?> terminationCompletion() {
         try {
             List<OwnerBean> requestList = masterService.terminationCompletion();
-            log.info("가게 해지완료 리스트 불러오기 성공: "+requestList);
+            log.info("가게 해지완료 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -211,31 +210,36 @@ public class MasterController {
     }
 
 
-
-
-
-
-
-    @PostMapping("/banner")
-    public ResponseEntity<?> insertBanner(BannerDTO bannerDTO, MultipartFile file) throws IOException {
-        log.info("file 정보 :" + file);
-        log.info("배너디티오 LIST : " + bannerDTO);
-
-//        if (!files.isEmpty()) {
-//            files.forEach((multipartFile) -> {
-//                try {
-//                    String image = s3Service.upload(multipartFile);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            });
-//        }
-
-        return null;
-
+    @PostMapping("/bannerImage")
+    public HashMap<String, Object> InsertBannerImage(MultipartFile file) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        log.info("files 정보 :" + file);
+        try {
+            String image = s3Service.upload(file);
+            hashMap.put("res", image);
+        } catch (IOException e) {
+            hashMap.put("res", e);
+        }
+        return hashMap;
     }
 
+    @PutMapping("/bannerContents")
+    public HashMap<String, Object> UpdateBannerContents(@RequestBody List<BannerDTO> list) {
+        HashMap<String, Object> hashMap = new HashMap<>();
+        log.info("받은 배열 정보 :" + list);
 
+        try {
+            masterService.deleteBannerTable();
+            list.forEach(bannerDTO -> {
+                masterService.insertBannerTable(bannerDTO);
+            });
+
+            hashMap.put("res", list);
+        } catch (Exception e) {
+            hashMap.put("res", e);
+        }
+
+        return hashMap;
+    }
 
 }
