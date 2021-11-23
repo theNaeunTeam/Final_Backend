@@ -83,12 +83,12 @@ public class MasterController {
 
 
     // 전체 회원 리스트 출력
-    @GetMapping("userList")
+    @GetMapping("/userList")
     public ResponseEntity<?> getUserList() {
 
         try {
             List<UserBean> userList = masterService.userAll();
-            log.info("회원 전체 리스트 불러오기");
+            log.info("회원 전체 리스트 불러오기" + userList);
             return ResponseEntity.ok().body(userList);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
