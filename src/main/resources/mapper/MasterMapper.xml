@@ -58,7 +58,8 @@
 
     <update id="terminationOK" parameterType="String">
         update owner
-        set o_approval = 1
+        set o_approval = 1,
+            o_date = now()
         where o_sNumber = #{o_sNumber}
     </update>
 
@@ -74,9 +75,15 @@
         where o_sNumber = #{o_sNumber}
     </update>
 
-
     <select id="getBanner" resultType="com.douzone.final_backend.DTO.BannerDTO">
     select * from banner
+    </select>
+
+    <select id="masterMonth" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select date_format(o_date, '%Y-%m') as date, count(date_format(o_date, '%Y-%m') ) as sum
+        from owner
+        where o_approval = 1
+        group by date ORDER BY date;
     </select>
 
 

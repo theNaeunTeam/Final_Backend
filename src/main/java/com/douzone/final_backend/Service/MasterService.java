@@ -6,6 +6,7 @@ import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DAO.MasterDAO;
 import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.MasterDTO;
+import com.douzone.final_backend.DTO.SaleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,15 +82,14 @@ public class MasterService {
         masterDAO.terminationCancle(o_sNumber);
     }
 
-
-
-
-
-
-
-
     public List<BannerDTO> getBanner(){
         return masterDAO.getBanner();
     }
+
+    public List<SaleDTO> masterMonth(){
+        return masterDAO.masterMonth();
+    }
+
+
 
 }
