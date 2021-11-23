@@ -86,10 +86,12 @@ public class MasterDAO {
         return sqlSession.insert("insertBannerTable", bannerDTO);
     }
 
+    public List<SaleDTO> masterDay(){
+        return sqlSession.selectList("masterDay");
+    }
+
     public List<SaleDTO> masterMonth(){
         return sqlSession.selectList("masterMonth");
     }
-
-
 
 }

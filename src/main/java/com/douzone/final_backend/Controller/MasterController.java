@@ -215,6 +215,7 @@ public class MasterController {
     public ResponseEntity MonthChart(){
         log.info("masterMonth 들어왓다");
         try{
+            List<SaleDTO> day = masterService.masterDay();
             List<SaleDTO> res = masterService.masterMonth();
             log.info("차트결과: "+ res);
             return ResponseEntity.ok().body(res);

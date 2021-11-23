@@ -79,15 +79,6 @@
     select * from banner
     </select>
 
-
-    <select id="masterMonth" resultType="com.douzone.final_backend.DTO.SaleDTO">
-        select date_format(o_date, '%Y-%m') as date, count(date_format(o_date, '%Y-%m') ) as sum
-        from owner
-        where o_approval = 1
-        group by date ORDER BY date;
-    </select>
-
-
     <delete id="deleteBannerTable">
         delete from banner;
     </delete>
@@ -97,6 +88,19 @@
         values (#{src}, #{altText}, #{header}, #{description}, #{link})
     </insert>
 
+    <select id="masterDay" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select date_format(o_date, '%Y-%m-%d') as date, count(case when o_approval = 1 then 1 end) as sum, count(case when o_approval =4 then 1 end) as tal
+        from owner
+        where o_approval in (1, 4)
+        group by date;
+    </select>
+
+    <select id="masterMonth" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select date_format(o_date, '%Y-%m') as date, count(case when o_approval = 1 then 1 end) as sum, count(case when o_approval =4 then 1 end) as tal
+        from owner
+        where o_approval in (1, 4)
+        group by date;
+    </select>
 
 </mapper>
 
