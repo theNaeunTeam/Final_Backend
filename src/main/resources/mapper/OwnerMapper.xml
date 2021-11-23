@@ -263,11 +263,11 @@
     <!-- 총 구매자 -->
     <!-- 총 수익 -->
     <select id="getOwner" resultType="com.douzone.final_backend.DTO.OwnerPageDTO">
-        select d.o_name, sum(a.r_pay) as total, b.monTotal, c.cnt as buyTotal
-        from (select r_pay from reserve where r_owner = #{o_sNumber} and r_status = 3) as a,
-             (select sum(r_pay) as monTotal
+        select d.o_name, total, b.monTotal, c.cnt as buyTotal
+        from (select ifnull(sum(r_pay), 0) as total from reserve where r_owner = #{o_sNumber} and r_status = 3) as a,
+             (select ifnull(sum(r_pay), 0) as monTotal
               from reserve
-              where r_owner = #{o_sNumber}
+              where r_owner = #{o_sNumber} and r_status=3
                 and date_format(r_lastTime, '%Y-%m') = date_format(now(), '%Y-%m')) as b,
              (select count(*) as cnt from reserve where r_owner = #{o_sNumber} and r_status = 3) as c,
              (select o_name from owner where o_sNumber = #{o_sNumber}) as d
@@ -275,7 +275,7 @@
 
     <!-- 일별 수익 -->
     <select id="getDay" resultType="com.douzone.final_backend.DTO.SaleDTO">
-        select date_format(r_lastTime, '%Y-%m-%d') as date, sum(r_pay) as sum
+        select date_format(r_lastTime, '%Y-%m-%d') as date, ifnull(sum(r_pay), 0) as sum
         from reserve
         where r_owner = #{o_sNumber}
           and r_status = 3
@@ -285,18 +285,20 @@
 
     <!-- 월별 수익 -->
     <select id="getMon" resultType="com.douzone.final_backend.DTO.SaleDTO">
-        select date_format(r_lastTime, '%Y-%m') as date, sum(r_pay) as sum
+        select date_format(r_lastTime, '%Y-%m') as date, ifnull(sum(r_pay), 0) as sum
         from reserve
         where r_owner = #{o_sNumber}
           and r_status = 3
-        group by date;
+        group by date
+        order by date;
     </select>
     <!-- 연도별 수익-->
     <select id="getYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
-        select year(r_lastTime) as date, sum(r_pay) as sum
+        select year(r_lastTime) as date, ifnull(sum(r_pay), 0) as sum
         from reserve
         where r_owner = #{o_sNumber}
           and r_status = 3
-        group by date;
+        group by date
+        order by date;
     </select>
 </mapper>

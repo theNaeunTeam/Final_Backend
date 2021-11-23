@@ -59,22 +59,29 @@ public class OwnerController {
         log.info("getDay 들어옴");
         String o_sNumber = userDetails.getUsername();
         List<SaleDTO> day = ownerService.getDay(o_sNumber);
-        return ResponseEntity.ok().body(day);
-    }
-    @GetMapping("getMon")
-    public ResponseEntity<?> getMon(@AuthenticationPrincipal UserDetails userDetails){
-        log.info("getMon 들어옴");
-        String o_sNumber = userDetails.getUsername();
         List<SaleDTO> mon = ownerService.getMon(o_sNumber);
-        return ResponseEntity.ok().body(mon);
-    }
-    @GetMapping("getYear")
-    public ResponseEntity<?> getYear(@AuthenticationPrincipal UserDetails userDetails){
-        log.info("getYear 들어옴");
-        String o_sNumber = userDetails.getUsername();
         List<SaleDTO> year = ownerService.getYear(o_sNumber);
-        return ResponseEntity.ok().body(year);
+        SaleDTO responseDTO = SaleDTO.builder()
+                .day(day)
+                .mon(mon)
+                .year(year)
+                .build();
+        return ResponseEntity.ok().body(responseDTO);
     }
+//    @GetMapping("getMon")
+//    public ResponseEntity<?> getMon(@AuthenticationPrincipal UserDetails userDetails){
+//        log.info("getMon 들어옴");
+//        String o_sNumber = userDetails.getUsername();
+//        List<SaleDTO> mon = ownerService.getMon(o_sNumber);
+//        return ResponseEntity.ok().body(mon);
+//    }
+//    @GetMapping("getYear")
+//    public ResponseEntity<?> getYear(@AuthenticationPrincipal UserDetails userDetails){
+//        log.info("getYear 들어옴");
+//        String o_sNumber = userDetails.getUsername();
+//        List<SaleDTO> year = ownerService.getYear(o_sNumber);
+//        return ResponseEntity.ok().body(year);
+//    }
 
 
     @PostMapping("/addGoods")

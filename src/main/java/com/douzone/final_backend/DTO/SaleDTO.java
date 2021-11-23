@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,4 +15,7 @@ public class SaleDTO {
     private String date;
     private int sum;
 
+    List<SaleDTO> day;
+    List<SaleDTO> mon;
+    List<SaleDTO> year;
 }
