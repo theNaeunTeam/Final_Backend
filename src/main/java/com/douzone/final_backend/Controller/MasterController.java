@@ -6,6 +6,7 @@ import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
 import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DTO.SaleDTO;
 import com.douzone.final_backend.Service.MasterService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -202,6 +203,22 @@ public class MasterController {
             }
             return ResponseEntity.ok().body(true);
         } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+  
+    // 월별 가입자수 가져오기
+    @GetMapping("/masterMonth")
+    public ResponseEntity MonthChart(){
+        log.info("masterMonth 들어왓다");
+        try{
+            List<SaleDTO> res = masterService.masterMonth();
+            log.info("차트결과: "+ res);
+            return ResponseEntity.ok().body(res);
+        }catch (Exception e){
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()

@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class SaleDTO {
     private String date;
     private int sum;
+    private int tal;
 
 }

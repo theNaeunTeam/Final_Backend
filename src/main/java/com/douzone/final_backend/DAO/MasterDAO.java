@@ -5,6 +5,7 @@ import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.MasterDTO;
+import com.douzone.final_backend.DTO.SaleDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +85,11 @@ public class MasterDAO {
     public int insertBannerTable(BannerDTO bannerDTO) {
         return sqlSession.insert("insertBannerTable", bannerDTO);
     }
+
+    public List<SaleDTO> masterMonth(){
+        return sqlSession.selectList("masterMonth");
+    }
+
+
 
 }
