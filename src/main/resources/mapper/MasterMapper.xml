@@ -79,6 +79,14 @@
     select * from banner
     </select>
 
+    <delete id="deleteBannerTable">
+        delete from banner;
+    </delete>
+
+    <insert id="insertBannerTable" parameterType="com.douzone.final_backend.DTO.BannerDTO">
+        insert into banner (src, altText, header, description, link)
+        values (#{src}, #{altText}, #{header}, #{description}, #{link})
+    </insert>
 
 </mapper>
 

@@ -26,14 +26,14 @@ public class MasterService {
 
     public void requestOK(String o_sNumber) {
         log.info("service : " + masterDAO.requestOK(o_sNumber));
-        if(masterDAO.requestOK(o_sNumber) == 0)
+        if (masterDAO.requestOK(o_sNumber) == 0)
             throw new RuntimeException("입점 신청 수락 에러");
 
-         masterDAO.requestOK(o_sNumber);
+        masterDAO.requestOK(o_sNumber);
     }
 
     public int requestNO(String o_sNumber) {
-        if(masterDAO.requestNO(o_sNumber) == 0)
+        if (masterDAO.requestNO(o_sNumber) == 0)
             throw new RuntimeException("입점 신청 거절 에러");
         return masterDAO.requestNO(o_sNumber);
     }
@@ -59,37 +59,44 @@ public class MasterService {
         return masterDAO.findApproval();
     }
 
-    public List<OwnerBean> approvalCompletion() {return masterDAO.approvalCompletion();}
+    public List<OwnerBean> approvalCompletion() {
+        return masterDAO.approvalCompletion();
+    }
 
-    public List<OwnerBean> terminationWaiting() {return masterDAO.terminationWaiting();}
+    public List<OwnerBean> terminationWaiting() {
+        return masterDAO.terminationWaiting();
+    }
 
     public void terminationOK(String o_sNumber) {
         log.info("service : " + masterDAO.terminationOK(o_sNumber));
-        if(masterDAO.terminationOK(o_sNumber) == 0)
+        if (masterDAO.terminationOK(o_sNumber) == 0)
             throw new RuntimeException("해지 신청 수락 에러");
 
         masterDAO.terminationOK(o_sNumber);
     }
 
-    public List<OwnerBean> terminationCompletion() {return masterDAO.terminationCompletion();}
+    public List<OwnerBean> terminationCompletion() {
+        return masterDAO.terminationCompletion();
+    }
 
     public void terminationCancle(String o_sNumber) {
         log.info("service : " + masterDAO.terminationCancle(o_sNumber));
-        if(masterDAO.terminationCancle(o_sNumber) == 0)
+        if (masterDAO.terminationCancle(o_sNumber) == 0)
             throw new RuntimeException("해지 반려 신청 수락 에러");
 
         masterDAO.terminationCancle(o_sNumber);
     }
 
-
-
-
-
-
-
-
-    public List<BannerDTO> getBanner(){
+    public List<BannerDTO> getBanner() {
         return masterDAO.getBanner();
+    }
+
+    public int deleteBannerTable() {
+        return masterDAO.deleteBannerTable();
+    }
+
+    public int insertBannerTable(BannerDTO bannerDTO) {
+        return masterDAO.insertBannerTable(bannerDTO);
     }
 
 }
