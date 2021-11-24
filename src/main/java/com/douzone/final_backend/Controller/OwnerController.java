@@ -49,21 +49,35 @@ public class OwnerController {
     @GetMapping
     public ResponseEntity<?> main(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("여기 들어옴" + userDetails.getUsername());
-        String  o_sNumber = userDetails.getUsername();
+        String o_sNumber = userDetails.getUsername();
         OwnerPageDTO owner = ownerService.getOwner(o_sNumber);
-        log.info("ownerPage : "+owner);
+        log.info("ownerPage : " + owner);
         return ResponseEntity.ok().body(owner);
     }
+
     @GetMapping("getDay")
-    public ResponseEntity<?> getDay(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> getDay(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("getDay 들어옴");
         String o_sNumber = userDetails.getUsername();
+//        List<Object> day = new ArrayList<>();
+        List<Object> mon = new ArrayList<>();
+        for (int i = 2019; i <= 2021; i++) {
+            OwnerPageDTO d = OwnerPageDTO.builder()
+                    .o_name(o_sNumber)
+                    .total(i)
+                    .build();
+            List<SaleDTO> m = ownerService.getMon(d);
+
+            mon.add(m);
+        }
         List<SaleDTO> day = ownerService.getDay(o_sNumber);
-        List<SaleDTO> mon = ownerService.getMon(o_sNumber);
+
+
         List<SaleDTO> year = ownerService.getYear(o_sNumber);
         SaleDTO responseDTO = SaleDTO.builder()
                 .day(day)
-                .mon(mon)
+//                .mon(mon)
+                .m(mon)
                 .year(year)
                 .build();
         return ResponseEntity.ok().body(responseDTO);
@@ -184,7 +198,7 @@ public class OwnerController {
 //                        .g_status(goodsBean.getG_status())
 //                        .g_count(goodsBean.getG_count())
 //                        .build();
-
+                log.info("goods : "+goods);
                 ReserveDTO responseDTO = ReserveDTO.builder()
                         .r_code(r.getR_code())
                         .r_u_id(r.getR_u_id())
@@ -194,6 +208,8 @@ public class OwnerController {
                         .r_status(r.getR_status())
                         .r_customOrder(r.getR_customOrder())
 //                        .goodsDTO(goods)
+                        .g_discount(goods.getG_discount())
+                        .g_price(goods.getG_price())
                         .g_name(goods.getG_name())
                         .g_expireDate(goods.getG_expireDate())
                         .g_category(goods.getG_category())
@@ -335,6 +351,75 @@ public class OwnerController {
     }
 
 
+    // 오너 대시보드 예약 시간별 보기
+    @GetMapping("getTime")
+    public ResponseEntity<?> getTime(@AuthenticationPrincipal UserDetails userDetails) {
+        String r_owner = userDetails.getUsername();
+        try {
+            List<SaleDTO> dto = ownerService.getTime(r_owner);
 
+            return ResponseEntity.ok().body(dto);
+
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 오너 대시보드 판매 완료 남여비율
+    @GetMapping("getGender")
+    public ResponseEntity<?> getGender(@AuthenticationPrincipal UserDetails userDetails) {
+        String r_owner = userDetails.getUsername();
+
+        try {
+            List<SaleDTO> dto = ownerService.getGender(r_owner);
+
+            return ResponseEntity.ok().body(dto);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 오너 대시보드 판매 완료 연령대 비율
+    @GetMapping("getAge")
+    public ResponseEntity<?> getAge(@AuthenticationPrincipal UserDetails userDetails) {
+        String r_owner = userDetails.getUsername();
+
+        try {
+            List<SaleDTO> dto = ownerService.getAge(r_owner);
+
+            return ResponseEntity.ok().body(dto);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 오너 대시보드 판매 완료 카테고리
+    @GetMapping("getCategorySale")
+    public ResponseEntity<?> getCategorySale(@AuthenticationPrincipal UserDetails userDetails) {
+        String r_owner = userDetails.getUsername();
+
+        try {
+            List<SaleDTO> dto = ownerService.getCategorySale(r_owner);
+
+            return ResponseEntity.ok().body(dto);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
 
 }

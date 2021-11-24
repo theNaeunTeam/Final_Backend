@@ -160,11 +160,27 @@ public class OwnerDAO {
         return sqlSession.selectList("getDay", o_sNumber);
     }
 
-    public List<SaleDTO> getMon(String o_sNumber) {
-        return sqlSession.selectList("getMon",o_sNumber);
+    public List<SaleDTO> getMon(OwnerPageDTO o_sNumber) {
+        return sqlSession.selectList("getMon", o_sNumber);
     }
 
     public List<SaleDTO> getYear(String o_sNumber) {
-        return sqlSession.selectList("getYear",o_sNumber);
+        return sqlSession.selectList("getYear", o_sNumber);
+    }
+
+    public List<SaleDTO> getTime(String r_owner) {
+        return sqlSession.selectList("getTime", r_owner);
+    }
+
+    public List<SaleDTO> getGender(String r_owner) {
+        return sqlSession.selectList("getGender", r_owner);
+    }
+
+    public List<SaleDTO> getAge(String r_owner) {
+        return sqlSession.selectList("getAge", r_owner);
+    }
+
+    public List<SaleDTO> getCategorySale(String r_owner) {
+        return sqlSession.selectList("getCategorySale", r_owner);
     }
 }
