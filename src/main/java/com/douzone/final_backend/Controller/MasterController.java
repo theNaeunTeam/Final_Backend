@@ -6,6 +6,7 @@ import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
 import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.SaleDTO;
 import com.douzone.final_backend.Service.MasterService;
 import com.douzone.final_backend.security.TokenProvider;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.*;
 
 
 @Slf4j
@@ -215,10 +216,22 @@ public class MasterController {
     public ResponseEntity MonthChart(){
         log.info("masterMonth 들어왓다");
         try{
-            List<SaleDTO> day = masterService.masterDay();
-            List<SaleDTO> res = masterService.masterMonth();
-            log.info("차트결과: "+ res);
-            return ResponseEntity.ok().body(res);
+            int nowYear = Calendar.getInstance().get(Calendar.YEAR);
+            log.info(""+nowYear);
+            List<Object> responseMonList = new ArrayList<>();
+            List<Object> responseYearList = new ArrayList<>();
+            for (int dal= 2019 ; dal <= nowYear ; dal++){
+                List<SaleDTO> mon =  masterService.masterMonth(dal);
+                List<SaleDTO> year = masterService.masterYear(dal);
+                responseMonList.add(mon);
+                responseYearList.add(year);
+            }
+            SaleDTO result = SaleDTO.builder()
+                    .totalMon(responseMonList)
+                    .totalYear(responseYearList)
+                    .build();
+            return ResponseEntity.ok().body(result);
+
         }catch (Exception e){
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity

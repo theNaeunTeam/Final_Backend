@@ -19,4 +19,8 @@ public class SaleDTO {
     List<SaleDTO> day;
     List<SaleDTO> mon;
     List<SaleDTO> year;
+
+    List<Object> totalMon;
+    List<Object> totalYear;
+
 }
