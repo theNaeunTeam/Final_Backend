@@ -219,8 +219,8 @@ public class OwnerService {
         ownerDAO.deleteStatus(g_code);
     }
 
-    public List<SaleDTO> getDay(String o_sNumber) {
-        return ownerDAO.getDay(o_sNumber);
+    public List<SaleDTO> getDay(OwnerPageDTO dto) {
+        return ownerDAO.getDay(dto);
     }
 
     public List<SaleDTO> getMon(OwnerPageDTO o_sNumber) {

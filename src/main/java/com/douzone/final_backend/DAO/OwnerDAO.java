@@ -156,8 +156,8 @@ public class OwnerDAO {
         sqlSession.update("deleteStatus", g_code);
     }
 
-    public List<SaleDTO> getDay(String o_sNumber) {
-        return sqlSession.selectList("getDay", o_sNumber);
+    public List<SaleDTO> getDay(OwnerPageDTO dto) {
+        return sqlSession.selectList("getDay", dto);
     }
 
     public List<SaleDTO> getMon(OwnerPageDTO o_sNumber) {

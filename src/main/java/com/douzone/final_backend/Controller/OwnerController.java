@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Slf4j
@@ -59,27 +60,41 @@ public class OwnerController {
     public ResponseEntity<?> getDay(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("getDay 들어옴");
         String o_sNumber = userDetails.getUsername();
-//        List<Object> day = new ArrayList<>();
+
         List<Object> mon = new ArrayList<>();
-        for (int i = 2019; i <= 2021; i++) {
-            OwnerPageDTO d = OwnerPageDTO.builder()
+        List<Object> day = new ArrayList<>();
+        int y = Calendar.getInstance().get(Calendar.YEAR);
+
+        for (int i = 2019; i <= y; i++) {
+            OwnerPageDTO mm = OwnerPageDTO.builder()
                     .o_name(o_sNumber)
                     .total(i)
                     .build();
-            List<SaleDTO> m = ownerService.getMon(d);
-
+            List<SaleDTO> m = ownerService.getMon(mm);
             mon.add(m);
-        }
-        List<SaleDTO> day = ownerService.getDay(o_sNumber);
 
+            for(int j = 1 ; j<= 12 ; j++)
+            {
+                OwnerPageDTO dd = OwnerPageDTO.builder()
+                        .o_name(o_sNumber)
+                        .total(i)
+                        .monTotal(j)
+                        .build();
+                List<SaleDTO> d = ownerService.getDay(dd);
+                day.add(d);
+            }
+//            log.info("만든 d"+day);
+        }
 
         List<SaleDTO> year = ownerService.getYear(o_sNumber);
         SaleDTO responseDTO = SaleDTO.builder()
-                .day(day)
+                .d(day)
 //                .mon(mon)
                 .m(mon)
                 .year(year)
                 .build();
+
+        log.info(responseDTO+"결과 !");
         return ResponseEntity.ok().body(responseDTO);
     }
 //    @GetMapping("getMon")

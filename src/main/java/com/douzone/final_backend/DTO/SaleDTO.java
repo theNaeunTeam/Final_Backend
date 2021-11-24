@@ -21,7 +21,9 @@ public class SaleDTO {
     List<SaleDTO> mon;
     List<SaleDTO> year;
 
+    List<Object> d;
     List<Object> m;
+
 
 
 }

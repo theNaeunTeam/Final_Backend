@@ -276,25 +276,35 @@
 
     <!-- 일별 수익 -->
     <select id="getDay" resultType="com.douzone.final_backend.DTO.SaleDTO">
-        select date_format(r_lastTime, '%Y-%m-%d') as date, ifnull(sum(r_pay), 0) as sum
-        from reserve
-        where r_owner = #{o_sNumber}
-          and r_status = 3
-        group by date
-        order by date;
+
+
+            set @N := (select date_format(last_day(str_to_date(${monTotal}, '%m')), '%d') as a);
+
+        <![CDATA[
+        select a.r as date, ifnull(b.cnt, 0) as sum
+        from (with recursive c as (select 1 as r union all select r + 1 from c where r < @N) select r from c) as a
+                 left join (select date_format(r_lastTime, '%d') as day, sum(r_pay) as cnt
+                            from reserve
+                            where month(r_lastTime) = ${monTotal}
+                              and year(r_lastTime) = ${total}
+                              and r_status = 3
+                              and r_owner = '${o_name}'
+                            group by day) as b
+                           on a.r = b.day
+        ]]>
     </select>
 
     <!-- 월별 수익 -->
     <select id="getMon" resultType="com.douzone.final_backend.DTO.SaleDTO">
         select a.r as date, ifnull(b.cnt, 0) as sum
         from <![CDATA[(with recursive c as (select 1 as r union all select r + 1 from c where r < 12) select r from c)]]> as a
-        left join (select month(r_lastTime) as mon, count(*) as cnt
-        from reserve
-        where r_status = 3
-        and r_owner = #{o_name}
-        and year(r_lastTime) = #{total}
-        group by mon) as b
-        on a.r = b.mon;
+                 left join (select month(r_lastTime) as mon, sum(r_pay) as cnt
+                            from reserve
+                            where r_status = 3
+                              and r_owner = #{o_name}
+                              and year(r_lastTime) = #{total}
+                            group by mon) as b
+                           on a.r = b.mon;
     </select>
     <!-- 연도별 수익-->
     <select id="getYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
@@ -365,7 +375,8 @@
     <select id="getCategorySale" resultType="com.douzone.final_backend.DTO.SaleDTO">
         select g_category as date, count(*) as sum
         from goods as g
-                 join reserve as r on g.g_code = r.r_g_code and r_status = 3 and r_owner=123 group by g_category;
+                 join reserve as r on g.g_code = r.r_g_code and r_status = 3 and r_owner = 123
+        group by g_category;
 
     </select>
 </mapper>
