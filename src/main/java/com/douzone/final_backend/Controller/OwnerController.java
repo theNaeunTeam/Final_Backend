@@ -49,13 +49,14 @@ public class OwnerController {
     @GetMapping
     public ResponseEntity<?> main(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("여기 들어옴" + userDetails.getUsername());
-        String  o_sNumber = userDetails.getUsername();
+        String o_sNumber = userDetails.getUsername();
         OwnerPageDTO owner = ownerService.getOwner(o_sNumber);
-        log.info("ownerPage : "+owner);
+        log.info("ownerPage : " + owner);
         return ResponseEntity.ok().body(owner);
     }
+
     @GetMapping("getDay")
-    public ResponseEntity<?> getDay(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> getDay(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("getDay 들어옴");
         String o_sNumber = userDetails.getUsername();
         List<SaleDTO> day = ownerService.getDay(o_sNumber);
@@ -307,7 +308,7 @@ public class OwnerController {
 
     // 상품 조회에서 검색
     @GetMapping("search")
-    public ResponseEntity<?> seaech(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
+    public ResponseEntity<?> search(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
         String g_owner = userDetails.getUsername();
         log.info("search 넘어온 값 : " + userDetails + g_category + g_status + searchInput);
 
@@ -337,7 +338,13 @@ public class OwnerController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PostMapping("pushToken")
+    public String pushToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String pushToken) {
+        String o_sNumber = userDetails.getUsername();
 
+        log.info(pushToken);
+        return null;
+    }
 
 
 }

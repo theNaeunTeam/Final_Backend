@@ -267,7 +267,8 @@
         from (select ifnull(sum(r_pay), 0) as total from reserve where r_owner = #{o_sNumber} and r_status = 3) as a,
              (select ifnull(sum(r_pay), 0) as monTotal
               from reserve
-              where r_owner = #{o_sNumber} and r_status=3
+              where r_owner = #{o_sNumber}
+                and r_status = 3
                 and date_format(r_lastTime, '%Y-%m') = date_format(now(), '%Y-%m')) as b,
              (select count(*) as cnt from reserve where r_owner = #{o_sNumber} and r_status = 3) as c,
              (select o_name from owner where o_sNumber = #{o_sNumber}) as d
@@ -301,4 +302,14 @@
         group by date
         order by date;
     </select>
+
+<!--    예약시 상품고유번호의 사업자번호를 토큰테이블에서 검색해서 반환-->
+    <select id="getPushTokenList" resultType="String">
+        select distinct token
+        from firebase_owner_push_token as f
+                 join reserve as r on f.g_owner_fk = r.r_owner
+        where r_g_code = #{r_g_code};
+    </select>
+
+
 </mapper>

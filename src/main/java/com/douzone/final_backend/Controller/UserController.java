@@ -8,11 +8,12 @@ import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import com.douzone.final_backend.Service.UserService;
 import com.douzone.final_backend.security.TokenProvider;
+import com.google.firebase.messaging.BatchResponse;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.MulticastMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +21,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 @Slf4j
@@ -182,7 +182,7 @@ public class UserController {
     @GetMapping("searchReserve")
     public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
         log.info("유저 예약 현황에서 검색 : " + g_category + r_status + searchInput);
- 
+
         String u_id = userDetails.getUsername();
         ReserveDTO r;
         if (r_status.equals("")) {
@@ -221,13 +221,13 @@ public class UserController {
 
     // user 회원정보 불러오기
     @GetMapping("userData")
-    public ResponseEntity<?> userData(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> userData(@AuthenticationPrincipal UserDetails userDetails) {
         String u_id = userDetails.getUsername();
         // 필요한 정보 -> u_id, u_pw, u_cellPhone, u_email, u_gender, u_age
         try {
 
             UserBean user = userService.userData(u_id);
-            log.info("user 정보"+ user);
+            log.info("user 정보" + user);
 
             UserDTO responseDTO = UserDTO.builder()
                     .u_id(user.getU_id())
@@ -237,7 +237,7 @@ public class UserController {
                     .u_age(user.getU_age())
                     .build();
             return ResponseEntity.ok().body(responseDTO);
-        } catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -247,8 +247,8 @@ public class UserController {
 
     // 회원 정보 수정
     @PostMapping("userUpdate")
-    public ResponseEntity<?> userUpdate(@RequestBody UserDTO userDTO){
-        log.info("회원정보 수정 들어옴  :"+userDTO);
+    public ResponseEntity<?> userUpdate(@RequestBody UserDTO userDTO) {
+        log.info("회원정보 수정 들어옴  :" + userDTO);
         try {
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
             UserBean user = UserBean.builder()
@@ -260,9 +260,9 @@ public class UserController {
                     .u_age(userDTO.getU_age())
                     .build();
             int res = userService.update(user);
-            log.info("업데이트 결과:"+res);
+            log.info("업데이트 결과:" + res);
             return ResponseEntity.ok().body(res);
-        } catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -284,14 +284,32 @@ public class UserController {
                     log.info("for문 안");
                     userService.insertReserve(reserve);
                 }
+
+                List<String> registrationTokens = userService.getOwnerPushToken(reserveDTO.get(0).getR_g_code());
+                MulticastMessage message = MulticastMessage.builder()
+                        .putData("title", "예약이 등록되었습니다")
+                        .putData("body", reserveDTO.get(0).getG_name() + "외 " + reserveDTO.get(0).getR_count() + "개")
+                        .putData("etc", reserveDTO.get(0).getR_customOrder())
+                        .addAllTokens(registrationTokens)
+                        .build();
+                BatchResponse response = null;
+                try {
+                    response = FirebaseMessaging.getInstance().sendMulticast(message);
+                } catch (FirebaseMessagingException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(response.getSuccessCount() + "건 메시지 전송 성공");
+
                 return ResponseEntity.ok().body(true);
             } catch (Exception e) {
+                e.printStackTrace();
                 ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
                 return ResponseEntity
                         .badRequest()
                         .body(responseDTO);
             }
-        }else {
+        } else {
             return ResponseEntity
                     .ok()
                     .body(false);
@@ -300,7 +318,7 @@ public class UserController {
 
     //회원탈퇴
     @PostMapping("userDelete")
-    public ResponseEntity<?> userDelete(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserDTO userDTO, String u_pw){
+    public ResponseEntity<?> userDelete(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserDTO userDTO, String u_pw) {
         String u_id = userDetails.getUsername();
         UserBean user = userService.userDelete(
                 u_id,
@@ -316,9 +334,6 @@ public class UserController {
         }
 
     }
-
-
-
 
 
 }
