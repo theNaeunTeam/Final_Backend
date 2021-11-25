@@ -8,7 +8,6 @@ import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
-import com.douzone.final_backend.DTO.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -150,17 +149,17 @@ public class UserService {
     public void insertReserve(ReserveDTO reserve) {
         log.info("insertReserve 안");
         int r = userDAO.insertReserve(reserve); // 데이터 삽입
-        log.info("insert"+r);
+        log.info("insert" + r);
 
         int r1 = userDAO.updateGoodsCount(reserve); // goods 테이블 상품수 빼기. 수량이 0이상이여야함
-        log.info("update1"+r1);
+        log.info("update1" + r1);
 
         int r2 = userDAO.updateGoodsStatus(reserve); //수량 확인하고 수량 0이면 판매완료로 바꾸기
 
-        if(r != 1 || r1 != 1 || r2 != 1){
+        if (r != 1 || r1 != 1 || r2 != 1) {
             throw new RuntimeException("예약 데이터 삽입 또는 수량 줄이기 실패");
         }
-        log.info("삽입/상품수량빼기/상태 변화" + r+"/"+r1);
+        log.info("삽입/상품수량빼기/상태 변화" + r + "/" + r1);
     }
 
     public int noShowCount(String u_id) {
@@ -168,7 +167,7 @@ public class UserService {
     }
 
     // 회원정보 업데이트
-    public int update(final UserBean userBean){
+    public int update(final UserBean userBean) {
         if (userBean == null || userBean.getU_id() == null) {
             log.warn("데이터 누락");
             throw new RuntimeException("데이터 누락");
@@ -177,21 +176,22 @@ public class UserService {
     }
 
     // 회원 탈퇴
-        public UserBean userDelete(final String u_id, final String u_pw, PasswordEncoder encoder) {
-            final UserBean originalUser = userDAO.findByUId(u_id);
-            log.info("PW : " + encoder.matches(u_pw, originalUser.getU_pw()));
-            log.info("PW?? " + originalUser.getU_pw());
+    public UserBean userDelete(final String u_id, final String u_pw, PasswordEncoder encoder) {
+        final UserBean originalUser = userDAO.findByUId(u_id);
+        log.info("PW : " + encoder.matches(u_pw, originalUser.getU_pw()));
+        log.info("PW?? " + originalUser.getU_pw());
 
-            if (originalUser != null && encoder.matches(u_pw, originalUser.getU_pw())) {
-                log.info("originalUser : " + originalUser);
-                //회원 탈퇴로 상태 수정DAO
-                userDAO.userDelete(u_id);
-                return originalUser;
-            }
-            return null;
+        if (originalUser != null && encoder.matches(u_pw, originalUser.getU_pw())) {
+            log.info("originalUser : " + originalUser);
+            //회원 탈퇴로 상태 수정DAO
+            userDAO.userDelete(u_id);
+            return originalUser;
         }
+        return null;
+    }
 
-
-
+    public List<String> getOwnerPushToken(int r_g_code) {
+        return userDAO.getOwnerPushToken(r_g_code);
+    }
 
 }

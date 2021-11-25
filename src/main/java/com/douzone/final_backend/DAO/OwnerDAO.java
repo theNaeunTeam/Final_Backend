@@ -183,4 +183,8 @@ public class OwnerDAO {
     public List<SaleDTO> getCategorySale(String r_owner) {
         return sqlSession.selectList("getCategorySale", r_owner);
     }
+
+    public int tokenDupChk(String token){
+        return sqlSession.selectOne("tokenDupChk", token);
+    }
 }

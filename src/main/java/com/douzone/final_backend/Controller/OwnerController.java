@@ -234,6 +234,9 @@ public class OwnerController {
                         .g_category(goods.getG_category())
                         .g_status(goods.getG_status())
                         .g_count(goods.getG_count())
+                        .g_discount(goods.getG_discount())
+                        .g_price(goods.getG_price())
+                        .r_pay(r.getR_pay())
                         .build();
                 log.info("responseDTO : " + responseDTO);
 
@@ -339,7 +342,7 @@ public class OwnerController {
 
     // 상품 조회에서 검색
     @GetMapping("search")
-    public ResponseEntity<?> seaech(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
+    public ResponseEntity<?> search(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
         String g_owner = userDetails.getUsername();
         log.info("search 넘어온 값 : " + userDetails + g_category + g_status + searchInput);
 
@@ -369,6 +372,12 @@ public class OwnerController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PostMapping("pushToken")
+    public String pushToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String pushToken) {
+        String o_sNumber = userDetails.getUsername();
+        log.info(pushToken);
+        return null;
+    }
 
     // 오너 대시보드 예약 시간별 보기
     @GetMapping("getTime")

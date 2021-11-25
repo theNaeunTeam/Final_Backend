@@ -316,6 +316,28 @@
         order by date;
     </select>
 
+
+    <!--    예약시 상품고유번호의 사업자번호를 토큰테이블에서 검색해서 반환-->
+    <select id="getPushTokenList" resultType="String">
+        select distinct token
+        from firebase_owner_push_token as f
+                 join reserve as r on f.g_owner_fk = r.r_owner
+        where r_g_code = #{r_g_code};
+    </select>
+
+    <select id="tokenDupChk" resultType="int">
+        select count(*)
+        from firebase_owner_push_token
+        where token = #{token}
+    </select>
+
+    <insert id="insertPushToken" parameterType="com.douzone.final_backend.DTO.PushTokenDTO">
+        insert into firebase_owner_push_token (g_owner_fk, token)
+        VALUES (#{g_owner_fk}, #{token})
+    </insert>
+
+
+
     <!-- 예약시간대별 count -->
     <select id="getTime" resultType="com.douzone.final_backend.DTO.SaleDTO">
         select a.hour as tal, ifnull(b.cnt, 0) as sum
