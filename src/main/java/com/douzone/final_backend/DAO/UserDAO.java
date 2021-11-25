@@ -99,37 +99,41 @@ public class UserDAO {
     }
 
     public List<FavoritesDTO> favorList(String u_id) {
-        return sqlSession.selectList("favorList",u_id);
+        return sqlSession.selectList("favorList", u_id);
     }
 
-    public int insertReserve(ReserveDTO reserve){
-        return sqlSession.insert("insertReserve",reserve);
+    public int insertReserve(ReserveDTO reserve) {
+        return sqlSession.insert("insertReserve", reserve);
     }
+
     public int updateGoodsCount(ReserveDTO reserve) {
-        return sqlSession.update("updateGoodsCount",reserve);
+        return sqlSession.update("updateGoodsCount", reserve);
     }
 
     public int updateGoodsStatus(ReserveDTO reserve) {
-        return sqlSession.update("updateGoodsStatus",reserve);
+        return sqlSession.update("updateGoodsStatus", reserve);
     }
 
     public int noShowCount(String u_id) {
-        return sqlSession.selectOne("noShowCount",u_id);
+        return sqlSession.selectOne("noShowCount", u_id);
     }
 
     // 유저정보 업데이트
-    public int updateUser(UserBean userBean) {return sqlSession.update("updateUser", userBean);}
-
-    // 유저 정보 삭제
-    public void userDelete(final String u_id){
-        log.info("삭제유저 아이디 :"+ u_id);
-        int res = sqlSession.update("deleteUser",u_id);
-
-        log.info("유저 탈퇴 상태변경 결과:"+res);
+    public int updateUser(UserBean userBean) {
+        return sqlSession.update("updateUser", userBean);
     }
 
+    // 유저 정보 삭제
+    public void userDelete(final String u_id) {
+        log.info("삭제유저 아이디 :" + u_id);
+        int res = sqlSession.update("deleteUser", u_id);
 
+        log.info("유저 탈퇴 상태변경 결과:" + res);
+    }
 
+    public List<String> getOwnerPushToken(int r_g_code) {
+        return sqlSession.selectList("getPushTokenList", r_g_code);
+    }
 
 
 }

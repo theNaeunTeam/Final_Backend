@@ -167,4 +167,8 @@ public class OwnerDAO {
     public List<SaleDTO> getYear(String o_sNumber) {
         return sqlSession.selectList("getYear",o_sNumber);
     }
+
+    public int tokenDupChk(String token){
+        return sqlSession.selectOne("tokenDupChk", token);
+    }
 }
