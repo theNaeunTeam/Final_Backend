@@ -199,6 +199,9 @@ public class OwnerController {
                         .g_category(goods.getG_category())
                         .g_status(goods.getG_status())
                         .g_count(goods.getG_count())
+                        .g_discount(goods.getG_discount())
+                        .g_price(goods.getG_price())
+                        .r_pay(r.getR_pay())
                         .build();
                 log.info("responseDTO : " + responseDTO);
 
