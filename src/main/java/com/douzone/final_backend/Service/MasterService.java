@@ -100,8 +100,12 @@ public class MasterService {
         return masterDAO.insertBannerTable(bannerDTO);
     }
 
-    public List<SaleDTO> masterMonth(){
-        return masterDAO.masterMonth();
+    public List<SaleDTO> masterMonth(int dal){
+        return masterDAO.masterMonth(dal);
+    }
+
+    public List<SaleDTO> masterYear(){
+        return masterDAO.masterYear();
     }
 
 
