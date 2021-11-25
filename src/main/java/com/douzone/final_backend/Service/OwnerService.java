@@ -219,15 +219,34 @@ public class OwnerService {
         ownerDAO.deleteStatus(g_code);
     }
 
-    public List<SaleDTO> getDay(String o_sNumber) {
-        return ownerDAO.getDay(o_sNumber);
+    public List<SaleDTO> getDay(OwnerPageDTO dto) {
+        return ownerDAO.getDay(dto);
     }
 
-    public List<SaleDTO> getMon(String o_sNumber) {
+    public List<SaleDTO> getMon(OwnerPageDTO o_sNumber) {
         return ownerDAO.getMon(o_sNumber);
     }
 
     public List<SaleDTO> getYear(String o_sNumber) {
         return ownerDAO.getYear(o_sNumber);
+    }
+
+    public List<SaleDTO> getTime(String r_owner) {
+
+        if (r_owner == null) throw new RuntimeException("들어온 값 없음");
+
+        return ownerDAO.getTime(r_owner);
+    }
+
+    public List<SaleDTO> getGender(String r_owner) {
+        return ownerDAO.getGender(r_owner);
+    }
+
+    public List<SaleDTO> getAge(String r_owner) {
+        return ownerDAO.getAge(r_owner);
+    }
+
+    public List<SaleDTO> getCategorySale(String r_owner) {
+        return ownerDAO.getCategorySale(r_owner);
     }
 }

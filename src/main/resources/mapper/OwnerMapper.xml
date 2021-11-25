@@ -267,7 +267,8 @@
         from (select ifnull(sum(r_pay), 0) as total from reserve where r_owner = #{o_sNumber} and r_status = 3) as a,
              (select ifnull(sum(r_pay), 0) as monTotal
               from reserve
-              where r_owner = #{o_sNumber} and r_status=3
+              where r_owner = #{o_sNumber}
+                and r_status = 3
                 and date_format(r_lastTime, '%Y-%m') = date_format(now(), '%Y-%m')) as b,
              (select count(*) as cnt from reserve where r_owner = #{o_sNumber} and r_status = 3) as c,
              (select o_name from owner where o_sNumber = #{o_sNumber}) as d
@@ -275,22 +276,35 @@
 
     <!-- 일별 수익 -->
     <select id="getDay" resultType="com.douzone.final_backend.DTO.SaleDTO">
-        select date_format(r_lastTime, '%Y-%m-%d') as date, ifnull(sum(r_pay), 0) as sum
-        from reserve
-        where r_owner = #{o_sNumber}
-          and r_status = 3
-        group by date
-        order by date;
+
+
+            set @N := (select date_format(last_day(str_to_date(${total}${monTotal}, '%Y%m')), '%d') as a);
+
+        <![CDATA[
+        select a.r as date, ifnull(b.cnt, 0) as sum
+        from (with recursive c as (select 1 as r union all select r + 1 from c where r < @N) select r from c) as a
+                 left join (select date_format(r_lastTime, '%d') as day, sum(r_pay) as cnt
+                            from reserve
+                            where month(r_lastTime) = ${monTotal}
+                              and year(r_lastTime) = ${total}
+                              and r_status = 3
+                              and r_owner = '${o_name}'
+                            group by day) as b
+                           on a.r = b.day
+        ]]>
     </select>
 
     <!-- 월별 수익 -->
     <select id="getMon" resultType="com.douzone.final_backend.DTO.SaleDTO">
-        select date_format(r_lastTime, '%Y-%m') as date, ifnull(sum(r_pay), 0) as sum
-        from reserve
-        where r_owner = #{o_sNumber}
-          and r_status = 3
-        group by date
-        order by date;
+        select a.r as date, ifnull(b.cnt, 0) as sum
+        from <![CDATA[(with recursive c as (select 1 as r union all select r + 1 from c where r < 12) select r from c)]]> as a
+                 left join (select month(r_lastTime) as mon, sum(r_pay) as cnt
+                            from reserve
+                            where r_status = 3
+                              and r_owner = #{o_name}
+                              and year(r_lastTime) = #{total}
+                            group by mon) as b
+                           on a.r = b.mon;
     </select>
     <!-- 연도별 수익-->
     <select id="getYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
@@ -300,5 +314,69 @@
           and r_status = 3
         group by date
         order by date;
+    </select>
+
+    <!-- 예약시간대별 count -->
+    <select id="getTime" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select a.hour as tal, ifnull(b.cnt, 0) as sum
+        from (select @a := @a + 1 as hour
+              from owner,
+                   (select @a := -1 from owner) nn
+              limit 24) a
+                 left join
+             (select hour(r_firstTime) as hour, count(*) as cnt
+              from reserve
+              where r_status = 3
+                and r_owner = #{r_owner}
+              group by hour) as b
+             on a.hour = b.hour;
+    </select>
+
+    <!-- 성별 구매 비율 -->
+    <select id="getGender" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select a.gender as date, ifnull(b.cnt, 0) as sum
+        from (select *
+              from (select '남성' as gender
+                    union
+                    select '여성') as b) as a
+                 left join (select u.u_gender as gender, count(*) as cnt
+                            from reserve as r
+                                     join user as u
+                                          on r.r_status = 3 and r.r_owner = #{r_owner} and r.r_u_id = u.u_id
+                            group by gender) as b
+                           on a.gender = b.gender
+        group by date
+    </select>
+
+    <!-- 연령대 구매 비율 -->
+    <select id="getAge" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select b.age as date, ifnull(c.cnt, 0) as sum
+        from (select *
+              from (select '10대' as age
+                    union
+                    select '20대'
+                    union
+                    select '30대'
+                    union
+                    select '40대'
+                    union
+                    select '50대') as a
+             ) as b
+                 left join (select u.u_age as a, count(*) cnt
+                            from reserve as r
+                                     join user as u
+                                          on r.r_status = 3 and r.r_owner = #{r_owner} and r.r_u_id = u.u_id
+                            group by a) as c
+                           on substr(age, 1, 2) = c.a
+        group by age;
+    </select>
+
+    <!-- 카테고리별 구매 -->
+    <select id="getCategorySale" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select g_category as date, count(*) as sum
+        from goods as g
+                 join reserve as r on g.g_code = r.r_g_code and r_status = 3 and r_owner = 123
+        group by g_category;
+
     </select>
 </mapper>
