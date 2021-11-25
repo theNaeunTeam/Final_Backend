@@ -89,8 +89,8 @@ public class MasterDAO {
         return sqlSession.selectList("masterMonth", dal);
     }
 
-    public List<SaleDTO> masterYear(int dal){
-        return sqlSession.selectList("masterYear", dal);
+    public List<SaleDTO> masterYear(){
+        return sqlSession.selectList("masterYear");
     }
 
 }

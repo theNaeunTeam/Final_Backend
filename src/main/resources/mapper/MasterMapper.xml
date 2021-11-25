@@ -102,14 +102,22 @@
     </select>
 
     <select id="masterYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
+<!--        select aa.r as date, ifnull(bb.cnt1,0) as sum, ifnull(bb.cnt2,0) as tal-->
+<!--        from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{dal}) select r from c) as aa-->
+<!--                    left join (select  year(o_date) as year,count(case when o_approval = 1 then 1 end) as cnt1, count(case when o_approval =4 then 1 end) as cnt2-->
+<!--                               from owner-->
+<!--                               where o_approval in(1,4)-->
+<!--                               group by year order by year) as bb-->
+<!--                on aa.r = bb.year-->
         <![CDATA[
-        select aa.r as date, ifnull(bb.cnt1,0) as sum, ifnull(bb.cnt2,0) as tal
-        from(with recursive c as (select 2019 as r union all select r+1 from c where r<2022) select r from c) as aa
-                    left join (select  year(o_date) as year,count(case when o_approval = 1 then 1 end) as cnt1, count(case when o_approval =4 then 1 end) as cnt2
-                               from owner
-                               where o_approval in(1,4)
-                               group by year order by year) as bb
-                on aa.r = bb.year
+        select year(o_date) as date,
+               count(case when o_approval = 1 then 1 end) as sum,
+               count(case when o_approval = 4 then 1 end) as tal
+        from owner
+        where o_approval in (1,4)
+          and year(o_date) > 2018
+        group by date
+        order by date;
         ]]>
     </select>
 

@@ -222,14 +222,16 @@ public class MasterController {
             List<Object> responseYearList = new ArrayList<>();
             for (int dal= 2019 ; dal <= nowYear ; dal++){
                 List<SaleDTO> mon =  masterService.masterMonth(dal);
-                List<SaleDTO> year = masterService.masterYear(dal);
                 responseMonList.add(mon);
-                responseYearList.add(year);
             }
+                List<SaleDTO> year = masterService.masterYear();
+//                responseYearList.add(year);
+                log.info(responseYearList+"");
             SaleDTO result = SaleDTO.builder()
                     .totalMon(responseMonList)
-                    .totalYear(responseYearList)
+                    .year(year)
                     .build();
+
             return ResponseEntity.ok().body(result);
 
         }catch (Exception e){

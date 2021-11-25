@@ -104,8 +104,8 @@ public class MasterService {
         return masterDAO.masterMonth(dal);
     }
 
-    public List<SaleDTO> masterYear(int dal){
-        return masterDAO.masterYear(dal);
+    public List<SaleDTO> masterYear(){
+        return masterDAO.masterYear();
     }
 
 
