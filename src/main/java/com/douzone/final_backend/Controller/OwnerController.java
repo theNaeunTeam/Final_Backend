@@ -72,8 +72,12 @@ public class OwnerController {
                     .build();
             List<SaleDTO> m = ownerService.getMon(mm);
             mon.add(m);
-
-            for(int j = 1 ; j<= 12 ; j++)
+            int a = 12;
+            if(i == y){
+                a = Calendar.getInstance().get(Calendar.MONTH)+1;
+                log.info(a+" a");
+            }
+            for(int j = 1 ; j<= a ; j++)
             {
                 OwnerPageDTO dd = OwnerPageDTO.builder()
                         .o_name(o_sNumber)

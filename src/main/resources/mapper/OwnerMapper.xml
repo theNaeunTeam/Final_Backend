@@ -278,7 +278,7 @@
     <select id="getDay" resultType="com.douzone.final_backend.DTO.SaleDTO">
 
 
-            set @N := (select date_format(last_day(str_to_date(${monTotal}, '%m')), '%d') as a);
+            set @N := (select date_format(last_day(str_to_date(${total}${monTotal}, '%Y%m')), '%d') as a);
 
         <![CDATA[
         select a.r as date, ifnull(b.cnt, 0) as sum
