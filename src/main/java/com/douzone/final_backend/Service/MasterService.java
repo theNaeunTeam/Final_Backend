@@ -104,10 +104,24 @@ public class MasterService {
         return masterDAO.masterMonth(dal);
     }
 
-    public List<SaleDTO> masterYear(){
-        return masterDAO.masterYear();
+    public List<SaleDTO> masterYear(int nowYear){
+        return masterDAO.masterYear(nowYear);
     }
 
+    public List<SaleDTO> userMonth(int dal){
+        return masterDAO.userMonth(dal);
+    }
 
+    public List<SaleDTO> userYear(int nowYear) {
+        return masterDAO.userYear(nowYear);
+    }
+
+    public  List<SaleDTO> ownerUser(int dal){
+        return masterDAO.ownerUser(dal);
+    }
+
+    public List<SaleDTO> onnerUserYear(int nowYear) {
+        return masterDAO.onnerUserYear(nowYear);
+    }
 
 }

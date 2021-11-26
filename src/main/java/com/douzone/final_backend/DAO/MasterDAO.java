@@ -89,8 +89,24 @@ public class MasterDAO {
         return sqlSession.selectList("masterMonth", dal);
     }
 
-    public List<SaleDTO> masterYear(){
-        return sqlSession.selectList("masterYear");
+    public List<SaleDTO> masterYear(int nowYear){
+        return sqlSession.selectList("masterYear", nowYear);
     }
+
+    public List<SaleDTO> userMonth(int dal){
+        return sqlSession.selectList("userMonth", dal);
+    }
+
+    public List<SaleDTO> userYear(int nowYear){
+        return sqlSession.selectList("userYear", nowYear);
+    }
+
+    public List<SaleDTO> ownerUser(int dal){
+        return sqlSession.selectList("ownerUser", dal);
+    }
+    public List<SaleDTO> onnerUserYear(int nowYear){
+        return sqlSession.selectList("onnerUserYear", nowYear);
+    }
+
 
 }
