@@ -117,7 +117,7 @@ public class MasterController {
         }
     }
 
-    // 가게 승인대기중 리스트 불러오기
+    // 가게 승인완료 리스트 불러오기
     @GetMapping("/approvalCompletion")
     public ResponseEntity<?> approvalWaiting() {
 
@@ -211,22 +211,21 @@ public class MasterController {
         }
     }
   
-    // 월별 가입자수 가져오기
+    // 월별 오너 가입 탈퇴수 가져오기
     @GetMapping("/masterMonth")
-    public ResponseEntity MonthChart(){
+    public ResponseEntity MonthMasterChart(){
         log.info("masterMonth 들어왓다");
         try{
             int nowYear = Calendar.getInstance().get(Calendar.YEAR);
             log.info(""+nowYear);
             List<Object> responseMonList = new ArrayList<>();
-            List<Object> responseYearList = new ArrayList<>();
             for (int dal= 2019 ; dal <= nowYear ; dal++){
                 List<SaleDTO> mon =  masterService.masterMonth(dal);
                 responseMonList.add(mon);
             }
-                List<SaleDTO> year = masterService.masterYear();
-//                responseYearList.add(year);
-                log.info(responseYearList+"");
+                List<SaleDTO> year = masterService.masterYear(nowYear);
+                log.info("000000000000000000000000");
+                log.info(""+year);
             SaleDTO result = SaleDTO.builder()
                     .totalMon(responseMonList)
                     .year(year)
@@ -234,6 +233,91 @@ public class MasterController {
 
             return ResponseEntity.ok().body(result);
 
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 월별 유저 가입 탈퇴수 가져오기
+    @GetMapping("/userMonth")
+    public ResponseEntity MonthUserChart(){
+        log.info("UserMonth 들어왓다");
+        try{
+            int nowYear = Calendar.getInstance().get(Calendar.YEAR);
+            log.info(""+nowYear);
+            List<Object> responseMonList = new ArrayList<>();
+            for (int dal= 2019 ; dal <= nowYear ; dal++){
+                List<SaleDTO> mon =  masterService.userMonth(dal);
+                responseMonList.add(mon);
+            }
+            List<SaleDTO> year = masterService.userYear(nowYear);
+
+            SaleDTO result = SaleDTO.builder()
+                    .totalMon(responseMonList)
+                    .year(year)
+                    .build();
+
+            return ResponseEntity.ok().body(result);
+
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 월별 오너 + 유저 가입자수 가져오기 - MasterChart.tsx
+    @GetMapping("/OwnerUserChart")
+    public ResponseEntity OnwerUserChart(){
+        log.info("MasterUserChart 들어왓다");
+        try{
+            int nowYear = Calendar.getInstance().get(Calendar.YEAR);
+            log.info(""+nowYear);
+            List<Object> responseMonList = new ArrayList<>();
+            for (int dal= 2019 ; dal <= nowYear ; dal++){
+                List<SaleDTO> mon =  masterService.ownerUser(dal);
+                responseMonList.add(mon);
+            }
+            List<SaleDTO> year = masterService.onnerUserYear(nowYear);
+
+            SaleDTO result = SaleDTO.builder()
+                    .totalMon(responseMonList)
+                    .year(year)
+                    .build();
+
+            return ResponseEntity.ok().body(result);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 월별 오너 + 유저 탈퇴수 가져오기 - MasterChart2.tsx
+    @GetMapping("/OwnerUserChart2")
+    public ResponseEntity OnwerUserChart2(){
+        log.info("MasterUserChart 들어왓다");
+        try{
+            int nowYear = Calendar.getInstance().get(Calendar.YEAR);
+            log.info(""+nowYear);
+            List<Object> responseMonList = new ArrayList<>();
+            for (int dal= 2019 ; dal <= nowYear ; dal++){
+                List<SaleDTO> mon =  masterService.ownerUser2(dal);
+                responseMonList.add(mon);
+            }
+            List<SaleDTO> year = masterService.onnerUserYear2(nowYear);
+
+            SaleDTO result = SaleDTO.builder()
+                    .totalMon(responseMonList)
+                    .year(year)
+                    .build();
+
+            return ResponseEntity.ok().body(result);
         }catch (Exception e){
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
