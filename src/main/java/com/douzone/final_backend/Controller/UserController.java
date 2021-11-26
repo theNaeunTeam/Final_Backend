@@ -287,9 +287,10 @@ public class UserController {
 
                 List<String> registrationTokens = userService.getOwnerPushToken(reserveDTO.get(0).getR_g_code());
                 MulticastMessage message = MulticastMessage.builder()
-                        .putData("title", "예약이 등록되었습니다")
-                        .putData("body", reserveDTO.get(0).getG_name() + "외 " + reserveDTO.get(0).getR_count() + "개")
-                        .putData("etc", reserveDTO.get(0).getR_customOrder())
+                        .putData("title", "새 예약건이 있습니다")
+                        .putData("body", reserveDTO.get(0).getG_name() + " 외 " + reserveDTO.get(0).getR_count() + "개")
+                        .putData("image", "이미지주소")
+                        .putData("r_customOrder",reserveDTO.get(0).getR_customOrder())
                         .addAllTokens(registrationTokens)
                         .build();
                 BatchResponse response = null;
