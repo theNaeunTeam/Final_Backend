@@ -73,7 +73,7 @@
     <select id="recommendList" resultType="com.douzone.final_backend.DTO.RecommendListDTO">
         select g_owner, g_name, g_price, g_discount, g_image, o_name from goods
         join owner o on o.o_sNumber = goods.g_owner
-        where g_status = 0 order by g_register desc
+        where g_status = 0 and g_count != 0 order by g_register desc
         limit 0,4;
     </select>
 
