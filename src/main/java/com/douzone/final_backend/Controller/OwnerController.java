@@ -1,6 +1,7 @@
 package com.douzone.final_backend.Controller;
 
 import com.douzone.final_backend.Bean.GoodsBean;
+import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
@@ -70,12 +71,11 @@ public class OwnerController {
             List<SaleDTO> m = ownerService.getMon(mm);
             mon.add(m);
             int a = 12;
-            if(i == y){
-                a = Calendar.getInstance().get(Calendar.MONTH)+1;
-                log.info(a+" a");
+            if (i == y) {
+                a = Calendar.getInstance().get(Calendar.MONTH) + 1;
+                log.info(a + " a");
             }
-            for(int j = 1 ; j<= a ; j++)
-            {
+            for (int j = 1; j <= a; j++) {
                 OwnerPageDTO dd = OwnerPageDTO.builder()
                         .o_name(o_sNumber)
                         .total(i)
@@ -95,7 +95,7 @@ public class OwnerController {
                 .year(year)
                 .build();
 
-        log.info(responseDTO+"결과 !");
+
         return ResponseEntity.ok().body(responseDTO);
     }
 //    @GetMapping("getMon")
@@ -195,14 +195,9 @@ public class OwnerController {
         log.info("reserveList 주인 :  " + userDetails.getUsername());
         try {
             List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
-
-            log.info("reserveBeans : " + reserveBeans);
-
-
             log.info("if null");
             List<ReserveDTO> responseDTOList = new ArrayList<>();
             for (ReserveBean r : reserveBeans) {
-                log.info("반복문");
                 GoodsBean goods = ownerService.goodsData(r.getR_g_code());
 
 //                GoodsDTO goods = GoodsDTO.builder()
@@ -214,7 +209,6 @@ public class OwnerController {
 //                        .g_status(goodsBean.getG_status())
 //                        .g_count(goodsBean.getG_count())
 //                        .build();
-                log.info("goods : "+goods);
                 ReserveDTO responseDTO = ReserveDTO.builder()
                         .r_code(r.getR_code())
                         .r_u_id(r.getR_u_id())
@@ -235,13 +229,11 @@ public class OwnerController {
                         .g_price(goods.getG_price())
                         .r_pay(r.getR_pay())
                         .build();
-                log.info("responseDTO : " + responseDTO);
 
                 responseDTOList.add(responseDTO);
 
             }
 //                log.info("responseDTOList : "+responseDTOList);
-
             return ResponseEntity.ok().body(responseDTOList);
 
         } catch (Exception e) {
@@ -372,7 +364,7 @@ public class OwnerController {
     @PostMapping("pushToken")
     public boolean pushToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PushTokenDTO pushTokenDTO) {
         String o_sNumber = userDetails.getUsername();
-        log.info("ㅁㅇㄴㄹㄴㅁㄹㅁㄴㅇㄹㅇㄴㅁㄹㅇㄴㅁㄹㅇㄴㄹㅇㄴㄹㅁㅇㄹㅇㄴㄹㅁㄴㅇㄹ"+pushTokenDTO);
+        log.info("ㅁㅇㄴㄹㄴㅁㄹㅁㄴㅇㄹㅇㄴㅁㄹㅇㄴㅁㄹㅇㄴㄹㅇㄴㄹㅁㅇㄹㅇㄴㄹㅁㄴㅇㄹ" + pushTokenDTO);
         pushTokenDTO.setG_owner_fk(o_sNumber);
         return ownerService.pushToken(pushTokenDTO);
     }
@@ -446,6 +438,56 @@ public class OwnerController {
                     .badRequest()
                     .body(responseDTO);
         }
+    }
+
+    // 오너 노쇼발생, 취소 발생, 유통기한 경과 판매중지 건수와 확률
+    @GetMapping("getOwnerBoard")
+    public ResponseEntity<?> getOwnerBoard(@AuthenticationPrincipal UserDetails userDetails) {
+        String owner = userDetails.getUsername();
+        log.info("getOwnerBoard 들어옴");
+        try {
+            SaleDTO noshow = ownerService.getNoShow(owner);
+            SaleDTO cancel = ownerService.getCancel(owner);
+            SaleDTO over = ownerService.getOver(owner);
+
+            SaleDTO responseDTO = SaleDTO.builder()
+                    .a(noshow)
+                    .b(cancel)
+                    .c(over)
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+
+
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 가맹 해지 신청
+    @PostMapping("ownerExit")
+    public ResponseEntity<?> ownerExit(@AuthenticationPrincipal UserDetails userDetails , @RequestBody OwnerDTO dto){
+        String o_sNumber = userDetails.getUsername();
+        log.info("ownerExit " +dto);
+        log.info("ownerExit " +o_sNumber);
+
+
+        OwnerBean owner = ownerService.getByCredentials(o_sNumber,dto.getO_pw(),passwordEncoder);
+
+        if(owner != null){
+            int result = ownerService.ownerExit(o_sNumber);
+            return ResponseEntity.ok().body(result);
+        }else{
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .error("비밀번호 틀림 실패")
+                    .build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+
     }
 
 }

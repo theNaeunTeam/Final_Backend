@@ -255,4 +255,20 @@ public class OwnerService {
             return false;
         }
     }
+
+    public SaleDTO getNoShow(String owner) {
+        return ownerDAO.getNoShow(owner);
+    }
+
+    public SaleDTO getCancel(String owner) {
+        return ownerDAO.getCancel(owner);
+    }
+
+    public SaleDTO getOver(String owner) {
+        return ownerDAO.getOver(owner);
+    }
+
+    public int ownerExit(String o_sNumber) {
+        return ownerDAO.ownerExit(o_sNumber);
+    }
 }

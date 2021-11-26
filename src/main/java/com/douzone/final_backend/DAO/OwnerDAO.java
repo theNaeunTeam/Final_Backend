@@ -191,4 +191,20 @@ public class OwnerDAO {
     public int insertPushToken(PushTokenDTO pushTokenDTO){
         return sqlSession.insert("insertPushToken", pushTokenDTO);
     }
+
+    public SaleDTO getNoShow(String owner) {
+        return sqlSession.selectOne("getNoShow",owner);
+    }
+
+    public SaleDTO getCancel(String owner) {
+        return sqlSession.selectOne("getCancel",owner);
+    }
+
+    public SaleDTO getOver(String owner) {
+        return sqlSession.selectOne("getOver",owner);
+    }
+
+    public int ownerExit(String o_sNumber) {
+        return sqlSession.update("ownerExit",o_sNumber);
+    }
 }
