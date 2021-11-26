@@ -1,6 +1,7 @@
 package com.douzone.final_backend.Service;
 
 import com.douzone.final_backend.DAO.CommonDAO;
+import com.douzone.final_backend.DTO.RecommendListDTO;
 import com.douzone.final_backend.DTO.ShopListDTO;
 import com.douzone.final_backend.DTO.ShoppingCartDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -29,4 +30,7 @@ public class CommonService {
         return commonDAO.getCategory(g_owner);
     }
 
+    public List<RecommendListDTO> getRecommendList(){
+        return commonDAO.getRecommendList();
+    }
 }
