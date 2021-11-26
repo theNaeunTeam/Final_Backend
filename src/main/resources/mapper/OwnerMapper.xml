@@ -317,7 +317,7 @@
     </select>
 
 
-    <!--    예약시 상품고유번호의 사업자번호를 토큰테이블에서 검색해서 반환-->
+    <!--    예약시 상품고유번호의 사업자번호와 같은 토큰 여러개를 검색해서 반환-->
     <select id="getPushTokenList" resultType="String">
         select distinct token
         from firebase_owner_push_token as f
