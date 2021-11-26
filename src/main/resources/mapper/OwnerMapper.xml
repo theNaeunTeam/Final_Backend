@@ -51,6 +51,7 @@
         select *
         from goods
         where g_owner = #{o_sNumber}
+        order by g_status
     </select>
 
 
@@ -152,6 +153,7 @@
         select *
         from reserve
         where r_owner = #{g_owner}
+        order by r_status
     </select>
 
     <!-- g_code로 물건 정보 조회 -->
@@ -278,7 +280,7 @@
     <select id="getDay" resultType="com.douzone.final_backend.DTO.SaleDTO">
 
 
-            set @N := (select date_format(last_day(str_to_date(${total}${monTotal}, '%Y%m')), '%d') as a);
+        set @N := (select date_format(last_day(str_to_date(${total}${monTotal}, '%Y%m')), '%d') as a);
 
         <![CDATA[
         select a.r as date, ifnull(b.cnt, 0) as sum
@@ -317,7 +319,7 @@
     </select>
 
 
-    <!--    예약시 상품고유번호의 사업자번호를 토큰테이블에서 검색해서 반환-->
+    <!--    예약시 상품고유번호의 사업자번호와 같은 토큰 여러개를 검색해서 반환-->
     <select id="getPushTokenList" resultType="String">
         select distinct token
         from firebase_owner_push_token as f
@@ -335,7 +337,6 @@
         insert into firebase_owner_push_token (g_owner_fk, token)
         VALUES (#{g_owner_fk}, #{token})
     </insert>
-
 
 
     <!-- 예약시간대별 count -->
@@ -401,4 +402,47 @@
         group by g_category;
 
     </select>
+
+    <!-- 노쇼 건수와 노쇼발생 비율-->
+    <select id="getNoShow" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select count(case when r_status = 4 then 1 end) as sum,
+               round(
+                               count(case when r_status = 4 then 1 end) /
+                               count(case when r_status in (3, 4, 5) then 1 end) *
+                               100
+                   )
+                                                        as tal
+        from reserve
+        where r_owner = #{owner}
+    </select>
+
+    <!--취소 건수와 발생 비율 -->
+    <select id="getCancel" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        select count(case when r_status = 5 then 1 end) as sum,
+               round(
+                               count(case when r_status = 5 then 1 end) /
+                               count(case when r_status in (3, 4, 5) then 1 end) *
+                               100
+                   )
+                                                        as tal
+        from reserve
+        where r_owner = #{owner}
+    </select>
+    <!--유통기한 경과 건수와 발생 비율 -->
+    <select id="getOver" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        <![CDATA[
+        select count(case when g_expireDate < date_format(now(), '%Y-%m-%d') and g_status = 2 then 1 end) as sum,
+               round(count(case when g_expireDate < date_format(now(), '%Y-%m-%d') and g_status = 2 then 1 end) /
+                     count(*) *
+                     100)                                                                                 as tal
+         ]]>
+        from goods
+        where g_owner = #{owner}
+    </select>
+
+    <update id="ownerExit" parameterType="String">
+        update owner
+        set o_approval = 3
+        where o_sNumber = #{o_sNumber}
+    </update>
 </mapper>

@@ -6,6 +6,7 @@
     <select id="findAll" resultType="com.douzone.final_backend.Bean.OwnerBean">
         select *
         from owner
+        order by o_approval in (0, 4) desc, o_approval
     </select>
 
     <update id="requestOK" parameterType="String">
@@ -35,6 +36,7 @@
     <select id="userAll" resultType="com.douzone.final_backend.Bean.UserBean">
         select*
         from user
+        order by u_date desc
     </select>
 
 
@@ -59,7 +61,7 @@
     <update id="terminationOK" parameterType="String">
         update owner
         set o_approval = 1,
-            o_date = now()
+            o_date     = now()
         where o_sNumber = #{o_sNumber}
     </update>
 
@@ -76,11 +78,13 @@
     </update>
 
     <select id="getBanner" resultType="com.douzone.final_backend.DTO.BannerDTO">
-    select * from banner
+        select *
+        from banner
     </select>
 
     <delete id="deleteBannerTable">
-        delete from banner;
+        delete
+        from banner;
     </delete>
 
     <insert id="insertBannerTable" parameterType="com.douzone.final_backend.DTO.BannerDTO">
@@ -90,18 +94,29 @@
 
     <select id="masterMonth" resultType="com.douzone.final_backend.DTO.SaleDTO">
         <![CDATA[
-        select aa.r as date, ifnull(bb.cnt1,0) as sum, ifnull(bb.cnt2,0) as tal
-        from (with recursive c as ( select 1 as r union all select r+1 from c where r<12) select r from c) as aa
-        left join (select  month(o_date) as mon,count(case when o_approval = 1 then 1 end) as cnt1, count(case when o_approval =4 then 1 end) as cnt2
-        from owner
-        where o_approval in(1,4)
-        and year(o_date) = #{dal}
-        group by mon order by mon) as bb
-        on aa.r = bb.mon;
+        select aa.r as date, ifnull(bb.cnt1, 0) as sum, ifnull(bb.cnt2, 0) as tal
+        from (with recursive c as (select 1 as r union all select r + 1 from c where r < 12) select r from c) as aa
+                 left join (select month(o_date)                              as mon,
+                                   count(case when o_approval = 1 then 1 end) as cnt1,
+                                   count(case when o_approval = 4 then 1 end) as cnt2
+                            from owner
+                            where o_approval in (1, 4)
+                              and year(o_date) = #{dal}
+                            group by mon
+                            order by mon) as bb
+                           on aa.r = bb.mon;
         ]]>
     </select>
 
     <select id="masterYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
+
+        <!--        select aa.r as date, ifnull(bb.cnt1,0) as sum, ifnull(bb.cnt2,0) as tal-->
+        <!--        from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{dal}) select r from c) as aa-->
+        <!--                    left join (select  year(o_date) as year,count(case when o_approval = 1 then 1 end) as cnt1, count(case when o_approval =4 then 1 end) as cnt2-->
+        <!--                               from owner-->
+        <!--                               where o_approval in(1,4)-->
+        <!--                               group by year order by year) as bb-->
+        <!--                on aa.r = bb.year-->
         <![CDATA[
         select aa.r as date, ifnull(bb.cnt1,0) as sum, ifnull(bb.cnt2,0) as tal
         from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa

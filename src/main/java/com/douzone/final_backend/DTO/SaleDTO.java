@@ -17,6 +17,10 @@ public class SaleDTO {
     private int tal;
 
 
+    SaleDTO a;
+    SaleDTO b;
+    SaleDTO c;
+
     List<SaleDTO> day;
     List<SaleDTO> mon;
     List<SaleDTO> year;

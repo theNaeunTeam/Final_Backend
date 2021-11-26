@@ -169,8 +169,8 @@
 
     <!-- 예약 신청 시 예약 테이블에 추가 -->
     <insert id="insertReserve" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
-        insert into reserve(r_u_id, r_g_code, r_firstTime, r_count, r_customOrder, r_owner, r_pay)
-        values (#{r_u_id}, #{r_g_code}, #{r_firstTime}, #{r_count}, #{r_customOrder}, #{r_owner}, #{r_pay})
+        insert into reserve(r_u_id, r_g_code, r_firstTime, r_count, r_customOrder, r_owner, r_pay, r_firstDate)
+        values (#{r_u_id}, #{r_g_code}, #{r_firstTime}, #{r_count}, #{r_customOrder}, #{r_owner}, #{r_pay}, #{r_firstDate})
     </insert>
     <!-- insert 되면 goods 테이블에 해당 상품 수량 빼기 -->
     <update id="updateGoodsCount" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
