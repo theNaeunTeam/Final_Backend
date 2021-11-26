@@ -286,22 +286,23 @@ public class UserController {
                 }
 
                 List<String> registrationTokens = userService.getOwnerPushToken(reserveDTO.get(0).getR_g_code());
-                MulticastMessage message = MulticastMessage.builder()
-                        .putData("title", reserveDTO.size() + "개의 새 예약건이 있습니다")
-                        .putData("body", "예약현황 페이지를 확인해 주세요")
-                        .putData("image", " ")
-                        .putData("r_customOrder", reserveDTO.get(0).getR_customOrder())
-                        .putData("r_firstTime", reserveDTO.get(0).getR_firstTime())
-                        .addAllTokens(registrationTokens)
-                        .build();
-                BatchResponse response = null;
-                try {
-                    response = FirebaseMessaging.getInstance().sendMulticast(message);
-                } catch (FirebaseMessagingException e) {
-                    e.printStackTrace();
+                if (!registrationTokens.isEmpty()) {
+                    MulticastMessage message = MulticastMessage.builder()
+                            .putData("title", reserveDTO.size() + "개의 새 예약건이 있습니다")
+                            .putData("body", "예약현황 페이지를 확인해 주세요")
+                            .putData("image", " ")
+                            .putData("r_customOrder", reserveDTO.get(0).getR_customOrder())
+                            .putData("r_firstTime", reserveDTO.get(0).getR_firstTime())
+                            .addAllTokens(registrationTokens)
+                            .build();
+                    BatchResponse response = null;
+                    try {
+                        response = FirebaseMessaging.getInstance().sendMulticast(message);
+                    } catch (FirebaseMessagingException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(response.getSuccessCount() + "건 메시지 전송 성공");
                 }
-
-                System.out.println(response.getSuccessCount() + "건 메시지 전송 성공");
 
                 return ResponseEntity.ok().body(true);
             } catch (Exception e) {
