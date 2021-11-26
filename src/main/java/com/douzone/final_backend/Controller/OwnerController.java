@@ -4,10 +4,7 @@ import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
-import com.douzone.final_backend.DTO.GoodsDTO;
-import com.douzone.final_backend.DTO.OwnerPageDTO;
-import com.douzone.final_backend.DTO.ReserveDTO;
-import com.douzone.final_backend.DTO.SaleDTO;
+import com.douzone.final_backend.DTO.*;
 import com.douzone.final_backend.Service.OwnerService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -373,10 +370,12 @@ public class OwnerController {
     }
 
     @PostMapping("pushToken")
-    public String pushToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String pushToken) {
+    public boolean pushToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody String pushToken) {
         String o_sNumber = userDetails.getUsername();
-        log.info(pushToken);
-        return null;
+        PushTokenDTO pushTokenDTO = new PushTokenDTO();
+        pushTokenDTO.setToken(pushToken);
+        pushTokenDTO.setG_owner_fk(o_sNumber);
+        return ownerService.pushToken(pushTokenDTO);
     }
 
     // 오너 대시보드 예약 시간별 보기

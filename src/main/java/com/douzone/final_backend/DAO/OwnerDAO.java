@@ -187,4 +187,8 @@ public class OwnerDAO {
     public int tokenDupChk(String token){
         return sqlSession.selectOne("tokenDupChk", token);
     }
+
+    public int insertPushToken(PushTokenDTO pushTokenDTO){
+        return sqlSession.insert("insertPushToken", pushTokenDTO);
+    }
 }

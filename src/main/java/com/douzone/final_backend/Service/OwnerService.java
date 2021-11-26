@@ -4,10 +4,7 @@ import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
-import com.douzone.final_backend.DTO.GoodsDTO;
-import com.douzone.final_backend.DTO.OwnerPageDTO;
-import com.douzone.final_backend.DTO.ReserveDTO;
-import com.douzone.final_backend.DTO.SaleDTO;
+import com.douzone.final_backend.DTO.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -248,5 +245,14 @@ public class OwnerService {
 
     public List<SaleDTO> getCategorySale(String r_owner) {
         return ownerDAO.getCategorySale(r_owner);
+    }
+
+    public boolean pushToken(PushTokenDTO pushTokenDTO) {
+        if (ownerDAO.tokenDupChk(pushTokenDTO.getToken()) == 0) {
+            ownerDAO.insertPushToken(pushTokenDTO);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
