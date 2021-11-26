@@ -1,5 +1,6 @@
 package com.douzone.final_backend.DAO;
 
+import com.douzone.final_backend.DTO.RecommendListDTO;
 import com.douzone.final_backend.DTO.ShopListDTO;
 import com.douzone.final_backend.DTO.ShoppingCartDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,10 @@ public class CommonDAO {
 
     public HashMap<String, Object> getCategory(String g_owner) {
         return sqlSession.selectOne("getCategory", g_owner);
+    }
+
+    public List<RecommendListDTO> getRecommendList() {
+        return sqlSession.selectList("recommendList");
     }
 
 }

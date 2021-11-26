@@ -348,4 +348,14 @@ public class CommonController {
         }
     }
 
+    @GetMapping("/recommendList")
+    public ResponseEntity<?> recommendList() {
+        try {
+            List<RecommendListDTO> list = commonService.getRecommendList();
+            return ResponseEntity.ok(list);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
 }
