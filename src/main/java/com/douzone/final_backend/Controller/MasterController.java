@@ -270,8 +270,8 @@ public class MasterController {
         }
     }
 
-    // 월별 오너 + 유저 가입자수 가져오기
-    @GetMapping("/OnwerUserChart")
+    // 월별 오너 + 유저 가입자수 가져오기 - MasterChart.tsx
+    @GetMapping("/OwnerUserChart")
     public ResponseEntity OnwerUserChart(){
         log.info("MasterUserChart 들어왓다");
         try{
@@ -283,6 +283,34 @@ public class MasterController {
                 responseMonList.add(mon);
             }
             List<SaleDTO> year = masterService.onnerUserYear(nowYear);
+
+            SaleDTO result = SaleDTO.builder()
+                    .totalMon(responseMonList)
+                    .year(year)
+                    .build();
+
+            return ResponseEntity.ok().body(result);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    // 월별 오너 + 유저 탈퇴수 가져오기 - MasterChart2.tsx
+    @GetMapping("/OwnerUserChart2")
+    public ResponseEntity OnwerUserChart2(){
+        log.info("MasterUserChart 들어왓다");
+        try{
+            int nowYear = Calendar.getInstance().get(Calendar.YEAR);
+            log.info(""+nowYear);
+            List<Object> responseMonList = new ArrayList<>();
+            for (int dal= 2019 ; dal <= nowYear ; dal++){
+                List<SaleDTO> mon =  masterService.ownerUser2(dal);
+                responseMonList.add(mon);
+            }
+            List<SaleDTO> year = masterService.onnerUserYear2(nowYear);
 
             SaleDTO result = SaleDTO.builder()
                     .totalMon(responseMonList)

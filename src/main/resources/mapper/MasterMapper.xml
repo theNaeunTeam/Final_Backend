@@ -162,7 +162,8 @@
                                 on qq.date = ww.date
         ]]>
     </select>
-    <select id="onnerUserYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
+
+    <select id="ownerUserYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
         <![CDATA[
         select qq.date, qq.sum as sum, ww.sum as tal
         from
@@ -187,7 +188,55 @@
         ]]>
     </select>
 
+    <select id="ownerUser2" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        <![CDATA[
+        select qq.date, qq.sum as sum, ww.sum as tal
+        from
+                (select aa.r as date, ifnull(bb.cnt1,0) as sum
+                 from(with recursive c as (select 1 as r union all select r+1 from c where r<12) select r from c) as aa
+                                        left join (select  month(o_date) as mon,count(case when o_approval = 4 then 1 end) as cnt1
+                                        from owner
+                                        where o_approval = 4
+                                          and year(o_date) = #{dal}
+                                        group by mon order by mon) as bb
+                         on aa.r = bb.mon) as qq
+                        join
+                        (select aa.r as date, ifnull(bb.cnt1,0) as sum
+                                      from(with recursive c as (select 1 as r union all select r+1 from c where r<12) select r from c) as aa
+                                     left join (select  month(u_date) as mon,count(case when u_status = 1 then 1 end) as cnt1
+                                                from user
+                                                where u_status = 1
+                                                  and year(u_date) = #{dal}
+                                                group by mon order by mon) as bb
+                                 on aa.r = bb.mon) as ww
+                                on qq.date = ww.date
+        ]]>
+    </select>
 
+    <select id="ownerUserYear2" resultType="com.douzone.final_backend.DTO.SaleDTO">
+        <![CDATA[
+        select qq.date, qq.sum as sum, ww.sum as tal
+        from
+                #오너
+                (select aa.r as date, ifnull(bb.cnt1,0) as sum
+                                 from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa
+                                 left join (select  year(o_date) as year,count(case when o_approval = 4 then 1 end) as cnt1
+                                                from owner
+                                                where o_approval = 4
+                                                group by year order by year) as bb
+                                 on aa.r = bb.year) as qq
+                        join
+                        #유저
+                                (select aa.r as date, ifnull(bb.cnt1,0) as sum
+                                 from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa
+                                             left join (select  year(u_date) as year,count(case when u_status = 1 then 1 end) as cnt1
+                                                        from user
+                                                        where u_status = 1
+                                                        group by year order by year) as bb
+                                         on aa.r = bb.year) as ww
+                                on qq.date = ww.date
+        ]]>
+    </select>
 
 </mapper>
 

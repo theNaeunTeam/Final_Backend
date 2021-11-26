@@ -124,4 +124,13 @@ public class MasterService {
         return masterDAO.onnerUserYear(nowYear);
     }
 
+    public  List<SaleDTO> ownerUser2(int dal){
+        return masterDAO.ownerUser2(dal);
+    }
+
+    public List<SaleDTO> onnerUserYear2(int nowYear) {
+        return masterDAO.onnerUserYear2(nowYear);
+    }
+
+
 }
