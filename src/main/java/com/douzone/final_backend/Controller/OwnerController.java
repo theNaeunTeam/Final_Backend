@@ -95,7 +95,6 @@ public class OwnerController {
                 .year(year)
                 .build();
 
-
         return ResponseEntity.ok().body(responseDTO);
     }
 //    @GetMapping("getMon")
@@ -115,11 +114,12 @@ public class OwnerController {
 
 
     @PostMapping("/addGoods")
-    public ResponseEntity<?> addGoods(GoodsDTO goodsDTO, MultipartFile file) throws IOException {
+    public ResponseEntity<?> addGoods(@AuthenticationPrincipal UserDetails userDetails,GoodsDTO goodsDTO, MultipartFile file) throws IOException {
         log.info("file 정보 :" + file);
         log.info("goods" + goodsDTO);
         String image = s3Service.upload(file);
         goodsDTO.setG_image(image);
+        goodsDTO.setG_owner(userDetails.getUsername());
 
 
         log.info("goodsDTO" + goodsDTO);
@@ -174,13 +174,31 @@ public class OwnerController {
     // 해당 가게 상품 리스트 -> 상품조회
     @GetMapping("goodsView")
     public ResponseEntity<?> goodsView(@RequestParam String o_sNumber) {
+        log.info("사업자 번호" + o_sNumber);
         try {
+            // 해당 가게 상품 리스트
             List<GoodsBean> goodsList = ownerService.goodsList(o_sNumber);
+            List<GoodsDTO> responseDTO = new ArrayList<>();
+            log.info("try문 ");
 
-            log.info("사업자 번호" + o_sNumber);
+            // 해당 상품 예약 판매 완료된 갯수
+            for (GoodsBean g : goodsList) {
+                int count = ownerService.getGoodsReserve(g.getG_code());
 
+                GoodsDTO dto = GoodsDTO.builder()
+                        .g_name(g.getG_name())
+                        .g_category(g.getG_category())
+                        .g_price(g.getG_price())
+                        .g_discount(g.getG_discount())
+                        .g_expireDate(g.getG_expireDate())
+                        .g_status(g.getG_status())
+                        .g_count(g.getG_count())
+                        .cnt(count)
+                        .build();
+                responseDTO.add(dto);
+            }
 
-            return ResponseEntity.ok().body(goodsList);
+            return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
@@ -217,6 +235,7 @@ public class OwnerController {
                         .r_firstTime(r.getR_firstTime())
                         .r_status(r.getR_status())
                         .r_customOrder(r.getR_customOrder())
+                        .r_firstDate(r.getR_firstDate())
 //                        .goodsDTO(goods)
                         .g_discount(goods.getG_discount())
                         .g_price(goods.getG_price())
@@ -468,18 +487,18 @@ public class OwnerController {
 
     // 가맹 해지 신청
     @PostMapping("ownerExit")
-    public ResponseEntity<?> ownerExit(@AuthenticationPrincipal UserDetails userDetails , @RequestBody OwnerDTO dto){
+    public ResponseEntity<?> ownerExit(@AuthenticationPrincipal UserDetails userDetails, @RequestBody OwnerDTO dto) {
         String o_sNumber = userDetails.getUsername();
-        log.info("ownerExit " +dto);
-        log.info("ownerExit " +o_sNumber);
+        log.info("ownerExit " + dto);
+        log.info("ownerExit " + o_sNumber);
 
 
-        OwnerBean owner = ownerService.getByCredentials(o_sNumber,dto.getO_pw(),passwordEncoder);
+        OwnerBean owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
 
-        if(owner != null){
+        if (owner != null) {
             int result = ownerService.ownerExit(o_sNumber);
             return ResponseEntity.ok().body(result);
-        }else{
+        } else {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .error("비밀번호 틀림 실패")
                     .build();

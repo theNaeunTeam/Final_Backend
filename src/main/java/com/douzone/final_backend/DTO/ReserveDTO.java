@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 public class ReserveDTO {
 
-    private String r_firstDate; // 예약일
+    private String r_firstDate; // 방문 예정 일
     private int r_code; // 예약 변호
     private int check;
     private String r_u_id;

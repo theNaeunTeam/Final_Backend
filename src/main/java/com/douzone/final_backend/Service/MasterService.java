@@ -44,12 +44,13 @@ public class MasterService {
         final MasterBean masterBean = masterDAO.masterLogin(masterDTO);
 
         log.info("serviceMasterBean : " + masterBean);
-        if (masterBean != null) {
-
-            return masterBean;
+        if (masterBean == null) {
+            throw new RuntimeException("아이디 또는 비밀번호를 확인해주세요");
         }
 
-        return null;
+
+        return masterBean;
+
     }
 
     public List<UserBean> userAll() {
@@ -101,15 +102,15 @@ public class MasterService {
         return masterDAO.insertBannerTable(bannerDTO);
     }
 
-    public List<SaleDTO> masterMonth(int dal){
+    public List<SaleDTO> masterMonth(int dal) {
         return masterDAO.masterMonth(dal);
     }
 
-    public List<SaleDTO> masterYear(int nowYear){
+    public List<SaleDTO> masterYear(int nowYear) {
         return masterDAO.masterYear(nowYear);
     }
 
-    public List<SaleDTO> userMonth(int dal){
+    public List<SaleDTO> userMonth(int dal) {
         return masterDAO.userMonth(dal);
     }
 
@@ -117,7 +118,7 @@ public class MasterService {
         return masterDAO.userYear(nowYear);
     }
 
-    public  List<SaleDTO> ownerUser(int dal){
+    public List<SaleDTO> ownerUser(int dal) {
         return masterDAO.ownerUser(dal);
     }
 
@@ -125,7 +126,7 @@ public class MasterService {
         return masterDAO.onnerUserYear(nowYear);
     }
 
-    public  List<SaleDTO> ownerUser2(int dal){
+    public List<SaleDTO> ownerUser2(int dal) {
         return masterDAO.ownerUser2(dal);
     }
 

@@ -24,4 +24,6 @@ public class GoodsDTO {
 
     private String actionType; // 새상품 등록인지 , 상품 업데이트인지
     private String searchInput;
+    
+    private int cnt; // 예약 판매 완료된 갯수
 }

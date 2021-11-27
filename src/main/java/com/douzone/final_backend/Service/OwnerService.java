@@ -23,11 +23,14 @@ public class OwnerService {
     public OwnerBean getByCredentials(String o_sNumber, String o_pw, PasswordEncoder passwordEncoder) {
         final OwnerBean originalOwner = ownerDAO.findBySNum(o_sNumber);
 
-        if (originalOwner != null && passwordEncoder.matches(o_pw, originalOwner.getO_pw())) {
-            log.info("originalOwner : " + originalOwner);
-            return originalOwner;
+        if (originalOwner == null) {
+            throw new RuntimeException("서비스 이용중인 사업자 번호가 아닙니다.");
+        } else if (passwordEncoder.matches(o_pw, originalOwner.getO_pw()) == false) {
+            throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
-        return null;
+
+        return originalOwner;
+
 
     }
 
@@ -50,12 +53,12 @@ public class OwnerService {
     public GoodsBean addGoods(GoodsBean goodsBean) {
         if (goodsBean == null) {
             log.warn("Goods 데이터 누락");
-            throw new RuntimeException("Goods 데이터 누락");
+            throw new RuntimeException("데이터 누락");
         }
 
         int result = ownerDAO.addGoods(goodsBean);
         if (result == 0) {
-            throw new RuntimeException("인서트 실패 포링키 확인할것");
+            throw new RuntimeException("상픔 등록 실패");
         }
 
 
@@ -65,11 +68,11 @@ public class OwnerService {
     public GoodsBean updateGoods(GoodsBean goodsBean) {
         if (goodsBean == null) {
             log.warn("Goods Update 데이터 누락");
-            throw new RuntimeException("Goods Update 데이터 누락");
+            throw new RuntimeException("데이터 누락");
         }
         int result = ownerDAO.updateGoods(goodsBean);
         if (result == 0) {
-            throw new RuntimeException("결과값 안나옴");
+            throw new RuntimeException("상품 수정 실패");
         }
 
 
@@ -270,5 +273,9 @@ public class OwnerService {
 
     public int ownerExit(String o_sNumber) {
         return ownerDAO.ownerExit(o_sNumber);
+    }
+
+    public int getGoodsReserve(int g_code) {
+        return ownerDAO.getGoodsReserve(g_code);
     }
 }

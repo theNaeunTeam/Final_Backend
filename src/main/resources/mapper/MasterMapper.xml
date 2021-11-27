@@ -58,11 +58,12 @@
         from owner
         where o_approval = 3
         order by o_date DESC
+
     </select>
 
     <update id="terminationOK" parameterType="String">
         update owner
-        set o_approval = 1,
+        set o_approval = 4,
             o_date     = now()
         where o_sNumber = #{o_sNumber}
     </update>
@@ -133,51 +134,64 @@
 
     <select id="userMonth" resultType="com.douzone.final_backend.DTO.SaleDTO">
             <![CDATA[
-        select aa.r as date, ifnull(bb.cnt1,0) as sum, ifnull(bb.cnt2,0) as tal
-        from(with recursive c as (select 1 as r union all select r+1 from c where r<12) select r from c) as aa
-                    left join (select  month(u_date) as mon,count(case when u_status = 0 then 1 end) as cnt1, count(case when u_status =1 then 1 end) as cnt2
-                               from user
-                               where u_status in(0,1)
-                                 and year(u_date) = #{dal}
-                               group by mon order by mon) as bb
-                on aa.r = bb.mon;
+        select aa.r as date, ifnull(bb.cnt1, 0) as sum, ifnull(bb.cnt2, 0) as tal
+        from (with recursive c as (select 1 as r union all select r + 1 from c where r < 12) select r from c) as aa
+                 left join (select month(u_date)                            as mon,
+                                   count(case when u_status = 0 then 1 end) as cnt1,
+                                   count(case when u_status = 1 then 1 end) as cnt2
+                            from user
+                            where u_status in (0, 1)
+                              and year(u_date) = #{dal}
+                            group by mon
+                            order by mon) as bb
+                           on aa.r = bb.mon;
         ]]>
     </select>
 
     <select id="userYear" resultType="com.douzone.final_backend.DTO.SaleDTO">
         <![CDATA[
-        select aa.r as date, ifnull(bb.cnt1,0) as sum, ifnull(bb.cnt2,0) as tal
-        from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa
-                    left join (select  year(u_date) as year,count(case when u_status = 0 then 1 end) as cnt1, count(case when u_status =1 then 1 end) as cnt2
-                               from user
-                               where u_status in(0,1)
-                               group by year order by year) as bb
-                on aa.r = bb.year;
+        select aa.r as date, ifnull(bb.cnt1, 0) as sum, ifnull(bb.cnt2, 0) as tal
+        from (with recursive c as (select 2019 as r union all select r + 1 from c where r < #{nowYear})
+              select r
+              from c) as aa
+                 left join (select year(u_date)                             as year,
+                                   count(case when u_status = 0 then 1 end) as cnt1,
+                                   count(case when u_status = 1 then 1 end) as cnt2
+                            from user
+                            where u_status in (0, 1)
+                            group by year
+                            order by year) as bb
+                           on aa.r = bb.year;
         ]]>
     </select>
 
     <select id="ownerUser" resultType="com.douzone.final_backend.DTO.SaleDTO">
         <![CDATA[
         select qq.date, qq.sum as sum, ww.sum as tal
-        from
-                (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                 from(with recursive c as (select 1 as r union all select r+1 from c where r<12) select r from c) as aa
-                             left join (select  month(o_date) as mon,count(case when o_approval = 1 then 1 end) as cnt1
-                                                from owner
-                                                where o_approval = 1
-                                                  and year(o_date) = #{dal}
-                                                group by mon order by mon) as bb
-                                                on aa.r = bb.mon) as qq
-                        join
-                        (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                         from(with recursive c as (select 1 as r union all select r+1 from c where r<12) select r from c) as aa
-                                     left join (select  month(u_date) as mon,count(case when u_status = 0 then 1 end) as cnt1
-                                                from user
-                                                where u_status = 0
-                                                  and year(u_date) = #{dal}
-                                                group by mon order by mon) as bb
+        from (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+              from (with recursive c as (select 1 as r union all select r + 1 from c where r < 12)
+                    select r
+                    from c) as aa
+                       left join (select month(o_date) as mon, count(case when o_approval = 1 then 1 end) as cnt1
+                                  from owner
+                                  where o_approval = 1
+                                    and year(o_date) = #{dal}
+                                  group by mon
+                                  order by mon) as bb
+                                 on aa.r = bb.mon) as qq
+                 join
+             (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+              from (with recursive c as (select 1 as r union all select r + 1 from c where r < 12)
+                    select r
+                    from c) as aa
+                       left join (select month(u_date) as mon, count(case when u_status = 0 then 1 end) as cnt1
+                                  from user
+                                  where u_status = 0
+                                    and year(u_date) = #{dal}
+                                  group by mon
+                                  order by mon) as bb
                                  on aa.r = bb.mon) as ww
-                                on qq.date = ww.date
+             on qq.date = ww.date
         ]]>
     </select>
 
@@ -185,49 +199,60 @@
         <![CDATA[
         select qq.date, qq.sum as sum, ww.sum as tal
         from
-                #오너
-                (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                 from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa
-                             left join (select  year(o_date) as year,count(case when o_approval = 1 then 1 end) as cnt1
-                        from owner
-                        where o_approval = 1
-                        group by year order by year) as bb
-         on aa.r = bb.year) as qq
-        join
-        #유저
-                (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                 from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa
-                             left join (select  year(u_date) as year,count(case when u_status = 0 then 1 end) as cnt1
-                                        from user
-                                        where u_status = 0
-                                        group by year order by year) as bb
-                         on aa.r = bb.year) as ww
-                on qq.date = ww.date
+            #오너
+            (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+             from (with recursive c as (select 2019 as r union all select r + 1 from c where r < #{nowYear})
+                   select r
+                   from c) as aa
+                      left join (select year(o_date) as year, count(case when o_approval = 1 then 1 end) as cnt1
+                                 from owner
+                                 where o_approval = 1
+                                 group by year
+                                 order by year) as bb
+                                on aa.r = bb.year) as qq
+                join
+            #유저
+                (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+                 from (with recursive c as (select 2019 as r union all select r + 1 from c where r < #{nowYear})
+                       select r
+                       from c) as aa
+                          left join (select year(u_date) as year, count(case when u_status = 0 then 1 end) as cnt1
+                                     from user
+                                     where u_status = 0
+                                     group by year
+                                     order by year) as bb
+                                    on aa.r = bb.year) as ww
+            on qq.date = ww.date
         ]]>
     </select>
 
     <select id="ownerUser2" resultType="com.douzone.final_backend.DTO.SaleDTO">
         <![CDATA[
         select qq.date, qq.sum as sum, ww.sum as tal
-        from
-                (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                 from(with recursive c as (select 1 as r union all select r+1 from c where r<12) select r from c) as aa
-                                        left join (select  month(o_date) as mon,count(case when o_approval = 4 then 1 end) as cnt1
-                                        from owner
-                                        where o_approval = 4
-                                          and year(o_date) = #{dal}
-                                        group by mon order by mon) as bb
-                         on aa.r = bb.mon) as qq
-                        join
-                        (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                                      from(with recursive c as (select 1 as r union all select r+1 from c where r<12) select r from c) as aa
-                                     left join (select  month(u_date) as mon,count(case when u_status = 1 then 1 end) as cnt1
-                                                from user
-                                                where u_status = 1
-                                                  and year(u_date) = #{dal}
-                                                group by mon order by mon) as bb
+        from (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+              from (with recursive c as (select 1 as r union all select r + 1 from c where r < 12)
+                    select r
+                    from c) as aa
+                       left join (select month(o_date) as mon, count(case when o_approval = 4 then 1 end) as cnt1
+                                  from owner
+                                  where o_approval = 4
+                                    and year(o_date) = #{dal}
+                                  group by mon
+                                  order by mon) as bb
+                                 on aa.r = bb.mon) as qq
+                 join
+             (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+              from (with recursive c as (select 1 as r union all select r + 1 from c where r < 12)
+                    select r
+                    from c) as aa
+                       left join (select month(u_date) as mon, count(case when u_status = 1 then 1 end) as cnt1
+                                  from user
+                                  where u_status = 1
+                                    and year(u_date) = #{dal}
+                                  group by mon
+                                  order by mon) as bb
                                  on aa.r = bb.mon) as ww
-                                on qq.date = ww.date
+             on qq.date = ww.date
         ]]>
     </select>
 
@@ -235,24 +260,30 @@
         <![CDATA[
         select qq.date, qq.sum as sum, ww.sum as tal
         from
-                #오너
-                (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                                 from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa
-                                 left join (select  year(o_date) as year,count(case when o_approval = 4 then 1 end) as cnt1
-                                                from owner
-                                                where o_approval = 4
-                                                group by year order by year) as bb
-                                 on aa.r = bb.year) as qq
-                        join
-                        #유저
-                                (select aa.r as date, ifnull(bb.cnt1,0) as sum
-                                 from(with recursive c as (select 2019 as r union all select r+1 from c where r < #{nowYear}) select r from c) as aa
-                                             left join (select  year(u_date) as year,count(case when u_status = 1 then 1 end) as cnt1
-                                                        from user
-                                                        where u_status = 1
-                                                        group by year order by year) as bb
-                                         on aa.r = bb.year) as ww
-                                on qq.date = ww.date
+            #오너
+            (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+             from (with recursive c as (select 2019 as r union all select r + 1 from c where r < #{nowYear})
+                   select r
+                   from c) as aa
+                      left join (select year(o_date) as year, count(case when o_approval = 4 then 1 end) as cnt1
+                                 from owner
+                                 where o_approval = 4
+                                 group by year
+                                 order by year) as bb
+                                on aa.r = bb.year) as qq
+                join
+            #유저
+                (select aa.r as date, ifnull(bb.cnt1, 0) as sum
+                 from (with recursive c as (select 2019 as r union all select r + 1 from c where r < #{nowYear})
+                       select r
+                       from c) as aa
+                          left join (select year(u_date) as year, count(case when u_status = 1 then 1 end) as cnt1
+                                     from user
+                                     where u_status = 1
+                                     group by year
+                                     order by year) as bb
+                                    on aa.r = bb.year) as ww
+            on qq.date = ww.date
         ]]>
     </select>
 

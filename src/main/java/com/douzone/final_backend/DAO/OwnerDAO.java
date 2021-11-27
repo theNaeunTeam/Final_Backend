@@ -207,4 +207,8 @@ public class OwnerDAO {
     public int ownerExit(String o_sNumber) {
         return sqlSession.update("ownerExit",o_sNumber);
     }
+
+    public int getGoodsReserve(int g_code) {
+        return sqlSession.selectOne("getGoodsReserve",g_code);
+    }
 }

@@ -29,8 +29,8 @@
     </select>
 
     <insert id="addGoods" parameterType="com.douzone.final_backend.Bean.GoodsBean">
-        insert into goods(g_owner, g_name, g_price, g_discount, g_detail, g_image, g_expireDate, g_category)
-        values (#{g_owner}, #{g_name}, #{g_price}, #{g_discount}, #{g_detail}, #{g_image}, #{g_expireDate},
+        insert into goods(g_owner, g_name, g_count, g_price, g_discount, g_detail, g_image, g_expireDate, g_category)
+        values (#{g_owner}, #{g_name}, #{g_count}, #{g_price}, #{g_discount}, #{g_detail}, #{g_image}, #{g_expireDate},
                 #{g_category})
 
     </insert>
@@ -44,7 +44,8 @@
             g_detail     = #{g_detail},
             g_image      = #{g_image},
             g_expireDate = #{g_expireDate},
-            g_category   = #{g_category}
+            g_category   = #{g_category},
+            g_count      = #{g_count}
         where g_code = #{g_code}
     </update>
     <select id="goodsList" resultType="com.douzone.final_backend.Bean.GoodsBean">
@@ -398,7 +399,7 @@
     <select id="getCategorySale" resultType="com.douzone.final_backend.DTO.SaleDTO">
         select g_category as date, count(*) as sum
         from goods as g
-                 join reserve as r on g.g_code = r.r_g_code and r_status = 3 and r_owner = 123
+                 join reserve as r on g.g_code = r.r_g_code and r_status = 3 and r_owner = #{r_owner}
         group by g_category;
 
     </select>
@@ -445,4 +446,12 @@
         set o_approval = 3
         where o_sNumber = #{o_sNumber}
     </update>
+
+    <!-- 해당 상품의 판매 완료 갯수-->
+    <select id="getGoodsReserve" resultType="int">
+        select ifnull(sum(r_count), 0)
+        from reserve
+        where r_g_code = #{g_code}
+          and r_status = 3
+    </select>
 </mapper>
