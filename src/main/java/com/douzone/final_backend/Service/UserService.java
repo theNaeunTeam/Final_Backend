@@ -45,15 +45,19 @@ public class UserService {
 
     // 로그인 시 id로 정보 들고와 입력된 비밀번호화 암호화된 비밀번호 match
     public UserBean getByCredentials(final String u_id, final String u_pw, final PasswordEncoder encoder) {
+        log.info("login service");
         final UserBean originalUser = userDAO.findByUId(u_id);
-        log.info("PW : " + encoder.matches(u_pw, originalUser.getU_pw()));
-        log.info("PW?? " + originalUser.getU_pw());
+        log.info("originalUser"+originalUser);
 
-        if (originalUser != null && encoder.matches(u_pw, originalUser.getU_pw())) {
-            log.info("originalUser : " + originalUser);
-            return originalUser;
+        if (originalUser == null) {
+            log.info("아이디가 존재하지 않습니다.");
+            throw new RuntimeException("존재하지 않는 아이디입니다.");
+        }else if(encoder.matches(u_pw, originalUser.getU_pw())== false){
+            throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
-        return null;
+
+        return originalUser;
+
     }
 
     // 가게 눌렀을 때 해당 가게의 판매중인 상품 보기

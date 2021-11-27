@@ -128,26 +128,24 @@ public class CommonController {
     // 유저 로그인
     @PostMapping("/userlogin")
     public ResponseEntity<?> userlogin(@RequestBody UserDTO userDTO) {
-        UserBean user = userService.getByCredentials(
-                userDTO.getU_id(),
-                userDTO.getU_pw(),
-                passwordEncoder
-        );
-        log.info("user : " + userDTO.getU_pw() + user);
+        log.info("login");
 
-        if (user != null) {
+        // 아이디가 존재하지 않거나 비밀번호가 틀리면 catch 문으로 간다.
+        // service 에서 예외처리 해줌.
+        try {
+            log.info("login1" + userDTO.getU_id());
+            UserBean user = userService.getByCredentials(
+                    userDTO.getU_id(),
+                    userDTO.getU_pw(),
+                    passwordEncoder
+            );
+            log.info("user : " + userDTO.getU_pw() + user);
+
             final String id = user.getU_id() + "&USER";
             log.info(id);
             final String token = tokenProvider.create(id);
 
             final UserDTO responseUserDTO = UserDTO.builder()
-//                    .u_id(user.getU_id())
-//                    .u_pw(user.getU_pw())
-//                    .u_cellPhone(user.getU_cellPhone())
-//                    .u_email(user.getU_email())
-//                    .u_gender(user.getU_gender())
-//                    .u_age(user.getU_age())
-//                    .roles(list)
                     .token(token)
                     .build();
             log.info(token);
@@ -157,9 +155,11 @@ public class CommonController {
             headers.add("X-AUTH-TOKEN", token);
             return new ResponseEntity<>(responseUserDTO, headers, HttpStatus.OK);
 //            return ResponseEntity.ok().body(responseUserDTO);
-        } else {
+
+        } catch (Exception e) {
+            log.info(e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("Login Failed")
+                    .error(e.getMessage())
                     .build();
             return ResponseEntity
                     .badRequest()
@@ -251,14 +251,15 @@ public class CommonController {
     @PostMapping("/ownerlogin")
     public ResponseEntity<?> ownerlogin(@RequestBody OwnerDTO ownerDTO) {
         log.info("들어온 정보 : " + ownerDTO);
-        OwnerBean owner = ownerService.getByCredentials(
-                ownerDTO.getO_sNumber(),
-                ownerDTO.getO_pw(),
-                passwordEncoder
-        );
-        log.info(ownerDTO.getO_pw());
 
-        if (owner != null) {
+        try {
+            OwnerBean owner = ownerService.getByCredentials(
+                    ownerDTO.getO_sNumber(),
+                    ownerDTO.getO_pw(),
+                    passwordEncoder
+            );
+            log.info(ownerDTO.getO_pw());
+
             final String id = owner.getO_sNumber() + "&" + "OWNER";
             final String token = tokenProvider.create(id);
             log.info(token);
@@ -274,26 +275,26 @@ public class CommonController {
             headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
             headers.add("X-AUTH-TOKEN", token);
             return new ResponseEntity<>(responseOwnerDTO, headers, HttpStatus.OK);
-//            return ResponseEntity.ok().body(responseOwnerDTO);
-        } else {
-            ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("Login Failed")
-                    .build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
+//            return ResponseEntity.ok().body(responseOwnerDTO);}
 
+
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .error(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     // 마스터 로그인 true, false
     @PostMapping("masterlogin")
     public ResponseEntity<?> masterLogin(@RequestBody MasterDTO masterDTO) {
         log.info("masterDTO : " + masterDTO);
-        MasterBean master = masterService.login(masterDTO);
+        try {
+            MasterBean master = masterService.login(masterDTO);
 //        MasterDTO master = masterService.findMaster(masterDTO);
-        log.info("master ??" + master);
-        if (master != null) {
+            log.info("master ??" + master);
+
             final String id = master.getM_id() + "&MASTER";
             final String token = tokenProvider.create(id);
             log.info(token);
@@ -309,15 +310,12 @@ public class CommonController {
             headers.add("X-AUTH-TOKEN", token);
 
             return new ResponseEntity<>(responseDTO, headers, HttpStatus.OK);
-
-        } else {
-            ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("masterLoing Failed")
-                    .build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
         }
+
+
     }
 
     @GetMapping("/getCategory")
