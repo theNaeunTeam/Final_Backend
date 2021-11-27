@@ -323,18 +323,25 @@ public class UserController {
     @PostMapping("userDelete")
     public ResponseEntity<?> userDelete(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserDTO userDTO, String u_pw) {
         String u_id = userDetails.getUsername();
-        UserBean user = userService.userDelete(
-                u_id,
-                userDTO.getU_pw(),
-                passwordEncoder
-        );
-        log.info("회원탈퇴user : " + userDTO.getU_pw() + user);
+        try {
+            UserBean user = userService.getByCredentials(
+                    u_id,
+                    userDTO.getU_pw(),
+                    passwordEncoder
+            );
+            int result = userService.userDelete(u_id);
+            log.info("회원탈퇴user : " + userDTO.getU_pw() + user);
+            return ResponseEntity.ok().body(result);
 
-        if (user != null) {
-            return ResponseEntity.ok().body(true);
-        } else {
-            return ResponseEntity.ok().body(false);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .error(e.getMessage())
+                    .build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
         }
+
 
     }
 

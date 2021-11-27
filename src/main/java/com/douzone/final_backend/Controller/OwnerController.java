@@ -114,7 +114,7 @@ public class OwnerController {
 
 
     @PostMapping("/addGoods")
-    public ResponseEntity<?> addGoods(@AuthenticationPrincipal UserDetails userDetails,GoodsDTO goodsDTO, MultipartFile file) throws IOException {
+    public ResponseEntity<?> addGoods(@AuthenticationPrincipal UserDetails userDetails, GoodsDTO goodsDTO, MultipartFile file) throws IOException {
         log.info("file 정보 :" + file);
         log.info("goods" + goodsDTO);
         String image = s3Service.upload(file);
@@ -493,20 +493,21 @@ public class OwnerController {
         log.info("ownerExit " + o_sNumber);
 
 
-        OwnerBean owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
+        try {
+            OwnerBean owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
 
-        if (owner != null) {
             int result = ownerService.ownerExit(o_sNumber);
             return ResponseEntity.ok().body(result);
-        } else {
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("비밀번호 틀림 실패")
+                    .error(e.getMessage())
                     .build();
             return ResponseEntity
                     .badRequest()
                     .body(responseDTO);
         }
-
     }
 
 }
+
+

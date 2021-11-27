@@ -124,11 +124,11 @@ public class UserDAO {
     }
 
     // 유저 정보 삭제
-    public void userDelete(final String u_id) {
+    public int userDelete(final String u_id) {
         log.info("삭제유저 아이디 :" + u_id);
         int res = sqlSession.update("deleteUser", u_id);
-
         log.info("유저 탈퇴 상태변경 결과:" + res);
+        return res;
     }
 
     public List<String> getOwnerPushToken(int r_g_code) {
