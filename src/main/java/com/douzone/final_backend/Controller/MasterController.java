@@ -4,10 +4,7 @@ import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
-import com.douzone.final_backend.DTO.BannerDTO;
-import com.douzone.final_backend.DTO.OwnerDTO;
-import com.douzone.final_backend.DTO.ReserveDTO;
-import com.douzone.final_backend.DTO.SaleDTO;
+import com.douzone.final_backend.DTO.*;
 import com.douzone.final_backend.Service.MasterService;
 import com.douzone.final_backend.security.TokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -325,6 +322,24 @@ public class MasterController {
                     .body(responseDTO);
         }
     }
+
+    // 지역
+    @GetMapping("/OwnerUserChart3")
+    public ResponseEntity OnwerUserChart3(){
+        log.info("OwnerUserChart3 들어왓다");
+        try{
+            LocalDTO localDTO = masterService.OwnerUserChart3();
+
+            return ResponseEntity.ok().body(localDTO);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+
 
 
     @PostMapping("/bannerImage")
