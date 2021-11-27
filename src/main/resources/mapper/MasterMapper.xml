@@ -50,13 +50,15 @@
         select *
         from owner
         where o_approval = 1
+        order by o_date DESC
     </select>
 
     <select id="terminationWaiting" resultType="com.douzone.final_backend.Bean.OwnerBean">
         select *
         from owner
         where o_approval = 3
-        order by o_date desc
+        order by o_date DESC
+
     </select>
 
     <update id="terminationOK" parameterType="String">
@@ -70,6 +72,7 @@
         select *
         from owner
         where o_approval = 4
+        order by o_date DESC
     </select>
 
     <update id="terminationCancle" parameterType="String">
@@ -283,6 +286,24 @@
             on qq.date = ww.date
         ]]>
     </select>
+
+    <select id="OwnerUserChart3" resultType="com.douzone.final_backend.DTO.LocalDTO">
+        select count(case when owner.o_address like '서울%' then 1 end)   as 'seoul',
+               count(case when owner.o_address like '대전%' then 1 end)   as 'daejeon',
+               count(case when owner.o_address like '대구%' then 1 end)   as 'daegu',
+               count(case when  owner.o_address like '부산%' then 1 end)   as 'busan',
+               count(case when  owner.o_address like '울산%' then 1 end) as 'ulsan',
+               count(case when  owner.o_address like '광주%' then 1 end) as 'gwangju',
+               count(case when  owner.o_address like '제주%' then 1 end) as 'jeju',
+               count(case when  owner.o_address like '경남%' OR owner.o_address like '경북%' then 1 end) as 'gyeongsang',
+               count(case when  owner.o_address like '강원%' then 1 end) as 'gangwon',
+               count(case when  owner.o_address like '충북%'  OR owner.o_address like '충남%' then 1 end) as 'chungcheong',
+               count(case when  owner.o_address like '전남%'  OR owner.o_address like '전북%' then 1 end) as 'jeonla',
+               count(case when  owner.o_address like '경기%' then 1 end) as 'gyeonggi',
+               count(case when  owner.o_address like '인천%' then 1 end) as 'incheon'
+        from owner
+    </select>
+
 
 </mapper>
 
