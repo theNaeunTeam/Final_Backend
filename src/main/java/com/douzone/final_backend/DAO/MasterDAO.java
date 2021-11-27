@@ -4,6 +4,7 @@ import com.douzone.final_backend.Bean.MasterBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DTO.BannerDTO;
+import com.douzone.final_backend.DTO.LocalDTO;
 import com.douzone.final_backend.DTO.MasterDTO;
 import com.douzone.final_backend.DTO.SaleDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -115,5 +116,9 @@ public class MasterDAO {
 
     public List<SaleDTO> onnerUserYear2(int nowYear){
         return sqlSession.selectList("ownerUserYear2", nowYear);
+    }
+
+    public LocalDTO OwnerUserChart3(){
+        return sqlSession.selectOne("OwnerUserChart3");
     }
 }
