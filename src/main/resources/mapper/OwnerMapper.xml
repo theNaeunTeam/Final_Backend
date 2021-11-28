@@ -2,12 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 
 <mapper namespace="com.douzone.mapper.owner">
+
+    <!-- 로그인시 사용 승인완료, 해지신청대기중일 때만 로그인가능-->
     <select id="findBySNum" resultType="com.douzone.final_backend.Bean.OwnerBean">
         select *
         from owner
         where o_sNumber = #{o_sNumber}
-          and o_approval = 1
+          and o_approval in (1,3)
     </select>
+
 
     <select id="existsBySNum" resultType="boolean">
         select count(*)
@@ -143,7 +146,7 @@
     </select>
 
     <!-- 상품 판매 중지 신청 -->
-    <update id="deleteGoods" parameterType="com.douzone.final_backend.DTO.GoodsDTO">
+    <update id="deleteGoods" parameterType="int">
         update goods
         set g_status = 2
         where g_code = #{g_code}

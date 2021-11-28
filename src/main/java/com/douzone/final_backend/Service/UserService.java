@@ -8,6 +8,7 @@ import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,17 +48,27 @@ public class UserService {
     public UserBean getByCredentials(final String u_id, final String u_pw, final PasswordEncoder encoder) {
         log.info("login service");
         final UserBean originalUser = userDAO.findByUId(u_id);
-        log.info("originalUser"+originalUser);
+        log.info("originalUser" + originalUser);
 
         if (originalUser == null) {
             log.info("아이디가 존재하지 않습니다.");
             throw new RuntimeException("존재하지 않는 아이디입니다.");
-        }else if(encoder.matches(u_pw, originalUser.getU_pw())== false){
+        } else if (encoder.matches(u_pw, originalUser.getU_pw()) == false) {
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
 
         return originalUser;
 
+    }
+
+    // 비밀번호 찾기 했을 때 유저 정보 가져오기 .
+    public UserBean findById(String u_id) {
+
+        if(userDAO.findByUId(u_id) == null){
+            throw new RuntimeException("존재하지 않는 아이디입니다.");
+        }
+
+        return userDAO.findByUId(u_id);
     }
 
     // 가게 눌렀을 때 해당 가게의 판매중인 상품 보기
@@ -179,23 +190,25 @@ public class UserService {
         return userDAO.updateUser(userBean);
     }
 
-    // 회원 탈퇴
-    public UserBean userDelete(final String u_id, final String u_pw, PasswordEncoder encoder) {
-        final UserBean originalUser = userDAO.findByUId(u_id);
-        log.info("PW : " + encoder.matches(u_pw, originalUser.getU_pw()));
-        log.info("PW?? " + originalUser.getU_pw());
-
-        if (originalUser != null && encoder.matches(u_pw, originalUser.getU_pw())) {
-            log.info("originalUser : " + originalUser);
-            //회원 탈퇴로 상태 수정DAO
-            userDAO.userDelete(u_id);
-            return originalUser;
-        }
-        return null;
-    }
 
     public List<String> getOwnerPushToken(int r_g_code) {
         return userDAO.getOwnerPushToken(r_g_code);
     }
 
+    public int userDelete(String u_id) {
+        return userDAO.userDelete(u_id);
+    }
+
+
+    public UserDTO changePWcheck(UserDTO userDTO) {
+        // common mapper에 있음
+        return userDAO.changePWcheck(userDTO);
+    }
+
+    public int pwUpdate(UserBean user) {
+        if(userDAO.pwUpdate(user) == 0){
+            throw new RuntimeException("비밀번호 변경 실패하였습니다.");
+        }
+            return userDAO.pwUpdate(user);
+    }
 }

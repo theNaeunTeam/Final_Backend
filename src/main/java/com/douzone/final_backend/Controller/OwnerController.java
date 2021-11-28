@@ -45,6 +45,7 @@ public class OwnerController {
     }
 
     // owner Main page
+    // 가게 기본 정보
     @GetMapping
     public ResponseEntity<?> main(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("여기 들어옴" + userDetails.getUsername());
@@ -53,7 +54,8 @@ public class OwnerController {
         log.info("ownerPage : " + owner);
         return ResponseEntity.ok().body(owner);
     }
-
+    // owner  main 들어왔을 때 보이는 차트 정보
+    // 연도별, 월별, 일별 매출
     @GetMapping("getDay")
     public ResponseEntity<?> getDay(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("getDay 들어옴");
@@ -71,6 +73,7 @@ public class OwnerController {
             List<SaleDTO> m = ownerService.getMon(mm);
             mon.add(m);
             int a = 12;
+            // 올해의 현재 월까지만
             if (i == y) {
                 a = Calendar.getInstance().get(Calendar.MONTH) + 1;
                 log.info(a + " a");
@@ -97,24 +100,9 @@ public class OwnerController {
 
         return ResponseEntity.ok().body(responseDTO);
     }
-//    @GetMapping("getMon")
-//    public ResponseEntity<?> getMon(@AuthenticationPrincipal UserDetails userDetails){
-//        log.info("getMon 들어옴");
-//        String o_sNumber = userDetails.getUsername();
-//        List<SaleDTO> mon = ownerService.getMon(o_sNumber);
-//        return ResponseEntity.ok().body(mon);
-//    }
-//    @GetMapping("getYear")
-//    public ResponseEntity<?> getYear(@AuthenticationPrincipal UserDetails userDetails){
-//        log.info("getYear 들어옴");
-//        String o_sNumber = userDetails.getUsername();
-//        List<SaleDTO> year = ownerService.getYear(o_sNumber);
-//        return ResponseEntity.ok().body(year);
-//    }
-
 
     @PostMapping("/addGoods")
-    public ResponseEntity<?> addGoods(@AuthenticationPrincipal UserDetails userDetails,GoodsDTO goodsDTO, MultipartFile file) throws IOException {
+    public ResponseEntity<?> addGoods(@AuthenticationPrincipal UserDetails userDetails, GoodsDTO goodsDTO, MultipartFile file) throws IOException {
         log.info("file 정보 :" + file);
         log.info("goods" + goodsDTO);
         String image = s3Service.upload(file);
@@ -137,29 +125,32 @@ public class OwnerController {
                     .g_category(goodsDTO.getG_category())
                     .build();
             GoodsBean registerGoods = null;
+            int result = 0;
             if (goodsDTO.getActionType().equals("new")) {
-                registerGoods = ownerService.addGoods(goods);
+//                registerGoods = ownerService.addGoods(goods);
+                result =  ownerService.addGoods(goods);
                 log.info("상품 등록 완료" + registerGoods);
             } else if (goodsDTO.getActionType().equals("update")) {
-                goods.setG_code(Integer.parseInt(goodsDTO.getG_code()));
-                registerGoods = ownerService.updateGoods(goods);
+                goods.setG_code(goodsDTO.getG_code());
+//                registerGoods = ownerService.updateGoods(goods);
+                result =  ownerService.updateGoods(goods);
                 log.info("상품 업데이트 완료" + registerGoods);
             }
 
-            GoodsDTO responseGoodsDTO = GoodsDTO.builder()
-                    .g_owner(registerGoods.getG_owner())
-//                    .g_owner("123")
-                    .g_name(registerGoods.getG_name())
-                    .g_count(registerGoods.getG_count())
-                    .g_price(registerGoods.getG_price())
-                    .g_discount(registerGoods.getG_discount())
-                    .g_detail(registerGoods.getG_detail())
-                    .g_image(registerGoods.getG_image())
-                    .g_expireDate(registerGoods.getG_expireDate())
-                    .g_category(registerGoods.getG_category())
-                    .build();
+//            GoodsDTO responseGoodsDTO = GoodsDTO.builder()
+//                    .g_owner(registerGoods.getG_owner())
+////                    .g_owner("123")
+//                    .g_name(registerGoods.getG_name())
+//                    .g_count(registerGoods.getG_count())
+//                    .g_price(registerGoods.getG_price())
+//                    .g_discount(registerGoods.getG_discount())
+//                    .g_detail(registerGoods.getG_detail())
+//                    .g_image(registerGoods.getG_image())
+//                    .g_expireDate(registerGoods.getG_expireDate())
+//                    .g_category(registerGoods.getG_category())
+//                    .build();
 
-            return ResponseEntity.ok().body(responseGoodsDTO);
+            return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             log.error("여기서 에러다");
 //            log.error(e.getMessage());
@@ -173,11 +164,13 @@ public class OwnerController {
 
     // 해당 가게 상품 리스트 -> 상품조회
     @GetMapping("goodsView")
-    public ResponseEntity<?> goodsView(@RequestParam String o_sNumber) {
-        log.info("사업자 번호" + o_sNumber);
+//    public ResponseEntity<?> goodsView(@RequestParam String o_sNumber) {
+    public ResponseEntity<?> goodsView(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("사업자 번호" + userDetails.getUsername());
+
         try {
             // 해당 가게 상품 리스트
-            List<GoodsBean> goodsList = ownerService.goodsList(o_sNumber);
+            List<GoodsBean> goodsList = ownerService.goodsList(userDetails.getUsername());
             List<GoodsDTO> responseDTO = new ArrayList<>();
             log.info("try문 ");
 
@@ -187,6 +180,7 @@ public class OwnerController {
 
                 GoodsDTO dto = GoodsDTO.builder()
                         .g_name(g.getG_name())
+                        .g_code(g.getG_code())
                         .g_category(g.getG_category())
                         .g_price(g.getG_price())
                         .g_discount(g.getG_discount())
@@ -300,10 +294,12 @@ public class OwnerController {
     // 상품 삭제 시 PatchMapping
     @PatchMapping("/deleteGoods")
     public ResponseEntity<?> deleteGoods(@RequestBody GoodsDTO goodsDTO) {
-        log.info("deleteGoods 넘어온 값 : " + goodsDTO.getG_code());
+        log.info("deleteGoods 넘어온 값 : " + goodsDTO);
+        int g_code = goodsDTO.getG_code();
         try {
-            ownerService.deleteGoods(goodsDTO);
-            return ResponseEntity.ok().body(true);
+            int result = ownerService.deleteGoods(g_code);
+
+            return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             log.error(e.getMessage());
             log.error("deleteGoods Error");
@@ -493,20 +489,21 @@ public class OwnerController {
         log.info("ownerExit " + o_sNumber);
 
 
-        OwnerBean owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
+        try {
+            OwnerBean owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
 
-        if (owner != null) {
             int result = ownerService.ownerExit(o_sNumber);
             return ResponseEntity.ok().body(result);
-        } else {
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder()
-                    .error("비밀번호 틀림 실패")
+                    .error(e.getMessage())
                     .build();
             return ResponseEntity
                     .badRequest()
                     .body(responseDTO);
         }
-
     }
 
 }
+
+

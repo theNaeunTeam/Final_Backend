@@ -6,6 +6,7 @@ import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,11 +125,11 @@ public class UserDAO {
     }
 
     // 유저 정보 삭제
-    public void userDelete(final String u_id) {
+    public int userDelete(final String u_id) {
         log.info("삭제유저 아이디 :" + u_id);
         int res = sqlSession.update("deleteUser", u_id);
-
         log.info("유저 탈퇴 상태변경 결과:" + res);
+        return res;
     }
 
     public List<String> getOwnerPushToken(int r_g_code) {
@@ -136,4 +137,11 @@ public class UserDAO {
     }
 
 
+    public UserDTO changePWcheck(UserDTO userDTO) {
+        return sqlSession.selectOne("changePWcheck",userDTO);
+    }
+
+    public int pwUpdate(UserBean user) {
+        return sqlSession.update("pwUpdate",user);
+    }
 }

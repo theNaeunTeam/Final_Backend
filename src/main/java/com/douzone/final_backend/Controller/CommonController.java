@@ -5,6 +5,7 @@ import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.MasterBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.Common.MailService;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.Common.S3Service;
 import com.douzone.final_backend.DTO.*;
@@ -233,10 +234,10 @@ public class CommonController {
                     .o_latitude(ownerDTO.getO_latitude())
                     .o_longitude(ownerDTO.getO_longitude())
                     .build();
-            ownerService.create(owner);
+            int result = ownerService.create(owner);
 
             log.info("owner 입점 신청 성공");
-            return ResponseEntity.ok().body(true);
+            return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
 
@@ -355,5 +356,60 @@ public class CommonController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }
+    }
+
+    @Autowired
+    MailService mailService;
+
+    @PostMapping("/userFindPW")
+    public ResponseEntity<?> userFindPW(@RequestBody UserDTO userDTO) {
+        log.info("id : "+userDTO.getU_id());
+
+        // id로 유저 정보 가져오기
+        try{
+            UserBean user = userService.findById(userDTO.getU_id());
+            String u_pw = user.getU_pw().substring(0, 20);
+            log.info("u_pw : "+u_pw);
+
+            String resPW = u_pw.replace("/","가");
+            log.info("resPW : "+resPW);
+
+            mailService.sendMail(user.getU_email(), user.getU_id(), resPW);
+            log.info("sendMail");
+            return ResponseEntity.ok().body(true);
+        }catch (Exception e){
+            log.info(e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+    // 링크 파라미터로 전해온 아이디와 비밀번호가 유효한지 검사
+    @PostMapping("changePWcheck")
+    public ResponseEntity<?> changePWcheck(@RequestBody UserDTO userDTO){
+        log.info("들어온 값 : "+userDTO);
+        UserDTO responseDTO = userService.changePWcheck(userDTO);
+        log.info("결과 : "+responseDTO);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @PatchMapping("changePW")
+    public ResponseEntity<?> changePW(@RequestBody UserDTO userDTO){
+        // 해당 비밀번호를 암호화해서 update
+        // 비밀번호 암호화해서 전송
+
+        try{
+            String encodePW = passwordEncoder.encode(userDTO.getU_pw());
+            UserBean user = UserBean.builder()
+                    .u_id(userDTO.getU_id())
+                    .u_pw(encodePW)
+                    .build();
+            int result = userService.pwUpdate(user);
+
+            return ResponseEntity.ok().body(true);
+        }catch(Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+
     }
 }
