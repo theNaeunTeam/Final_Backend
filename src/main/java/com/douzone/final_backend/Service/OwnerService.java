@@ -19,38 +19,41 @@ public class OwnerService {
     @Autowired
     private OwnerDAO ownerDAO;
 
-
+    // 로그인
     public OwnerBean getByCredentials(String o_sNumber, String o_pw, PasswordEncoder passwordEncoder) {
+        // 해당 사업자 번호로 정보 가져옴. 가맹점 상태 1 : 입점 승은 완료, 3 : 해지신청대기중 일 때만
         final OwnerBean originalOwner = ownerDAO.findBySNum(o_sNumber);
 
+        // 해당 사업자 번호로 조회가 안될 때 예외 발생
         if (originalOwner == null) {
             throw new RuntimeException("서비스 이용중인 사업자 번호가 아닙니다.");
-        } else if (passwordEncoder.matches(o_pw, originalOwner.getO_pw()) == false) {
+        } // 입력한 비밀번호와 암호화된 비밀번호 비교 후 틀리면 예외 발생
+        else if (passwordEncoder.matches(o_pw, originalOwner.getO_pw()) == false) {
             throw new RuntimeException("비밀번호가 틀렸습니다.");
         }
 
         return originalOwner;
 
-
     }
+    // 입점신청
+    public int create(OwnerBean owner) {
 
-    public OwnerBean create(OwnerBean owner) {
         if (owner == null || owner.getO_sNumber() == null) {
             log.warn("owner 정보 누락");
-            throw new RuntimeException("owner 데이터 누락");
+            throw new RuntimeException("데이터가 누락되었습니다.");
         }
         final String o_sNumber = owner.getO_sNumber();
-
+        // 존재 여부 확인. 반환 타입 true, false
         if (ownerDAO.existsBySNum(o_sNumber)) {
             log.warn("이미 존재하는 사업자 번호");
-            throw new RuntimeException("이미 존재하는 사업자 번호");
+            throw new RuntimeException("이미 존재하는 사업자 번호입니다.");
         }
-        ownerDAO.insertOwner(owner);
+        int result = ownerDAO.insertOwner(owner);
 
-        return owner;
+        return result;
     }
 
-    public GoodsBean addGoods(GoodsBean goodsBean) {
+    public int addGoods(GoodsBean goodsBean) {
         if (goodsBean == null) {
             log.warn("Goods 데이터 누락");
             throw new RuntimeException("데이터 누락");
@@ -58,25 +61,25 @@ public class OwnerService {
 
         int result = ownerDAO.addGoods(goodsBean);
         if (result == 0) {
-            throw new RuntimeException("상픔 등록 실패");
+            throw new RuntimeException("상픔 등록 실패했습니다.");
         }
 
 
-        return goodsBean;
+        return result;
     }
 
-    public GoodsBean updateGoods(GoodsBean goodsBean) {
+    public int updateGoods(GoodsBean goodsBean) {
         if (goodsBean == null) {
             log.warn("Goods Update 데이터 누락");
             throw new RuntimeException("데이터 누락");
         }
         int result = ownerDAO.updateGoods(goodsBean);
         if (result == 0) {
-            throw new RuntimeException("상품 수정 실패");
+            throw new RuntimeException("상품 수정 실패했습니다.");
         }
 
 
-        return goodsBean;
+        return result;
     }
 
     public List<GoodsBean> goodsList(String o_sNumber) {
@@ -151,8 +154,14 @@ public class OwnerService {
     }
 
 
-    public void deleteGoods(GoodsDTO goodsDTO) {
-        int r = ownerDAO.deleteGoods(goodsDTO);
+    public int deleteGoods(int g_code) {
+        int result = ownerDAO.deleteGoods(g_code);
+        if(g_code == 0){
+         throw new RuntimeException("데이터가 누락되었습니다.");
+        }else if(result == 1){
+            throw new RuntimeException("상품 삭제 실패하였습니다.");
+        }
+        return result;
     }
 
     public List<ReserveBean> reserveList(String g_owner) {

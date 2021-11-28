@@ -27,8 +27,8 @@ public class OwnerDAO {
         return sqlSession.selectOne("existsBySNum", o_sNumber);
     }
 
-    public void insertOwner(OwnerBean owner) {
-        sqlSession.insert("insertOwner", owner);
+    public int insertOwner(OwnerBean owner) {
+       return sqlSession.insert("insertOwner", owner);
     }
 
     public OwnerDTO findByOwner(String id) {
@@ -97,8 +97,8 @@ public class OwnerDAO {
     }
 
 
-    public int deleteGoods(GoodsDTO goodsDTO) {
-        return sqlSession.update("deleteGoods", goodsDTO);
+    public int deleteGoods(int g_code) {
+        return sqlSession.update("deleteGoods", g_code);
     }
 
     public List<ReserveBean> reserveList(String g_owner) {

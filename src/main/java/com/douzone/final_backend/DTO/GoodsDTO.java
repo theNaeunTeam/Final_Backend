@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class GoodsDTO {
-    private String g_code; //상품 코드
+    private int g_code; //상품 코드
     private String g_owner; // 상품 올린 사업자 번호
     private String g_name; // 상품 이름
     private int g_count; // 상품 수량
