@@ -97,8 +97,8 @@ public class OwnerDAO {
     }
 
 
-    public int deleteGoods(GoodsDTO goodsDTO) {
-        return sqlSession.update("deleteGoods", goodsDTO);
+    public int deleteGoods(int g_code) {
+        return sqlSession.update("deleteGoods", g_code);
     }
 
     public List<ReserveBean> reserveList(String g_owner) {

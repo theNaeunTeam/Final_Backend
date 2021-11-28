@@ -146,7 +146,7 @@
     </select>
 
     <!-- 상품 판매 중지 신청 -->
-    <update id="deleteGoods" parameterType="com.douzone.final_backend.DTO.GoodsDTO">
+    <update id="deleteGoods" parameterType="int">
         update goods
         set g_status = 2
         where g_code = #{g_code}
