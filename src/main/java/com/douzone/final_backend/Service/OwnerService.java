@@ -34,7 +34,7 @@ public class OwnerService {
 
     }
 
-    public OwnerBean create(OwnerBean owner) {
+    public int create(OwnerBean owner) {
         if (owner == null || owner.getO_sNumber() == null) {
             log.warn("owner 정보 누락");
             throw new RuntimeException("owner 데이터 누락");
@@ -45,9 +45,9 @@ public class OwnerService {
             log.warn("이미 존재하는 사업자 번호");
             throw new RuntimeException("이미 존재하는 사업자 번호");
         }
-        ownerDAO.insertOwner(owner);
+        int result = ownerDAO.insertOwner(owner);
 
-        return owner;
+        return result;
     }
 
     public GoodsBean addGoods(GoodsBean goodsBean) {
