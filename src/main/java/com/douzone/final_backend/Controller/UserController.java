@@ -8,10 +8,7 @@ import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import com.douzone.final_backend.Service.UserService;
 import com.douzone.final_backend.security.TokenProvider;
-import com.google.firebase.messaging.BatchResponse;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.MulticastMessage;
+import com.google.firebase.messaging.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -288,7 +285,12 @@ public class UserController {
                 List<String> registrationTokens = userService.getOwnerPushToken(reserveDTO.get(0).getR_g_code());
                 if (!registrationTokens.isEmpty()) {
                     MulticastMessage message = MulticastMessage.builder()
-                            .putData("title", reserveDTO.size() + "개의 새 예약건이 있습니다")
+                            .setNotification(Notification.builder() // notification 객체 안에 들어감. 이게 있어야 백그라운드 동작
+                                    .setTitle(reserveDTO.size() + "개의 새 예약건이 있습니다")
+                                    .setBody("예약현황페이지를 확인해주세요")
+                                    .setImage("")
+                                    .build())
+                            .putData("title", reserveDTO.size() + "개의 새 예약건이 있습니다") // data 객체 안에 들어감
                             .putData("body", "예약현황 페이지를 확인해 주세요")
                             .putData("image", " ")
                             .putData("r_customOrder", reserveDTO.get(0).getR_customOrder())
