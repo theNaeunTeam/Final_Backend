@@ -6,6 +6,7 @@ import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,4 +137,11 @@ public class UserDAO {
     }
 
 
+    public UserDTO changePWcheck(UserDTO userDTO) {
+        return sqlSession.selectOne("changePWcheck",userDTO);
+    }
+
+    public int pwUpdate(UserBean user) {
+        return sqlSession.update("pwUpdate",user);
+    }
 }
