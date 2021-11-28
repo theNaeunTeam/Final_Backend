@@ -405,7 +405,7 @@ public class CommonController {
                     .build();
             int result = userService.pwUpdate(user);
 
-            return ResponseEntity.ok().body(true);
+            return ResponseEntity.ok().body(result);
         }catch(Exception e){
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
