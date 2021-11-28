@@ -8,6 +8,7 @@ import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
+import com.douzone.final_backend.DTO.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,6 +59,16 @@ public class UserService {
 
         return originalUser;
 
+    }
+
+    // 비밀번호 찾기 했을 때 유저 정보 가져오기 .
+    public UserBean findById(String u_id) {
+
+        if(userDAO.findByUId(u_id) == null){
+            throw new RuntimeException("존재하지 않는 아이디입니다.");
+        }
+
+        return userDAO.findByUId(u_id);
     }
 
     // 가게 눌렀을 때 해당 가게의 판매중인 상품 보기
@@ -186,5 +197,18 @@ public class UserService {
 
     public int userDelete(String u_id) {
         return userDAO.userDelete(u_id);
+    }
+
+
+    public UserDTO changePWcheck(UserDTO userDTO) {
+        // common mapper에 있음
+        return userDAO.changePWcheck(userDTO);
+    }
+
+    public int pwUpdate(UserBean user) {
+        if(userDAO.pwUpdate(user) == 0){
+            throw new RuntimeException("비밀번호 변경 실패하였습니다.");
+        }
+            return userDAO.pwUpdate(user);
     }
 }

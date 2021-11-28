@@ -47,7 +47,7 @@
     </select>
 
 
-<!--    그 사업자번호가 판매하는 카테고리 별 상품 갯수-->
+    <!--    그 사업자번호가 판매하는 카테고리 별 상품 갯수-->
     <select id="getCategory" resultType="map">
         select count(case when g_category = '가공식품' then 1 end)   as 'gagong',
                count(case when g_category = '신선식품' then 1 end)   as 'fresh',
@@ -71,13 +71,29 @@
     </select>
 
     <select id="recommendList" resultType="com.douzone.final_backend.DTO.RecommendListDTO">
-        select g_owner, g_name, g_price, g_discount, g_image, o_name from goods
-        join owner o on o.o_sNumber = goods.g_owner
-        where g_status = 0 and g_count != 0 order by g_register desc
+        select g_owner, g_name, g_price, g_discount, g_image, o_name
+        from goods
+                 join owner o on o.o_sNumber = goods.g_owner
+        where g_status = 0
+          and g_count != 0
+        order by g_register desc
         limit 0,4;
     </select>
 
+    <!-- 해당 아이디와 암호화된 비밀번호랑 일치하는 user 찾기 -->
+    <select id="changePWcheck" resultType="com.douzone.final_backend.DTO.UserDTO">
+        select *
+        from user
+        where u_id = #{u_id}
+          and u_pw like concat('%', #{u_pw}, '%')
+    </select>
 
+    <!-- 비밀번호 업데이트 -->
+    <update id="pwUpdate" parameterType="com.douzone.final_backend.Bean.UserBean">
+        update user
+        set u_pw = #{u_pw}
+        where u_id = #{u_id}
+    </update>
 </mapper>
 
 

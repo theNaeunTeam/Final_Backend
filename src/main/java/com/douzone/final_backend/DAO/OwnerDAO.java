@@ -28,7 +28,7 @@ public class OwnerDAO {
     }
 
     public int insertOwner(OwnerBean owner) {
-       return sqlSession.insert("insertOwner", owner);
+        return sqlSession.insert("insertOwner", owner);
     }
 
     public OwnerDTO findByOwner(String id) {
