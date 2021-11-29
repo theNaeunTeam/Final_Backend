@@ -396,7 +396,6 @@ public class CommonController {
     public ResponseEntity<?> changePW(@RequestBody UserDTO userDTO){
         // 해당 비밀번호를 암호화해서 update
         // 비밀번호 암호화해서 전송
-
         try{
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
             UserBean user = UserBean.builder()
