@@ -379,7 +379,7 @@ public class OwnerController {
     @PostMapping("pushToken")
     public boolean pushToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PushTokenDTO pushTokenDTO) {
         String o_sNumber = userDetails.getUsername();
-        log.info("ㅁㅇㄴㄹㄴㅁㄹㅁㄴㅇㄹㅇㄴㅁㄹㅇㄴㅁㄹㅇㄴㄹㅇㄴㄹㅁㅇㄹㅇㄴㄹㅁㄴㅇㄹ" + pushTokenDTO);
+        log.info("pushToken" + pushTokenDTO);
         pushTokenDTO.setG_owner_fk(o_sNumber);
         return ownerService.pushToken(pushTokenDTO);
     }
