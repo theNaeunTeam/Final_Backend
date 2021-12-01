@@ -81,6 +81,7 @@
                r.r_u_id,
                r.r_count,
                r.r_firstTime,
+               r.r_firstDate,
                r.r_g_code,
                r.r_status,
                r.r_customOrder,
