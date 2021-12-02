@@ -26,7 +26,7 @@
         select *
         from user
         where u_id = #{u_id}
-          and u_status in (0,2);
+          and u_status in (0, 2);
     </select>
 
     <!-- 해당 가게의 상세 정보 user 용  -->
@@ -77,25 +77,29 @@
 
     <!-- 해당 유저의 예약 리스트 -->
     <select id="userReserveList" resultType="com.douzone.final_backend.DTO.ReserveDTO">
-        select r.r_code,
-               r.r_u_id,
-               r.r_count,
-               r.r_firstTime,
-               r.r_firstDate,
-               r.r_g_code,
-               r.r_status,
-               r.r_customOrder,
-               r.r_pay,
-               g.g_name,
-               g.g_expireDate,
-               g.g_category,
-               g.g_status,
-               g.g_count
-        from reserve as r
-                 join goods as g
-        where r.r_u_id = #{r_u_id}
-          and g_code = r.r_g_code
-        group by r.r_code;
+        select *
+        from (select r.r_code,
+                     r.r_u_id,
+                     r.r_count,
+                     r.r_firstTime,
+                     r.r_firstDate,
+                     r.r_g_code,
+                     r.r_status,
+                     r.r_customOrder,
+                     r.r_pay,
+                     g.g_name,
+                     g.g_expireDate,
+                     g.g_category,
+                     g.g_status,
+                     g.g_count
+              from reserve as r
+                       join goods as g
+              where r.r_u_id = #{r_u_id}
+                and g_code = r.r_g_code
+              order by r.r_status
+              limit 1000) as re
+        group by re.r_code
+        limit #{startIndex},10
     </select>
 
     <select id="getReserve" resultType="com.douzone.final_backend.Bean.ReserveBean">
@@ -113,65 +117,78 @@
 
     <!-- 예약 상태 선택 안했을 때 -->
     <select id="searchReserveU" resultType="com.douzone.final_backend.DTO.ReserveDTO">
-        select r.r_code,
-               r.r_u_id,
-               r.r_count,
-               r.r_firstTime,
-               r.r_g_code,
-               r.r_status,
-               r.r_customOrder,
-               r.r_pay,
-               g.g_name,
-               g.g_expireDate,
-               g.g_category,
-               g.g_status,
-               g.g_count
-        from reserve as r
-                 join goods as g
-        where g.g_category LIKE '%${g_category}%'
-          and g.g_name LIKE '%${searchInput}%'
-          and r.r_u_id = #{r_u_id}
-          and g_code = r.r_g_code
-        group by r.r_code;
+        select *
+        from (select r.r_code,
+                     r.r_u_id,
+                     r.r_count,
+                     r.r_firstTime,
+                     r.r_firstDate,
+                     r.r_g_code,
+                     r.r_status,
+                     r.r_customOrder,
+                     r.r_pay,
+                     g.g_name,
+                     g.g_expireDate,
+                     g.g_category,
+                     g.g_status,
+                     g.g_count
+              from reserve as r
+                       join goods as g
+              where g.g_category LIKE '%${g_category}%'
+                and g.g_name LIKE '%${searchInput}%'
+                and r.r_u_id = #{r_u_id}
+                and g_code = r.r_g_code
+              order by r_status
+              limit 1000) as re
+        group by re.r_code
+        limit #{startIndex},10
     </select>
     <!-- 예약 상태 선택 했을 때 -->
     <select id="userSearchReserve" resultType="com.douzone.final_backend.DTO.ReserveDTO">
-        select r.r_code,
-               r.r_u_id,
-               r.r_count,
-               r.r_firstTime,
-               r.r_g_code,
-               r.r_status,
-               r.r_customOrder,
-               r.r_pay,
-               g.g_name,
-               g.g_expireDate,
-               g.g_category,
-               g.g_status,
-               g.g_count
-        from reserve as r
-                 join goods as g
-        where g.g_category LIKE '%${g_category}%'
-          and r.r_status = #{r_status}
-          and g.g_name LIKE '%${searchInput}%'
-          and r.r_u_id = #{r_u_id}
-          and g_code = r.r_g_code
-        group by r.r_code;
+        select *
+        from (select r.r_code,
+                     r.r_u_id,
+                     r.r_count,
+                     r.r_firstTime,
+                     r.r_firstDate,
+                     r.r_g_code,
+                     r.r_status,
+                     r.r_customOrder,
+                     r.r_pay,
+                     g.g_name,
+                     g.g_expireDate,
+                     g.g_category,
+                     g.g_status,
+                     g.g_count
+              from reserve as r
+                       join goods as g
+              where g.g_category LIKE '%${g_category}%'
+                and r.r_status = #{r_status}
+                and g.g_name LIKE '%${searchInput}%'
+                and r.r_u_id = #{r_u_id}
+                and g_code = r.r_g_code
+              order by r_status
+              limit 1000) as re
+        group by re.r_code
+        limit #{startIndex},10;
     </select>
 
     <select id="favorList" resultType="com.douzone.final_backend.DTO.FavoritesDTO">
         select o.o_name, o.o_sNumber as f_o_sNumber, o.o_approval, o.o_phone, o.o_address, o.o_time1, o.o_time2
         from owner as o,
              favorites as f
-        where f.f_p_user_id = #{u_id}
+        where f.f_p_user_id = #{f_p_user_id}
           and o.o_sNumber = f.f_o_sNumber
-        group by f.f_o_sNumber;
+        group by f.f_o_sNumber
+        limit #{startIndex},10
+
     </select>
 
     <!-- 예약 신청 시 예약 테이블에 추가 -->
     <insert id="insertReserve" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
         insert into reserve(r_u_id, r_g_code, r_firstTime, r_count, r_customOrder, r_owner, r_pay, r_firstDate)
-        values (#{r_u_id}, #{r_g_code}, #{r_firstTime}, #{r_count}, #{r_customOrder}, #{r_owner}, #{r_pay}, #{r_firstDate})
+        values (#{r_u_id}, #{r_g_code}, #{r_firstTime}, #{r_count}, #{r_customOrder}, #{r_owner}, #{r_pay},
+                #{r_firstDate})
     </insert>
     <!-- insert 되면 goods 테이블에 해당 상품 수량 빼기 -->
     <update id="updateGoodsCount" parameterType="com.douzone.final_backend.DTO.ReserveDTO">
@@ -194,18 +211,18 @@
 
     <update id="updateUser" parameterType="com.douzone.final_backend.Bean.UserBean">
         update user
-        set u_pw = #{u_pw},
+        set u_pw        = #{u_pw},
             u_cellPhone = #{u_cellPhone},
-            u_email = #{u_email},
-            u_gender = #{u_gender},
-            u_age = #{u_age}
+            u_email     = #{u_email},
+            u_gender    = #{u_gender},
+            u_age       = #{u_age}
         where u_id = #{u_id}
     </update>
 
     <update id="deleteUser" parameterType="String">
         update user
         set u_status = 1
-        where  u_id = #{u_id}
+        where u_id = #{u_id}
     </update>
 
 
