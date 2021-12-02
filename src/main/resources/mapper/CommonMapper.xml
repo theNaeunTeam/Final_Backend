@@ -68,6 +68,8 @@
              , (select count(*)
                 from goods
                 where o_sNumber = goods.g_owner
+                  and g_status = 0
+                  and g_count != 0
                   and goods.g_name like concat('%', #{goodsName}, '%')) as 'searchResult'
         FROM owner
         where o_approval in (1, 3)
