@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 
@@ -207,7 +206,7 @@ public class MasterController {
                     .body(responseDTO);
         }
     }
-  
+
     // 월별 오너 가입 탈퇴수 가져오기
     @GetMapping("/masterMonth")
     public ResponseEntity MonthMasterChart(){
@@ -359,7 +358,6 @@ public class MasterController {
     public HashMap<String, Object> UpdateBannerContents(@RequestBody List<BannerDTO> list) {
         HashMap<String, Object> hashMap = new HashMap<>();
         log.info("받은 배열 정보 :" + list);
-
         try {
             masterService.deleteBannerTable();
             list.forEach(bannerDTO -> {

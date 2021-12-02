@@ -20,5 +20,7 @@ public class FavoritesDTO {
     private String o_phone;
     private int o_approval;
 
+    private int startIndex;
+
 
 }

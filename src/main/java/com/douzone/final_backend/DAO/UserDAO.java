@@ -77,8 +77,8 @@ public class UserDAO {
         return sqlSession.selectOne("userReserve", u_id);
     }
 
-    public List<ReserveDTO> reserveList(String u_id) {
-        return sqlSession.selectList("userReserveList", u_id);
+    public List<ReserveDTO> reserveList(ReserveDTO dto) {
+        return sqlSession.selectList("userReserveList", dto);
     }
 
     public ReserveBean getReserve(ReserveDTO reserveDTO) {
@@ -99,8 +99,8 @@ public class UserDAO {
         return sqlSession.selectList("userSearchReserve", r);
     }
 
-    public List<FavoritesDTO> favorList(String u_id) {
-        return sqlSession.selectList("favorList", u_id);
+    public List<FavoritesDTO> favorList(FavoritesDTO dto) {
+        return sqlSession.selectList("favorList", dto);
     }
 
     public int insertReserve(ReserveDTO reserve) {

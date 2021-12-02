@@ -121,8 +121,8 @@ public class UserService {
         return userDAO.userReserve(u_id);
     }
 
-    public List<ReserveDTO> reserveList(String u_id) {
-        return userDAO.reserveList(u_id);
+    public List<ReserveDTO> reserveList(ReserveDTO dto) {
+        return userDAO.reserveList(dto);
     }
 
     public ReserveBean getReserve(ReserveDTO reserveDTO) {
@@ -156,8 +156,8 @@ public class UserService {
         }
     }
 
-    public List<FavoritesDTO> favorList(String u_id) {
-        return userDAO.favorList(u_id);
+    public List<FavoritesDTO> favorList(FavoritesDTO dto) {
+        return userDAO.favorList(dto);
     }
 
     @Transactional

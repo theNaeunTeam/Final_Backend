@@ -127,12 +127,16 @@ public class UserController {
 
     // 해당 유저 예약 리스트
     @GetMapping("reserveList")
-    public ResponseEntity<?> reserveList(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> reserveList(@AuthenticationPrincipal UserDetails userDetails,@RequestParam int startIndex) {
         log.info("user reserveList" + userDetails);
         String u_id = userDetails.getUsername();
+        ReserveDTO dto = ReserveDTO.builder()
+                .r_u_id(u_id)
+                .startIndex(startIndex)
+                .build();
         try {
-            List<ReserveDTO> reserve = userService.reserveList(u_id);
-            log.info("user Reserve List : " + reserve);
+            List<ReserveDTO> reserve = userService.reserveList(dto);
+//            log.info("user Reserve List : " + reserve);
             return ResponseEntity.ok().body(reserve);
         } catch (Exception e) {
             return ResponseEntity
@@ -177,7 +181,7 @@ public class UserController {
 
     // user 예약 현황에서 검색
     @GetMapping("searchReserve")
-    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
+    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput,@RequestParam int startIndex) {
         log.info("유저 예약 현황에서 검색 : " + g_category + r_status + searchInput);
 
         String u_id = userDetails.getUsername();
@@ -188,6 +192,7 @@ public class UserController {
                     .searchInput(searchInput)
                     .r_status(9999)
                     .r_u_id(u_id)
+                    .startIndex(startIndex)
                     .build();
         } else {
             r = ReserveDTO.builder()
@@ -195,25 +200,32 @@ public class UserController {
                     .searchInput(searchInput)
                     .r_status(Integer.parseInt(r_status))
                     .r_u_id(u_id)
+                    .startIndex(startIndex)
                     .build();
         }
         log.info("빌드한 r : " + r);
 
         List<ReserveDTO> responseDTO = userService.searchReserve(r);
 
+        log.info("결과 r"+responseDTO);
+
         return ResponseEntity.ok().body(responseDTO);
     }
 
     // user 즐겨찾는 가게 목록
     @GetMapping("favorList")
-    public ResponseEntity<?> favorList(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> favorList(@AuthenticationPrincipal UserDetails userDetails,@RequestParam int startIndex) {
         String u_id = userDetails.getUsername();
         // 필요한 정보 -> o_name, o_address, o_time1, o_time2 , o_phone, o_approval
-        List<FavoritesDTO> dto = userService.favorList(u_id);
+        FavoritesDTO dto = FavoritesDTO.builder()
+                .f_p_user_id(u_id)
+                .startIndex(startIndex)
+                .build();
+        List<FavoritesDTO> responseDTO = userService.favorList(dto);
 
-        log.info("favorList : " + dto);
+        log.info("favorList : " + responseDTO);
 
-        return ResponseEntity.ok().body(dto);
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     // user 회원정보 불러오기
