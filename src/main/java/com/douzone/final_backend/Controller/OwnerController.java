@@ -201,61 +201,59 @@ public class OwnerController {
         }
     }
 
-    @GetMapping("reserveList")
-    public ResponseEntity<?> reservationView(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String g_owner) {
-        log.info("g : " + g_owner);
-        log.info("reserveList 주인 :  " + userDetails.getUsername());
-        try {
-            List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
-            log.info("if null");
-            List<ReserveDTO> responseDTOList = new ArrayList<>();
-            for (ReserveBean r : reserveBeans) {
-                GoodsBean goods = ownerService.goodsData(r.getR_g_code());
-
-//                GoodsDTO goods = GoodsDTO.builder()
-//                        .g_name(goodsBean.getG_name())
-//                        .g_price(goodsBean.getG_price())
-//                        .g_discount(goodsBean.getG_discount())
-//                        .g_expireDate(goodsBean.getG_expireDate())
-//                        .g_category(goodsBean.getG_category())
-//                        .g_status(goodsBean.getG_status())
-//                        .g_count(goodsBean.getG_count())
+//    @GetMapping("reserveList")
+//    public ResponseEntity<?> reservationView(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String g_owner) {
+//        log.info("g : " + g_owner);
+//        log.info("reserveList 주인 :  " + userDetails.getUsername());
+//        try {
+//            List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
+//            log.info("if null");
+//            List<ReserveDTO> responseDTOList = new ArrayList<>();
+//            for (ReserveBean r : reserveBeans) {
+//                GoodsBean goods = ownerService.goodsData(r.getR_g_code());
+//
+////                GoodsDTO goods = GoodsDTO.builder()
+////                        .g_name(goodsBean.getG_name())
+////                        .g_price(goodsBean.getG_price())
+////                        .g_discount(goodsBean.getG_discount())
+////                        .g_expireDate(goodsBean.getG_expireDate())
+////                        .g_category(goodsBean.getG_category())
+////                        .g_status(goodsBean.getG_status())
+////                        .g_count(goodsBean.getG_count())
+////                        .build();
+//                ReserveDTO responseDTO = ReserveDTO.builder()
+//                        .r_code(r.getR_code())
+//                        .r_u_id(r.getR_u_id())
+//                        .r_count(r.getR_count())
+//                        .r_g_code(r.getR_g_code())
+//                        .r_firstTime(r.getR_firstTime())
+//                        .r_status(r.getR_status())
+//                        .r_customOrder(r.getR_customOrder())
+//                        .r_firstDate(r.getR_firstDate())
+////                        .goodsDTO(goods)
+//                        .g_discount(goods.getG_discount())
+//                        .g_price(goods.getG_price())
+//                        .g_name(goods.getG_name())
+//                        .g_expireDate(goods.getG_expireDate())
+//                        .g_category(goods.getG_category())
+//                        .g_status(goods.getG_status())
+//                        .g_count(goods.getG_count())
+//                        .r_pay(r.getR_pay())
 //                        .build();
-                ReserveDTO responseDTO = ReserveDTO.builder()
-                        .r_code(r.getR_code())
-                        .r_u_id(r.getR_u_id())
-                        .r_count(r.getR_count())
-                        .r_g_code(r.getR_g_code())
-                        .r_firstTime(r.getR_firstTime())
-                        .r_status(r.getR_status())
-                        .r_customOrder(r.getR_customOrder())
-                        .r_firstDate(r.getR_firstDate())
-//                        .goodsDTO(goods)
-                        .g_discount(goods.getG_discount())
-                        .g_price(goods.getG_price())
-                        .g_name(goods.getG_name())
-                        .g_expireDate(goods.getG_expireDate())
-                        .g_category(goods.getG_category())
-                        .g_status(goods.getG_status())
-                        .g_count(goods.getG_count())
-                        .g_discount(goods.getG_discount())
-                        .g_price(goods.getG_price())
-                        .r_pay(r.getR_pay())
-                        .build();
-
-                responseDTOList.add(responseDTO);
-
-            }
-//                log.info("responseDTOList : "+responseDTOList);
-            return ResponseEntity.ok().body(responseDTOList);
-
-        } catch (Exception e) {
-            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-    }
+//
+//                responseDTOList.add(responseDTO);
+//
+//            }
+////                log.info("responseDTOList : "+responseDTOList);
+//            return ResponseEntity.ok().body(responseDTOList);
+//
+//        } catch (Exception e) {
+//            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(responseDTO);
+//        }
+//    }
 
     // 예약 상태 변화. 예약 승인완료, 거절, 노쇼
     // r_code 랑 status=승인완료, 거절, 판매완료, 노쇼 정보
@@ -313,7 +311,7 @@ public class OwnerController {
 
     // 예약 현황에서 검색
     @GetMapping("searchReserve")
-    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput) {
+    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput,@RequestParam(required = false) int startIndex) {
         log.info("예약현황에서 검색" + g_category + r_status + searchInput);
         // 넘어오는 값 g_category, r_status, searchInput(상품명)
         String o_sNumber = userDetails.getUsername();
@@ -324,6 +322,7 @@ public class OwnerController {
                     .searchInput(searchInput)
                     .r_status(9999)
                     .r_owner(o_sNumber)
+                    .startIndex(startIndex)
                     .build();
         } else {
             r = ReserveDTO.builder()
@@ -331,6 +330,7 @@ public class OwnerController {
                     .r_status(Integer.parseInt(r_status))
                     .searchInput(searchInput)
                     .r_owner(o_sNumber)
+                    .startIndex(startIndex)
                     .build();
         }
         log.info("만들어진 r : " + r);
@@ -346,7 +346,7 @@ public class OwnerController {
 
     // 상품 조회에서 검색
     @GetMapping("search")
-    public ResponseEntity<?> search(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput) {
+    public ResponseEntity<?> search(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String g_status, @RequestParam(required = false) String searchInput, @RequestParam(required = false) int startIndex) {
         String g_owner = userDetails.getUsername();
         log.info("search 넘어온 값 : " + userDetails + g_category + g_status + searchInput);
 
@@ -357,6 +357,7 @@ public class OwnerController {
                     .g_category(g_category)
                     .g_status(9999)
                     .searchInput(searchInput)
+                    .startIndex(startIndex)
                     .build();
             log.info("status 값 공백");
         } else {
@@ -365,6 +366,7 @@ public class OwnerController {
                     .g_category(g_category)
                     .g_status(Integer.parseInt(g_status))
                     .searchInput(searchInput)
+                    .startIndex(startIndex)
                     .build();
             log.info("stauts 값 : " + g_status);
         }
@@ -372,7 +374,11 @@ public class OwnerController {
         log.info("search Build 성공");
 
         List<GoodsDTO> responseDTO = ownerService.search(g);
-
+        for(GoodsDTO dto : responseDTO){
+            int count = ownerService.getGoodsReserve(dto.getG_code());
+            dto.setCnt(count);
+        }
+        log.info("cnt set ?? "+responseDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 
