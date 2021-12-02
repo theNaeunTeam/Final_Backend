@@ -25,5 +25,7 @@ public class ShopListDTO {
     private String o_image;
     private String distance;
     private int startIndex;
-
+    private String goodsName;
+    private int totalGoodsCnt;
+    private int searchResult;
 }
