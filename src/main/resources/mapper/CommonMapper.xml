@@ -42,7 +42,7 @@
 
         ORDER BY distance
 
-        LIMIT 0,300;
+        LIMIT #{startIndex},10;
         ]]>
     </select>
 
