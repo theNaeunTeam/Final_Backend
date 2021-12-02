@@ -50,6 +50,8 @@ public class CommonController {
 
     @Autowired
     private TokenProvider tokenProvider;
+    @Autowired
+    MailService mailService;
 
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -71,6 +73,27 @@ public class CommonController {
                     .badRequest()
                     .body(responseDTO);
         }
+    }
+    // 현재 위치 저장 되어있을 경우 근처 가게 4개만 뽑아서 내보내기
+    @GetMapping("/localList")
+    public ResponseEntity<?> localList(@RequestParam String LAT, String LON){
+        String range = "1.5";
+        log.info("localList 들어옴");
+        ShopListDTO s = ShopListDTO.builder()
+                .o_latitude(LAT)
+                .o_longitude(LON)
+                .radius(range)
+                .build();
+        try{
+            List<ShopListDTO> list = commonService.getLocalList(s);
+            return ResponseEntity.ok().body(list);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+
     }
 
     // 장바구니
@@ -359,8 +382,7 @@ public class CommonController {
         }
     }
 
-    @Autowired
-    MailService mailService;
+
 
     @PostMapping("/userFindPW")
     public ResponseEntity<?> userFindPW(@RequestBody UserDTO userDTO) {
@@ -410,6 +432,7 @@ public class CommonController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
+
+
 }

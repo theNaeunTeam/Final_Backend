@@ -33,4 +33,10 @@ public class CommonService {
     public List<RecommendListDTO> getRecommendList(){
         return commonDAO.getRecommendList();
     }
+
+
+    // getShopList 랑 동일하지만 sql 문이 다름
+    public List<ShopListDTO> getLocalList(ShopListDTO s) {
+        return commonDAO.getLocalList(s);
+    }
 }

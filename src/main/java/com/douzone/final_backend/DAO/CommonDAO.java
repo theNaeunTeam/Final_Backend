@@ -34,4 +34,7 @@ public class CommonDAO {
         return sqlSession.selectList("recommendList");
     }
 
+    public List<ShopListDTO> getLocalList(ShopListDTO s) {
+        return sqlSession.selectList("getLocalList",s);
+    }
 }
