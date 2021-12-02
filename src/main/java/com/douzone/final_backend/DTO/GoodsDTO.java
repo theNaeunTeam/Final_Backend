@@ -26,4 +26,5 @@ public class GoodsDTO {
     private String searchInput;
     
     private int cnt; // 예약 판매 완료된 갯수
+    private int startIndex;
 }

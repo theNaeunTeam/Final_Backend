@@ -37,6 +37,8 @@ public class ReserveDTO {
     //    private GoodsDTO goodsDTO;
     private String searchInput;
 
+    private int startIndex;
+
 
 
 }
