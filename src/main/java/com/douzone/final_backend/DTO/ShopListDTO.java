@@ -28,4 +28,5 @@ public class ShopListDTO {
     private String goodsName;
     private int totalGoodsCnt;
     private int searchResult;
+    private String sortOption;
 }

@@ -46,7 +46,7 @@
     <!--        ]]>-->
     <!--    </select>-->
 
-    <select id="getShopList" resultType="com.douzone.final_backend.DTO.ShopListDTO">
+    <select id="getShopList1" resultType="com.douzone.final_backend.DTO.ShopListDTO">
         <![CDATA[
         SELECT o_sNumber
              , o_phone
@@ -60,11 +60,11 @@
              , o_image
              , (6371 * acos(cos(radians(#{o_latitude})) * cos(radians(o_latitude)) * cos(radians(o_longitude)
             - radians(#{o_longitude})) + sin(radians(#{o_latitude})) * sin(radians(o_latitude))))
-                                               AS distance
+                                                                        AS distance
              , (select count(*)
                 from goods
                 where o_sNumber = goods.g_owner
-                group by g_owner)              as 'totalGoodsCnt'
+                group by g_owner)                                       as 'totalGoodsCnt'
              , (select count(*)
                 from goods
                 where o_sNumber = goods.g_owner
@@ -78,7 +78,121 @@
 
         HAVING distance <= #{radius}
 
-        ORDER BY distance
+        ORDER BY distance asc, searchResult desc
+
+        LIMIT #{startIndex},10;
+        ]]>
+    </select>
+
+    <select id="getShopList2" resultType="com.douzone.final_backend.DTO.ShopListDTO">
+        <![CDATA[
+        SELECT o_sNumber
+             , o_phone
+             , o_cellPhone
+             , o_name
+             , o_address
+             , o_latitude
+             , o_longitude
+             , o_time1
+             , o_time2
+             , o_image
+             , (6371 * acos(cos(radians(#{o_latitude})) * cos(radians(o_latitude)) * cos(radians(o_longitude)
+            - radians(#{o_longitude})) + sin(radians(#{o_latitude})) * sin(radians(o_latitude))))
+                                                                        AS distance
+             , (select count(*)
+                from goods
+                where o_sNumber = goods.g_owner
+                group by g_owner)                                       as 'totalGoodsCnt'
+             , (select count(*)
+                from goods
+                where o_sNumber = goods.g_owner
+                  and g_status = 0
+                  and g_count != 0
+                  and goods.g_name like concat('%', #{goodsName}, '%')) as 'searchResult'
+        FROM owner
+        where o_approval in (1, 3)
+
+        group by o_sNumber
+
+        HAVING distance <= #{radius}
+
+        ORDER BY distance desc, searchResult desc
+
+        LIMIT #{startIndex},10;
+        ]]>
+    </select>
+
+    <select id="getShopList3" resultType="com.douzone.final_backend.DTO.ShopListDTO">
+        <![CDATA[
+        SELECT o_sNumber
+             , o_phone
+             , o_cellPhone
+             , o_name
+             , o_address
+             , o_latitude
+             , o_longitude
+             , o_time1
+             , o_time2
+             , o_image
+             , (6371 * acos(cos(radians(#{o_latitude})) * cos(radians(o_latitude)) * cos(radians(o_longitude)
+            - radians(#{o_longitude})) + sin(radians(#{o_latitude})) * sin(radians(o_latitude))))
+                                                                        AS distance
+             , (select count(*)
+                from goods
+                where o_sNumber = goods.g_owner
+                group by g_owner)                                       as 'totalGoodsCnt'
+             , (select count(*)
+                from goods
+                where o_sNumber = goods.g_owner
+                  and g_status = 0
+                  and g_count != 0
+                  and goods.g_name like concat('%', #{goodsName}, '%')) as 'searchResult'
+        FROM owner
+        where o_approval in (1, 3)
+
+        group by o_sNumber
+
+        HAVING distance <= #{radius}
+
+        ORDER BY searchResult desc
+
+        LIMIT #{startIndex},10;
+        ]]>
+    </select>
+
+    <select id="getShopList4" resultType="com.douzone.final_backend.DTO.ShopListDTO">
+        <![CDATA[
+        SELECT o_sNumber
+             , o_phone
+             , o_cellPhone
+             , o_name
+             , o_address
+             , o_latitude
+             , o_longitude
+             , o_time1
+             , o_time2
+             , o_image
+             , (6371 * acos(cos(radians(#{o_latitude})) * cos(radians(o_latitude)) * cos(radians(o_longitude)
+            - radians(#{o_longitude})) + sin(radians(#{o_latitude})) * sin(radians(o_latitude))))
+                                                                        AS distance
+             , (select count(*)
+                from goods
+                where o_sNumber = goods.g_owner
+                group by g_owner)                                       as 'totalGoodsCnt'
+             , (select count(*)
+                from goods
+                where o_sNumber = goods.g_owner
+                  and g_status = 0
+                  and g_count != 0
+                  and goods.g_name like concat('%', #{goodsName}, '%')) as 'searchResult'
+        FROM owner
+        where o_approval in (1, 3)
+
+        group by o_sNumber
+
+        HAVING distance <= #{radius}
+
+        ORDER BY searchResult asc
 
         LIMIT #{startIndex},10;
         ]]>
