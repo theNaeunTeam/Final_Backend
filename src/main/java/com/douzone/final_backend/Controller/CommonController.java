@@ -55,11 +55,12 @@ public class CommonController {
 
     //위치 근처 가게 리스트
     @GetMapping("/list")
-    public ResponseEntity<?> shopList(@RequestParam String LAT, String LON, String RAD) {
+    public ResponseEntity<?> shopList(@RequestParam String LAT, String LON, String RAD, int startIndex) {
         ShopListDTO s = ShopListDTO.builder()
                 .o_longitude(LON)
                 .o_latitude(LAT)
                 .radius(RAD)
+                .startIndex(startIndex)
                 .build();
         try {
             List<ShopListDTO> list = commonService.getShopList(s);
