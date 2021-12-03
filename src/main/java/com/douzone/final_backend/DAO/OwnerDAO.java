@@ -106,6 +106,11 @@ public class OwnerDAO {
         return sqlSession.selectList("reserveListAll", g_owner);
     }
 
+    public List<ReserveBean> reserveList(String g_owner) {
+
+        return sqlSession.selectList("reserveList", g_owner);
+    }
+
     public GoodsBean goodsData(int r_g_code) {
         return sqlSession.selectOne("goodsData", r_g_code);
     }
