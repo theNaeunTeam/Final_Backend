@@ -494,12 +494,12 @@ public class OwnerController {
         log.info("ownerExit " + dto);
         log.info("ownerExit " + o_sNumber);
 
-
         try {
             OwnerBean owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
 
             int result = ownerService.ownerExit(o_sNumber);
             return ResponseEntity.ok().body(result);
+
         } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder()
                     .error(e.getMessage())

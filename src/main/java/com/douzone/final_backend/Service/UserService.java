@@ -30,13 +30,13 @@ public class UserService {
     public UserBean create(final UserBean userBean) {
         if (userBean == null || userBean.getU_id() == null) {
             log.warn("데이터 누락");
-            throw new RuntimeException("데이터 누락");
+            throw new RuntimeException("필수 데이터가 누락되었습니다.");
         }
         final String u_id = userBean.getU_id();
 
         if (userDAO.existsById(u_id)) {
             log.warn("이미 존재하는 아이디");
-            throw new RuntimeException("존재하는 아이디");
+            throw new RuntimeException("이미 존재하는 아이디입니다.");
         }
 
         userDAO.insertUser(userBean);
@@ -90,7 +90,7 @@ public class UserService {
     public int addFavorService(FavoritesDTO favoritesDTO) {
         int r = userDAO.addFavorDAO(favoritesDTO);
         if (r == 0) {
-            throw new RuntimeException("즐겨찾기 추가 실패");
+            throw new RuntimeException("즐겨찾기 추가 실패하였습니다.");
         }
         return r;
     }
@@ -99,7 +99,7 @@ public class UserService {
     public int FavorOffService(FavoritesDTO favoritesDTO) {
         int r = userDAO.FavorOffDAO(favoritesDTO);
         if (r == 0) {
-            throw new RuntimeException("즐겨찾기 해제 실패");
+            throw new RuntimeException("즐겨찾기 해제 실패하였습니다.");
         }
         return r;
     }
@@ -108,7 +108,7 @@ public class UserService {
     public UserBean userData(String u_id) {
 
         if (userDAO.userData(u_id) == null) {
-            throw new RuntimeException("해당 회원 정보 없음");
+            throw new RuntimeException("존재하지 않는 아이디입니다.");
         }
         return userDAO.userData(u_id);
     }
@@ -140,7 +140,7 @@ public class UserService {
             int r2 = ownerDAO.reNoSt(responseDTO);
 
             if (r == 0 || r1 == 0 || r2 == 0) {
-                throw new RuntimeException("예약 취소 실패");
+                throw new RuntimeException("예약 취소 실패하였습니다.");
             }
         } else {
             throw new RuntimeException("예약 승인대기/승인 상태에서만 취소할 수 있습니다.");
@@ -172,7 +172,7 @@ public class UserService {
         int r2 = userDAO.updateGoodsStatus(reserve); //수량 확인하고 수량 0이면 판매완료로 바꾸기
 
         if (r != 1 || r1 != 1 || r2 != 1) {
-            throw new RuntimeException("예약 데이터 삽입 또는 수량 줄이기 실패");
+            throw new RuntimeException("예약 데이터 삽입 또는 수량 줄이기 실패하였습니다.");
         }
         log.info("삽입/상품수량빼기/상태 변화" + r + "/" + r1);
     }
@@ -185,7 +185,7 @@ public class UserService {
     public int update(final UserBean userBean) {
         if (userBean == null || userBean.getU_id() == null) {
             log.warn("데이터 누락");
-            throw new RuntimeException("데이터 누락");
+            throw new RuntimeException("필수 데이터가 데이터 누락되었습니다.");
         }
         return userDAO.updateUser(userBean);
     }
