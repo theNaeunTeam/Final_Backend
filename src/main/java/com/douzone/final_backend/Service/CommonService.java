@@ -23,14 +23,27 @@ public class CommonService {
     }
 
     public List<ShopListDTO> getShopList(ShopListDTO s) {
-        return commonDAO.getShopList(s);
+
+        switch (s.getSortOption()) {
+            case "가까운순":
+                return commonDAO.getShopList1(s);
+            case "멀리있는순":
+                return commonDAO.getShopList2(s);
+            case "상품많은순":
+                return commonDAO.getShopList3(s);
+            case "상품적은순":
+                return commonDAO.getShopList4(s);
+            default:
+                return commonDAO.getShopList1(s);
+        }
+
     }
 
     public HashMap<String, Object> getCategory(String g_owner) {
         return commonDAO.getCategory(g_owner);
     }
 
-    public List<RecommendListDTO> getRecommendList(){
+    public List<RecommendListDTO> getRecommendList() {
         return commonDAO.getRecommendList();
     }
 

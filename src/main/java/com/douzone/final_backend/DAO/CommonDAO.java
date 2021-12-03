@@ -22,8 +22,17 @@ public class CommonDAO {
         return sqlSession.selectOne("getShoppingCart", g_code);
     }
 
-    public List<ShopListDTO> getShopList(ShopListDTO s) {
-        return sqlSession.selectList("getShopList", s);
+    public List<ShopListDTO> getShopList1(ShopListDTO s) {
+        return sqlSession.selectList("getShopList1", s);
+    }
+    public List<ShopListDTO> getShopList2(ShopListDTO s) {
+        return sqlSession.selectList("getShopList2", s);
+    }
+    public List<ShopListDTO> getShopList3(ShopListDTO s) {
+        return sqlSession.selectList("getShopList3", s);
+    }
+    public List<ShopListDTO> getShopList4(ShopListDTO s) {
+        return sqlSession.selectList("getShopList4", s);
     }
 
     public HashMap<String, Object> getCategory(String g_owner) {
