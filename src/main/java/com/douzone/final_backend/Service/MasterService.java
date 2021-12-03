@@ -107,8 +107,11 @@ public class MasterService {
 
     public void terminationCancle(String o_sNumber) {
 //        log.info("service : " + masterDAO.terminationCancle(o_sNumber));
-        if (masterDAO.terminationCancle(o_sNumber) == 0)
-            throw new RuntimeException("해지 반려 신청 수락 에러");
+        int status = ownerDAO.findByOwner(o_sNumber).getO_approval();
+        if(status != 4){
+            throw new RuntimeException("해지 신청 완료 되었을 때만 승인 취소 가능합니다.");
+        }else if (masterDAO.terminationCancle(o_sNumber) == 0)
+            throw new RuntimeException("해지 신청 취소 처리 중 에러가 발생하였습니다.");
 
         masterDAO.terminationCancle(o_sNumber);
     }
