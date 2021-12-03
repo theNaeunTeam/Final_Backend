@@ -126,24 +126,24 @@ public class UserController {
 
 
     // 해당 유저 예약 리스트
-    @GetMapping("reserveList")
-    public ResponseEntity<?> reserveList(@AuthenticationPrincipal UserDetails userDetails,@RequestParam int startIndex) {
-        log.info("user reserveList" + userDetails);
-        String u_id = userDetails.getUsername();
-        ReserveDTO dto = ReserveDTO.builder()
-                .r_u_id(u_id)
-                .startIndex(startIndex)
-                .build();
-        try {
-            List<ReserveDTO> reserve = userService.reserveList(dto);
-//            log.info("user Reserve List : " + reserve);
-            return ResponseEntity.ok().body(reserve);
-        } catch (Exception e) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(false);
-        }
-    }
+//    @GetMapping("reserveList")
+//    public ResponseEntity<?> reserveList(@AuthenticationPrincipal UserDetails userDetails,@RequestParam int startIndex) {
+//        log.info("user reserveList" + userDetails);
+//        String u_id = userDetails.getUsername();
+//        ReserveDTO dto = ReserveDTO.builder()
+//                .r_u_id(u_id)
+//                .startIndex(startIndex)
+//                .build();
+//        try {
+//            List<ReserveDTO> reserve = userService.reserveList(dto);
+////            log.info("user Reserve List : " + reserve);
+//            return ResponseEntity.ok().body(reserve);
+//        } catch (Exception e) {
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(false);
+//        }
+//    }
 
     // 유저 예약 취소
     @PatchMapping("changeReserveStatus")
@@ -258,7 +258,11 @@ public class UserController {
     @PostMapping("userUpdate")
     public ResponseEntity<?> userUpdate(@RequestBody UserDTO userDTO) {
         log.info("회원정보 수정 들어옴  :" + userDTO);
+
         try {
+            if(userDTO.getU_pw() == null){
+                throw new RuntimeException("비밀번호를 입력해주세요");
+            }
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
             UserBean user = UserBean.builder()
                     .u_id(userDTO.getU_id())
@@ -335,9 +339,13 @@ public class UserController {
 
     //회원탈퇴
     @PostMapping("userDelete")
-    public ResponseEntity<?> userDelete(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserDTO userDTO, String u_pw) {
+    public ResponseEntity<?> userDelete(@AuthenticationPrincipal UserDetails userDetails, @RequestBody UserDTO userDTO) {
         String u_id = userDetails.getUsername();
+        log.info(userDTO + " 들어온 데이터");
         try {
+            if(userDTO.getU_pw() == null){
+                throw new RuntimeException("비밀번호를 입력해주세요");
+            }
             UserBean user = userService.getByCredentials(
                     u_id,
                     userDTO.getU_pw(),
