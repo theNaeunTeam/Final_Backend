@@ -165,7 +165,7 @@ public class OwnerController {
     }
 
     // 해당 가게 상품 리스트 -> 상품조회
-//    @GetMapping("goodsView")
+    @GetMapping("goodsView")
 //    public ResponseEntity<?> goodsView(@RequestParam String o_sNumber) {
     public ResponseEntity<?> goodsView(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("사업자 번호" + userDetails.getUsername());
