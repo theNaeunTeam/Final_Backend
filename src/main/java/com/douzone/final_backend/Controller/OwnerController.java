@@ -104,14 +104,15 @@ public class OwnerController {
     @PostMapping("/addGoods")
     public ResponseEntity<?> addGoods(@AuthenticationPrincipal UserDetails userDetails, GoodsDTO goodsDTO, MultipartFile file) throws IOException {
         log.info("file 정보 :" + file);
-        log.info("goods" + goodsDTO);
-        String image = s3Service.upload(file);
-        goodsDTO.setG_image(image);
-        goodsDTO.setG_owner(userDetails.getUsername());
-
-
         log.info("goodsDTO" + goodsDTO);
         try {
+            if(file == null){
+                throw new RuntimeException("이미지를 선택해주세요");
+            }
+            String image = s3Service.upload(file);
+            goodsDTO.setG_image(image);
+            goodsDTO.setG_owner(userDetails.getUsername());
+
             GoodsBean goods = GoodsBean.builder()
                     .g_owner(goodsDTO.getG_owner())
 //                    .g_owner("123")
