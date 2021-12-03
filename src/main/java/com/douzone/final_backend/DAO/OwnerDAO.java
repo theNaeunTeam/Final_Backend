@@ -101,9 +101,9 @@ public class OwnerDAO {
         return sqlSession.update("deleteGoods", g_code);
     }
 
-    public List<ReserveBean> reserveList(String g_owner) {
+    public List<ReserveBean> reserveListAll(String g_owner) {
 
-        return sqlSession.selectList("reserveList", g_owner);
+        return sqlSession.selectList("reserveListAll", g_owner);
     }
 
     public GoodsBean goodsData(int r_g_code) {
