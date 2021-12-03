@@ -54,9 +54,9 @@ public class OwnerService {
     }
 
     public int addGoods(GoodsBean goodsBean) {
-        if (goodsBean == null) {
+        if (goodsBean.getG_name() == null || goodsBean.getG_count() == 0 || goodsBean.getG_price() == 0 || goodsBean.getG_discount()==0|| goodsBean.getG_expireDate() == null || goodsBean.getG_category()==null) {
             log.warn("Goods 데이터 누락");
-            throw new RuntimeException("데이터 누락");
+            throw new RuntimeException("필수 데이터가 누락되었습니다.");
         }
 
         int result = ownerDAO.addGoods(goodsBean);
@@ -69,9 +69,9 @@ public class OwnerService {
     }
 
     public int updateGoods(GoodsBean goodsBean) {
-        if (goodsBean == null) {
+        if (goodsBean.getG_name() == null || goodsBean.getG_count() == 0 || goodsBean.getG_price() == 0 || goodsBean.getG_discount()==0|| goodsBean.getG_expireDate() == null || goodsBean.getG_category()==null) {
             log.warn("Goods Update 데이터 누락");
-            throw new RuntimeException("데이터 누락");
+            throw new RuntimeException("필수 데이터가 누락되었습니다.");
         }
         int result = ownerDAO.updateGoods(goodsBean);
         if (result == 0) {
@@ -123,7 +123,7 @@ public class OwnerService {
                 int r = ownerDAO.resSu(reserveDTO);
                 int r1 = ownerDAO.point(reserveDTO);
                 if (r == 0 || r1 == 0) {
-                    throw new RuntimeException("판매완료 에러");
+                    throw new RuntimeException("판매완료 처리 중 에러가 발생했습니다.");
                 }
             } else {
                 throw new RuntimeException("예약 승인 되어있을 때만 판매 완료로 바꿀 수 있습니다.");
@@ -161,8 +161,8 @@ public class OwnerService {
         int result = ownerDAO.deleteGoods(g_code);
         if(g_code == 0){
          throw new RuntimeException("데이터가 누락되었습니다.");
-        }else if(result != 1){
-            throw new RuntimeException("상품 판매 중지 실패하였습니다.");
+        }else if(result != 0){
+            throw new RuntimeException("상품 판매 완료 처리 실패하였습니다.");
         }
         return result;
     }
@@ -183,7 +183,7 @@ public class OwnerService {
 
     public ReserveBean reserveOne(ReserveDTO reserve) {
         if (ownerDAO.reserveOne(reserve) == null) {
-            throw new RuntimeException("반환되는 값 없음");
+            throw new RuntimeException("데이터를 불러오는데 에러가 발생했습니다.");
         }
         return ownerDAO.reserveOne(reserve);
     }
@@ -245,7 +245,7 @@ public class OwnerService {
 
     public List<SaleDTO> getTime(String r_owner) {
 
-        if (r_owner == null) throw new RuntimeException("들어온 값 없음");
+        if (r_owner == null) throw new RuntimeException("필수 데이터 누락되었습니다.");
 
         return ownerDAO.getTime(r_owner);
     }

@@ -4,6 +4,7 @@ import com.douzone.final_backend.Bean.MasterBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.DAO.MasterDAO;
+import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.LocalDTO;
 import com.douzone.final_backend.DTO.MasterDTO;
@@ -21,22 +22,40 @@ public class MasterService {
     @Autowired
     private MasterDAO masterDAO;
 
+    @Autowired
+    private OwnerDAO ownerDAO;
+
     public List<OwnerBean> findAll() {
         return masterDAO.findAll();
     }
 
 
     public void requestOK(String o_sNumber) {
-        log.info("service : " + masterDAO.requestOK(o_sNumber));
-        if (masterDAO.requestOK(o_sNumber) == 0)
-            throw new RuntimeException("입점 신청 수락 에러");
+//        log.info("service : " + masterDAO.requestOK(o_sNumber));
+        int status = ownerDAO.findByOwner(o_sNumber).getO_approval();
 
+        if (status == 3) {
+            throw new RuntimeException("입점 해지 신청 대기 중인 가게는 처리할 수 없습니다.");
+        } else if (status == 4) {
+            throw new RuntimeException("입점 해지 신청 완료된 가게는 처리할 수 없습니다.");
+        }else if (masterDAO.requestOK(o_sNumber) == 0) {
+            throw new RuntimeException("입점 신청 수락 처리 중 에러가 발생했습니다.");
+        }
         masterDAO.requestOK(o_sNumber);
     }
 
     public int requestNO(String o_sNumber) {
-        if (masterDAO.requestNO(o_sNumber) == 0)
-            throw new RuntimeException("입점 신청 거절 에러");
+        int status = ownerDAO.findByOwner(o_sNumber).getO_approval();
+        log.info("사업자 번호 : " + o_sNumber);
+        log.info("현재  상태 " + status);
+
+        if (status == 1 || status == 3) {
+            throw new RuntimeException("입점 신청 승인 후에는 반려 처리 할 수 없습니다.");
+        } else if (status == 4) {
+            throw new RuntimeException("입점 해지 신청 완료된 가맹점은 처리할 수 없습니다.");
+        }else if (masterDAO.requestNO(o_sNumber) == 0) {
+            throw new RuntimeException("입점 신청 반려 처리 중 에러가 발생했습니다.");
+        }
         return masterDAO.requestNO(o_sNumber);
     }
 
@@ -71,10 +90,14 @@ public class MasterService {
     }
 
     public void terminationOK(String o_sNumber) {
-        log.info("service : " + masterDAO.terminationOK(o_sNumber));
-        if (masterDAO.terminationOK(o_sNumber) == 0)
-            throw new RuntimeException("해지 신청 수락 에러");
+//        log.info("service : " + masterDAO.terminationOK(o_sNumber));
+        int status = ownerDAO.findByOwner(o_sNumber).getO_approval();
 
+        if(status != 3){
+            throw new RuntimeException("해지 신청 대기 중일 때만 처리가 가능합니다.");
+        }
+        if (masterDAO.terminationOK(o_sNumber) == 0)
+            throw new RuntimeException("해지 신청 수락 처리 중 에러가 발생했습니다.");
         masterDAO.terminationOK(o_sNumber);
     }
 
@@ -83,7 +106,7 @@ public class MasterService {
     }
 
     public void terminationCancle(String o_sNumber) {
-        log.info("service : " + masterDAO.terminationCancle(o_sNumber));
+//        log.info("service : " + masterDAO.terminationCancle(o_sNumber));
         if (masterDAO.terminationCancle(o_sNumber) == 0)
             throw new RuntimeException("해지 반려 신청 수락 에러");
 
@@ -134,7 +157,7 @@ public class MasterService {
         return masterDAO.onnerUserYear2(nowYear);
     }
 
-    public LocalDTO  OwnerUserChart3(){
+    public LocalDTO OwnerUserChart3() {
         return masterDAO.OwnerUserChart3();
     }
 }

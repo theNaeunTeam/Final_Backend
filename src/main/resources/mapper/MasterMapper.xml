@@ -6,7 +6,7 @@
     <select id="findAll" resultType="com.douzone.final_backend.Bean.OwnerBean">
         select *
         from owner
-        order by o_approval in (0, 4) desc, o_approval
+        order by o_approval in (0, 3) desc, o_approval
     </select>
 
     <update id="requestOK" parameterType="String">

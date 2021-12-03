@@ -155,7 +155,7 @@
     <!-- 상품 판매 중지 신청 -->
     <update id="deleteGoods" parameterType="int">
         update goods
-        set g_status = 2
+        set g_status = 1
         where g_code = #{g_code}
     </update>
 

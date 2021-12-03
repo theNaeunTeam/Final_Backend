@@ -109,6 +109,7 @@ public class OwnerController {
             if(file == null){
                 throw new RuntimeException("이미지를 선택해주세요");
             }
+
             String image = s3Service.upload(file);
             goodsDTO.setG_image(image);
             goodsDTO.setG_owner(userDetails.getUsername());
@@ -164,43 +165,43 @@ public class OwnerController {
     }
 
     // 해당 가게 상품 리스트 -> 상품조회
-    @GetMapping("goodsView")
+//    @GetMapping("goodsView")
 //    public ResponseEntity<?> goodsView(@RequestParam String o_sNumber) {
-    public ResponseEntity<?> goodsView(@AuthenticationPrincipal UserDetails userDetails) {
-        log.info("사업자 번호" + userDetails.getUsername());
-
-        try {
-            // 해당 가게 상품 리스트
-            List<GoodsBean> goodsList = ownerService.goodsList(userDetails.getUsername());
-            List<GoodsDTO> responseDTO = new ArrayList<>();
-            log.info("try문 ");
-
-            // 해당 상품 예약 판매 완료된 갯수
-            for (GoodsBean g : goodsList) {
-                int count = ownerService.getGoodsReserve(g.getG_code());
-
-                GoodsDTO dto = GoodsDTO.builder()
-                        .g_name(g.getG_name())
-                        .g_code(g.getG_code())
-                        .g_category(g.getG_category())
-                        .g_price(g.getG_price())
-                        .g_discount(g.getG_discount())
-                        .g_expireDate(g.getG_expireDate())
-                        .g_status(g.getG_status())
-                        .g_count(g.getG_count())
-                        .cnt(count)
-                        .build();
-                responseDTO.add(dto);
-            }
-
-            return ResponseEntity.ok().body(responseDTO);
-        } catch (Exception e) {
-            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
-            return ResponseEntity
-                    .badRequest()
-                    .body(responseDTO);
-        }
-    }
+//    public ResponseEntity<?> goodsView(@AuthenticationPrincipal UserDetails userDetails) {
+//        log.info("사업자 번호" + userDetails.getUsername());
+//
+//        try {
+//            // 해당 가게 상품 리스트
+//            List<GoodsBean> goodsList = ownerService.goodsList(userDetails.getUsername());
+//            List<GoodsDTO> responseDTO = new ArrayList<>();
+//            log.info("try문 ");
+//
+//            // 해당 상품 예약 판매 완료된 갯수
+//            for (GoodsBean g : goodsList) {
+//                int count = ownerService.getGoodsReserve(g.getG_code());
+//
+//                GoodsDTO dto = GoodsDTO.builder()
+//                        .g_name(g.getG_name())
+//                        .g_code(g.getG_code())
+//                        .g_category(g.getG_category())
+//                        .g_price(g.getG_price())
+//                        .g_discount(g.getG_discount())
+//                        .g_expireDate(g.getG_expireDate())
+//                        .g_status(g.getG_status())
+//                        .g_count(g.getG_count())
+//                        .cnt(count)
+//                        .build();
+//                responseDTO.add(dto);
+//            }
+//
+//            return ResponseEntity.ok().body(responseDTO);
+//        } catch (Exception e) {
+//            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+//            return ResponseEntity
+//                    .badRequest()
+//                    .body(responseDTO);
+//        }
+//    }
 
 //    @GetMapping("reserveList")
 //    public ResponseEntity<?> reservationView(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String g_owner) {
