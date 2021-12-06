@@ -161,7 +161,7 @@ public class OwnerService {
         int result = ownerDAO.deleteGoods(g_code);
         if(g_code == 0){
          throw new RuntimeException("데이터가 누락되었습니다.");
-        }else if(result != 0){
+        }else if(result == 0){
             throw new RuntimeException("상품 판매 완료 처리 실패하였습니다.");
         }
         return result;

@@ -4,6 +4,7 @@ import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.DAO.MasterDAO;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
@@ -26,6 +27,9 @@ public class UserService {
 
     @Autowired
     private OwnerDAO ownerDAO;
+
+    @Autowired
+    private MasterDAO masterDAO;
 
     public UserBean create(final UserBean userBean) {
         if (userBean == null || userBean.getU_id() == null) {
@@ -64,7 +68,7 @@ public class UserService {
     // 비밀번호 찾기 했을 때 유저 정보 가져오기 .
     public UserBean findById(String u_id) {
 
-        if(userDAO.findByUId(u_id) == null){
+        if (userDAO.findByUId(u_id) == null) {
             throw new RuntimeException("존재하지 않는 아이디입니다.");
         }
 
@@ -163,6 +167,14 @@ public class UserService {
     @Transactional
     public void insertReserve(ReserveDTO reserve) {
         log.info("insertReserve 안");
+        // 해당가게 상태가 1 또는 3일 때만 예약가능.
+        OwnerBean owner = ownerDAO.findBySNum(reserve.getR_owner());
+        if (owner == null) {
+            throw new RuntimeException("현재 예약이 불가능한 가게입니다.");
+        }
+        // 방문요청 한 시간이 영업시간인지 확인.
+
+
         int r = userDAO.insertReserve(reserve); // 데이터 삽입
         log.info("insert" + r);
 
@@ -206,9 +218,9 @@ public class UserService {
     }
 
     public int pwUpdate(UserBean user) {
-        if(userDAO.pwUpdate(user) == 0){
+        if (userDAO.pwUpdate(user) == 0) {
             throw new RuntimeException("비밀번호 변경 실패하였습니다.");
         }
-            return userDAO.pwUpdate(user);
+        return userDAO.pwUpdate(user);
     }
 }
