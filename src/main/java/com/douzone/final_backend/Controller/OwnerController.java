@@ -208,7 +208,7 @@ public class OwnerController {
         log.info("g : " + g_owner);
         log.info("reserveList 주인 :  " + userDetails.getUsername());
         try {
-            List<ReserveBean> reserveBeans = ownerService.reserveList(g_owner);
+            List<ReserveBean> reserveBeans = ownerService.reserveListAll(g_owner);
             log.info("if null");
             List<ReserveDTO> responseDTOList = new ArrayList<>();
             for (ReserveBean r : reserveBeans) {
