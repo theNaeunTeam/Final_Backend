@@ -168,6 +168,14 @@
         LIMIT #{startIndex},10
     </select>
 
+    <!-- 본인 가게 예약 리스트 -->
+    <select id="reserveListAll" resultType="com.douzone.final_backend.Bean.ReserveBean">
+        select *
+        from reserve
+        where r_owner = #{g_owner}
+        order by r_status
+    </select>
+
     <!-- g_code로 물건 정보 조회 -->
     <select id="goodsData" resultType="com.douzone.final_backend.Bean.GoodsBean">
         select *

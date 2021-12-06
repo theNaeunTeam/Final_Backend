@@ -167,6 +167,10 @@ public class OwnerService {
         return result;
     }
 
+    public List<ReserveBean> reserveListAll(String g_owner) {
+
+        return ownerDAO.reserveListAll(g_owner);
+    }
     public List<ReserveBean> reserveList(String g_owner) {
 
         return ownerDAO.reserveList(g_owner);
