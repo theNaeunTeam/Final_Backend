@@ -185,7 +185,7 @@ public class OwnerService {
     }
 
     public ReserveBean reserveOne(ReserveDTO reserve) {
-        if (reserve.getR_g_code() == 0) {
+        if (reserve.getR_code() == 0) {
             throw new RuntimeException("필수 데이터가 누락되었습니다.");
         } else if (ownerDAO.reserveOne(reserve) == null) {
             throw new RuntimeException("데이터를 불러오는데 에러가 발생했습니다.");
