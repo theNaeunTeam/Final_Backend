@@ -214,15 +214,6 @@ public class OwnerController {
             for (ReserveBean r : reserveBeans) {
                 GoodsBean goods = ownerService.goodsData(r.getR_g_code());
 
-//                GoodsDTO goods = GoodsDTO.builder()
-//                        .g_name(goodsBean.getG_name())
-//                        .g_price(goodsBean.getG_price())
-//                        .g_discount(goodsBean.getG_discount())
-//                        .g_expireDate(goodsBean.getG_expireDate())
-//                        .g_category(goodsBean.getG_category())
-//                        .g_status(goodsBean.getG_status())
-//                        .g_count(goodsBean.getG_count())
-//                        .build();
                 ReserveDTO responseDTO = ReserveDTO.builder()
                         .r_code(r.getR_code())
                         .r_u_id(r.getR_u_id())
@@ -232,7 +223,6 @@ public class OwnerController {
                         .r_status(r.getR_status())
                         .r_customOrder(r.getR_customOrder())
                         .r_firstDate(r.getR_firstDate())
-//                        .goodsDTO(goods)
                         .g_discount(goods.getG_discount())
                         .g_price(goods.getG_price())
                         .g_name(goods.getG_name())

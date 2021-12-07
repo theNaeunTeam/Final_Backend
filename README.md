@@ -32,6 +32,11 @@
 
 크게 보았을 때 소형 음식점에서의 음식물 쓰레기 발생량을 줄일 수 있을 것으로 예상된다.(공익성)
 
+## 사이트맵
+
+![siteMap](https://thebetterteam-image.s3.ap-northeast-2.amazonaws.com/TanDaMarket%20SiteMap%20vertical.png)
+
+
 ## ✔설치
 
 ```  
@@ -185,4 +190,3 @@ $ yarn start
   4. 입점 신청 대기 중인 가게들을 입점 승인/반려할 수 있다.
   5. 입점 해지 신청 후 대기 중인 가게들을 해지 승인/거절할 수 있다.
   6. 메인페이지의 배너를 추가/삭제 할 수 있다.
-    
