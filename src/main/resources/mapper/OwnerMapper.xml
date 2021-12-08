@@ -173,7 +173,7 @@
         select *
         from reserve
         where r_owner = #{g_owner}
-        and r_status != 3 and r_status != 4 and r_status != 5
+          and r_status = 0 or 1
         order by r_status
         limit 100;
     </select>
