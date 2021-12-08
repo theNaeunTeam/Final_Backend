@@ -168,12 +168,14 @@
         LIMIT #{startIndex},10
     </select>
 
-    <!-- 본인 가게 예약 리스트 -->
+    <!-- 탄다오너 어플 예약목록 보기 -->
     <select id="reserveListAll" resultType="com.douzone.final_backend.Bean.ReserveBean">
         select *
         from reserve
         where r_owner = #{g_owner}
+        and r_status != 3 and r_status != 4 and r_status != 5
         order by r_status
+        limit 100;
     </select>
 
     <!-- g_code로 물건 정보 조회 -->
