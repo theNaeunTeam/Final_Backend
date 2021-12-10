@@ -76,7 +76,6 @@ public class OwnerController {
             // 올해의 현재 월까지만
             if (i == y) {
                 a = Calendar.getInstance().get(Calendar.MONTH) + 1;
-                log.info(a + " a");
             }
             for (int j = 1; j <= a; j++) {
                 OwnerPageDTO dd = OwnerPageDTO.builder()

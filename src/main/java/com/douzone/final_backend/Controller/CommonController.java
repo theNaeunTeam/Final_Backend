@@ -181,7 +181,6 @@ public class CommonController {
             headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
             headers.add("X-AUTH-TOKEN", token);
             return new ResponseEntity<>(responseUserDTO, headers, HttpStatus.OK);
-//            return ResponseEntity.ok().body(responseUserDTO);
 
         } catch (Exception e) {
             log.info(e.getMessage());
