@@ -46,12 +46,6 @@ public class CustomDetailsService implements UserDetailsService {
             UserBean result = userDAO.findByUId(id);
             if (result == null) throw new BadCredentialsException("UserID not Found");
 
-//            List<String> list = new ArrayList<>();
-//            list.add("ROLE_USER");
-//            result.setRoles(list);
-
-//            log.info("DetailsService : " + list);
-
             securityUser.setId(result.getU_id());
             securityUser.setPw(result.getU_pw());
 

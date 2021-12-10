@@ -43,7 +43,7 @@ public class Scheduler {
                 log.info("결과 " + date2.before(date1));
                 if (date2.before(date1)) {
                     log.info("gcode" + g.getG_code());
-                    // 판매 종료로 바꾸기
+                    // 판매 중지로 바꾸기
                     ownerService.changeStatus(g.getG_code());
                     // 해당 상품 예약이 있으면 거절로 바꾸기
                     ownerService.deleteStatus(g.getG_code());
