@@ -34,7 +34,7 @@
 
 ## 사이트맵
 
-![siteMap](https://thebetterteam-image.s3.ap-northeast-2.amazonaws.com/TanDaMarket%20SiteMap%20vertical.png)
+![siteMap](./TanDaMarketSiteMap.png)
 
 
 ## ✔설치
