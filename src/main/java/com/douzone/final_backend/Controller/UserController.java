@@ -24,15 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    //    @GetMapping("/user")
-//    public String test() {
-//        List<UserBean> test = userDAO.select();
-//        for(UserBean data : test) {
-//            System.out.println("data:"+data.getU_email());
-//        }
-//        log.warn("dmdkdpofiopfi");
-//        return "테스트";
-//    }
+
     @Autowired
     private UserService userService;
 
@@ -123,27 +115,6 @@ public class UserController {
                     .body(responseDTO);
         }
     }
-
-
-    // 해당 유저 예약 리스트
-//    @GetMapping("reserveList")
-//    public ResponseEntity<?> reserveList(@AuthenticationPrincipal UserDetails userDetails,@RequestParam int startIndex) {
-//        log.info("user reserveList" + userDetails);
-//        String u_id = userDetails.getUsername();
-//        ReserveDTO dto = ReserveDTO.builder()
-//                .r_u_id(u_id)
-//                .startIndex(startIndex)
-//                .build();
-//        try {
-//            List<ReserveDTO> reserve = userService.reserveList(dto);
-////            log.info("user Reserve List : " + reserve);
-//            return ResponseEntity.ok().body(reserve);
-//        } catch (Exception e) {
-//            return ResponseEntity
-//                    .badRequest()
-//                    .body(false);
-//        }
-//    }
 
     // 유저 예약 취소
     @PatchMapping("changeReserveStatus")
