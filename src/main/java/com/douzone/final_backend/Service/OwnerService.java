@@ -39,7 +39,7 @@ public class OwnerService {
     // 입점신청
     public int create(OwnerBean owner) {
 
-        if (owner == null || owner.getO_sNumber() == null) {
+        if (owner == null || owner.getO_sNumber() == null || owner.getO_pw() == null || owner.getO_address() == null || owner.getO_phone() == null || owner.getO_cellPhone() == null || owner.getO_image() == null || owner.getO_name() == null || owner.getO_time1() == null || owner.getO_time2() == null || owner.getO_latitude() == null || owner.getO_longitude() == null) {
             log.warn("owner 정보 누락");
             throw new RuntimeException("데이터가 누락되었습니다.");
         }
@@ -172,7 +172,6 @@ public class OwnerService {
 
         return ownerDAO.reserveList(g_owner);
     }
-
 
     public GoodsBean goodsData(int r_g_code) {
 
