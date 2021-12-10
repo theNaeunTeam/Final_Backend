@@ -32,7 +32,7 @@ public class UserService {
     private MasterDAO masterDAO;
 
     public UserBean create(final UserBean userBean) {
-        if (userBean == null || userBean.getU_id() == null) {
+        if (userBean == null || userBean.getU_id() == null || userBean.getU_pw() == null || userBean.getU_cellPhone() == null || userBean.getU_email() == null || userBean.getU_gender() == null || userBean.getU_age() == 0) {
             log.warn("데이터 누락");
             throw new RuntimeException("필수 데이터가 누락되었습니다.");
         }
@@ -51,6 +51,9 @@ public class UserService {
     // 로그인 시 id로 정보 들고와 입력된 비밀번호화 암호화된 비밀번호 match
     public UserBean getByCredentials(final String u_id, final String u_pw, final PasswordEncoder encoder) {
         log.info("login service");
+        if(u_id == null || u_pw == null){
+            throw new RuntimeException("필수 데이터가 누락되었습니다.");
+        }
         final UserBean originalUser = userDAO.findByUId(u_id);
         log.info("originalUser" + originalUser);
 
