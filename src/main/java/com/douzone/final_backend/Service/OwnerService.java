@@ -4,6 +4,7 @@ import com.douzone.final_backend.Bean.GoodsBean;
 import com.douzone.final_backend.Bean.OwnerBean;
 import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.DAO.OwnerDAO;
+import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ import java.util.List;
 public class OwnerService {
     @Autowired
     private OwnerDAO ownerDAO;
+
+    @Autowired
+    private UserDAO userDAO;
 
     // 로그인
     public OwnerBean getByCredentials(String o_sNumber, String o_pw, PasswordEncoder passwordEncoder) {
@@ -45,7 +49,7 @@ public class OwnerService {
         }
         final String o_sNumber = owner.getO_sNumber();
         // 존재 여부 확인. 반환 타입 true, false
-        if (ownerDAO.existsBySNum(o_sNumber)) {
+        if (ownerDAO.existsBySNum(o_sNumber)||userDAO.existsById(o_sNumber)) {
             log.warn("이미 존재하는 사업자 번호");
             throw new RuntimeException("이미 존재하는 사업자 번호입니다.");
         }
