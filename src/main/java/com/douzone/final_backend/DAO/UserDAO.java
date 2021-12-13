@@ -153,4 +153,8 @@ public class UserDAO {
     public int insertPushToken(PushTokenDTO pushTokenDTO){
         return sqlSession.insert("insertPushTokenUser", pushTokenDTO);
     }
+
+    public List<String> getUserPushToken(String u_id_fk) {
+        return sqlSession.selectList("getPushTokenListUser", u_id_fk);
+    }
 }

@@ -290,10 +290,11 @@ public class UserController {
                     BatchResponse response = null;
                     try {
                         response = FirebaseMessaging.getInstance().sendMulticast(message);
+                        System.out.println(response.getSuccessCount() + "건 메시지 전송 성공");
+
                     } catch (FirebaseMessagingException e) {
                         e.printStackTrace();
                     }
-                    System.out.println(response.getSuccessCount() + "건 메시지 전송 성공");
                 }
 
                 return ResponseEntity.ok().body(true);

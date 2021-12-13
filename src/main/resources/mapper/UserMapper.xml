@@ -225,6 +225,10 @@
         where u_id = #{u_id}
     </update>
 
+    <select id="getPushTokenListUser" resultType="String">
+select distinct token from firebase_user_push_token where u_id_fk = #{u_id_fk}
+    </select>
+
     <select id="tokenDupChkUser" resultType="int">
         select count(*)
         from firebase_user_push_token
@@ -235,4 +239,6 @@
         insert into firebase_user_push_token (u_id_fk, token)
         VALUES (#{g_owner_fk}, #{token})
     </insert>
+
+
 </mapper>
