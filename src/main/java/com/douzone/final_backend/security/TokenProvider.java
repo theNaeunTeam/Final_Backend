@@ -5,6 +5,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,7 @@ public class TokenProvider {
     private final UserDetailsService userDetailsService;
 
 
-    public String create(String id, String role) {
+    public String create(String id) {
         // 기한은 지금부터 1일로 설정
         Date expiryDate = Date.from(
                 Instant.now()
@@ -44,11 +46,11 @@ public class TokenProvider {
     }
 
     // 인증 성공시 SecurityContextHolder에 저장할 Authentication 객체 생성
-//    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
-//        //CustomDetailsService 에서 loadUserByUsername 재정의
-//        UserDetails userDetails = userDetailsService.loadUserByUsername(token);
-//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-//    }
+    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        //CustomDetailsService 에서 loadUserByUsername 재정의
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getUserPk(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
 
     // 토큰에서 id 가져오기 한다. customDetailService에서 호출함
     public String getUserPk(String token) {
