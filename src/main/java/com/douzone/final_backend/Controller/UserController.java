@@ -4,6 +4,7 @@ import com.douzone.final_backend.Bean.ReserveBean;
 import com.douzone.final_backend.Bean.UserBean;
 import com.douzone.final_backend.Common.ResponseDTO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
+import com.douzone.final_backend.DTO.PushTokenDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import com.douzone.final_backend.Service.UserService;
@@ -338,6 +339,14 @@ public class UserController {
         }
 
 
+    }
+
+    @PostMapping("pushToken")
+    public boolean pushToken(@AuthenticationPrincipal UserDetails userDetails, @RequestBody PushTokenDTO pushTokenDTO) {
+        String u_id = userDetails.getUsername();
+        log.info("pushToken" + pushTokenDTO);
+        pushTokenDTO.setU_id_fk(u_id);
+        return true;
     }
 
 

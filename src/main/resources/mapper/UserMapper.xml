@@ -225,5 +225,14 @@
         where u_id = #{u_id}
     </update>
 
+    <select id="tokenDupChkUser" resultType="int">
+        select count(*)
+        from firebase_user_push_token
+        where token = #{token}
+    </select>
 
+    <insert id="insertPushTokenUser" parameterType="com.douzone.final_backend.DTO.PushTokenDTO">
+        insert into firebase_user_push_token (u_id_fk, token)
+        VALUES (#{g_owner_fk}, #{token})
+    </insert>
 </mapper>

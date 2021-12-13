@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class PushTokenDTO {
     private String g_owner_fk;
     private String token;
+    private String u_id_fk;
 }

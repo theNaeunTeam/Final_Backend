@@ -8,6 +8,7 @@ import com.douzone.final_backend.DAO.MasterDAO;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
+import com.douzone.final_backend.DTO.PushTokenDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.UserDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -225,5 +226,13 @@ public class UserService {
             throw new RuntimeException("비밀번호 변경 실패하였습니다.");
         }
         return userDAO.pwUpdate(user);
+    }
+    public boolean pushToken(PushTokenDTO pushTokenDTO) {
+        if (userDAO.tokenDupChk(pushTokenDTO.getToken()) == 0) {
+            userDAO.insertPushToken(pushTokenDTO);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
