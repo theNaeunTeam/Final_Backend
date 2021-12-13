@@ -38,7 +38,7 @@ public class UserService {
         }
         final String u_id = userBean.getU_id();
 
-        if (userDAO.existsById(u_id)) {
+        if (userDAO.existsById(u_id)||ownerDAO.existsBySNum(u_id)||u_id.equals("master")) {
             log.warn("이미 존재하는 아이디");
             throw new RuntimeException("이미 존재하는 아이디입니다.");
         }

@@ -100,6 +100,8 @@ public class UserController {
     // user Mypage 로딩
     @GetMapping("myPage")
     public ResponseEntity<?> myPage(@AuthenticationPrincipal UserDetails userDetails) {
+        log.info("mypage 들어옴");
+        log.info(userDetails.getUsername()+"이름ㅇ?");
         String u_id = userDetails.getUsername();
         try {
             // user 정보가 없을 시 예외 발생

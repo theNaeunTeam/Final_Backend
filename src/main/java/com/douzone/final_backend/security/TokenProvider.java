@@ -5,12 +5,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -25,13 +22,14 @@ public class TokenProvider {
     private final UserDetailsService userDetailsService;
 
 
-    public String create(String id) {
+    public String create(String id, String role) {
         // 기한은 지금부터 1일로 설정
         Date expiryDate = Date.from(
                 Instant.now()
                         .plus(1, ChronoUnit.DAYS)
         );
         log.info("토큰 생성 완료");
+
 
         //JWT 토큰 생성
         return Jwts.builder()
@@ -46,21 +44,21 @@ public class TokenProvider {
     }
 
     // 인증 성공시 SecurityContextHolder에 저장할 Authentication 객체 생성
-    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        //CustomDetailsService 에서 loadUserByUsername 재정의
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-    }
+//    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
+//        //CustomDetailsService 에서 loadUserByUsername 재정의
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(token);
+//        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//    }
 
-    // 토근에서 getSubject 한다. (우리는 subject = id&USER 등)
+    // 토큰에서 id 가져오기 한다. customDetailService에서 호출함
     public String getUserPk(String token) {
+        log.info(Jwts.parser().setSigningKey(SECRET_KEY)
+                .parseClaimsJws(token).getBody().getSubject());
         return Jwts.parser().setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token).getBody().getSubject();
     }
 
-    // 헤더 Authorization 가져오기. 헤더 Authorization = token
-    public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
-    }
+
+
 
 }

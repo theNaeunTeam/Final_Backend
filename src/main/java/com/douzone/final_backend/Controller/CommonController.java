@@ -168,9 +168,10 @@ public class CommonController {
             );
             log.info("user : " + userDTO.getU_pw() + user);
 
-            final String id = user.getU_id() + "&USER";
+            final String id = user.getU_id();
+            final String role = "USER";
             log.info(id);
-            final String token = tokenProvider.create(id);
+            final String token = tokenProvider.create(id,role);
 
             final UserDTO responseUserDTO = UserDTO.builder()
                     .token(token)
@@ -286,8 +287,9 @@ public class CommonController {
             );
             log.info(ownerDTO.getO_pw());
 
-            final String id = owner.getO_sNumber() + "&" + "OWNER";
-            final String token = tokenProvider.create(id);
+            final String id = owner.getO_sNumber();
+            final String role = "OWNER";
+            final String token = tokenProvider.create(id,role);
             log.info(token);
 
             final OwnerDTO responseOwnerDTO = OwnerDTO.builder()
@@ -321,8 +323,9 @@ public class CommonController {
 //        MasterDTO master = masterService.findMaster(masterDTO);
             log.info("master ??" + master);
 
-            final String id = master.getM_id() + "&MASTER";
-            final String token = tokenProvider.create(id);
+            final String id = master.getM_id();
+            final String role = "MASTER";
+            final String token = tokenProvider.create(id,role);
             log.info(token);
             log.info("master login success");
             List<String> list = new ArrayList<>();
