@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -33,7 +32,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             log.info("Filter is running");
             log.info("token: " + token);
             if (token != null && !token.equalsIgnoreCase("null")) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(token);
+//                UserDetails userDetails = userDetailsService.loadUserByUsername(token);
 //                UsernamePasswordAuthenticationToken auth =
 //                        new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                 UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
