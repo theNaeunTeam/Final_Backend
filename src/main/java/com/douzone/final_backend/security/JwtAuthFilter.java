@@ -20,8 +20,8 @@ import java.io.IOException;
 @Slf4j
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-//    @Autowired
-//    private TokenProvider tokenProvider;
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -34,9 +34,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             log.info("token: " + token);
             if (token != null && !token.equalsIgnoreCase("null")) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(token);
-                UsernamePasswordAuthenticationToken auth =
-                        new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-//                UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
+//                UsernamePasswordAuthenticationToken auth =
+//                        new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken auth = tokenProvider.getAuthentication(token);
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 securityContext.setAuthentication(auth);

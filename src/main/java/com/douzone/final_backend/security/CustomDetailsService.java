@@ -8,7 +8,6 @@ import com.douzone.final_backend.DTO.MasterDTO;
 import com.douzone.final_backend.DTO.OwnerDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,14 +27,9 @@ public class CustomDetailsService implements UserDetailsService {
     private final MasterDAO masterDAO;
     private final OwnerDAO ownerDAO;
 
-    @Autowired
-    TokenProvider t;
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-
-        String id = t.getUserPk(s);
-
+    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 
         log.info("CustomDetailServie 들어옴 !@!@!@!");
         SecurityUser securityUser = new SecurityUser();
