@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers( "/static/**", "/","/common/**","/manifest.json", "/favicon.ico", "/firebase-messaging-sw.js", "/logo.png", "/logo192.png", "/logo512.png", "/sitemap.xml").permitAll()
+                .antMatchers( "/static/**", "/","/common/**","/manifest.json", "/favicon.ico", "/firebase-messaging-sw.js", "/logo.png", "/logo192.png", "/logo512.png", "/sitemap.xml", "/service-worker.js", "/service-worker.js.map", "/asset-manifest.json", "/robots.txt", "/index.html").permitAll()
 //                .antMatchers("/user/**").permitAll()
                 .antMatchers("/user/**").hasAnyRole("USER", "MASTER")
 //                .antMatchers("/master/**").permitAll()
