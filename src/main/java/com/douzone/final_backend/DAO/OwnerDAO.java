@@ -1,8 +1,8 @@
 package com.douzone.final_backend.DAO;
 
-import com.douzone.final_backend.Bean.GoodsBean;
-import com.douzone.final_backend.Bean.OwnerBean;
-import com.douzone.final_backend.Bean.ReserveBean;
+import com.douzone.final_backend.vo.GoodsVO;
+import com.douzone.final_backend.vo.OwnerVO;
+import com.douzone.final_backend.vo.ReserveVO;
 import com.douzone.final_backend.DTO.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -17,7 +17,7 @@ public class OwnerDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    public OwnerBean findBySNum(String o_sNumber) {
+    public OwnerVO findBySNum(String o_sNumber) {
         return sqlSession.selectOne("findBySNum", o_sNumber);
     }
 
@@ -25,7 +25,7 @@ public class OwnerDAO {
         return sqlSession.selectOne("existsBySNum", o_sNumber);
     }
 
-    public int insertOwner(OwnerBean owner) {
+    public int insertOwner(OwnerVO owner) {
         return sqlSession.insert("insertOwner", owner);
     }
 
@@ -33,15 +33,15 @@ public class OwnerDAO {
         return sqlSession.selectOne("findByOwner", id);
     }
 
-    public int addGoods(GoodsBean goodsBean) {
-        return sqlSession.insert("addGoods", goodsBean);
+    public int addGoods(GoodsVO goodsVO) {
+        return sqlSession.insert("addGoods", goodsVO);
     }
 
-    public int updateGoods(GoodsBean goodsBean) {
-        return sqlSession.update("updateGoods", goodsBean);
+    public int updateGoods(GoodsVO goodsVO) {
+        return sqlSession.update("updateGoods", goodsVO);
     }
 
-    public List<GoodsBean> goodsList(String o_sNumber) {
+    public List<GoodsVO> goodsList(String o_sNumber) {
         return sqlSession.selectList("goodsList", o_sNumber);
     }
 
@@ -90,7 +90,7 @@ public class OwnerDAO {
         sqlSession.update("noShowCheck", reserveDTO);
     }
 
-    public List<GoodsBean> allGoodList() {
+    public List<GoodsVO> allGoodList() {
         return sqlSession.selectList("allGoodsList");
     }
 
@@ -99,21 +99,21 @@ public class OwnerDAO {
         return sqlSession.update("deleteGoods", g_code);
     }
 
-    public List<ReserveBean> reserveListAll(String g_owner) {
+    public List<ReserveVO> reserveListAll(String g_owner) {
 
         return sqlSession.selectList("reserveListAll", g_owner);
     }
 
-    public List<ReserveBean> reserveList(String g_owner) {
+    public List<ReserveVO> reserveList(String g_owner) {
 
         return sqlSession.selectList("reserveList", g_owner);
     }
 
-    public GoodsBean goodsData(int r_g_code) {
+    public GoodsVO goodsData(int r_g_code) {
         return sqlSession.selectOne("goodsData", r_g_code);
     }
 
-    public ReserveBean reserveOne(ReserveDTO reserve) {
+    public ReserveVO reserveOne(ReserveDTO reserve) {
         return sqlSession.selectOne("reserveOne", reserve);
     }
 

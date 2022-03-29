@@ -3,7 +3,7 @@
 
 <mapper namespace="com.douzone.mapper.master">
 
-    <select id="findAll" resultType="com.douzone.final_backend.Bean.OwnerBean">
+    <select id="findAll" resultType="com.douzone.final_backend.vo.OwnerVO">
         select *
         from owner
         order by o_approval in (0, 3) desc, o_approval
@@ -26,34 +26,34 @@
         where m_id = #{id}
     </select>
 
-    <select id="masterlogin" resultType="com.douzone.final_backend.Bean.MasterBean">
+    <select id="masterlogin" resultType="com.douzone.final_backend.vo.MasterVO">
         select*
         from master
         where m_id = #{m_id}
           and m_pw = #{m_pw}
     </select>
 
-    <select id="userAll" resultType="com.douzone.final_backend.Bean.UserBean">
+    <select id="userAll" resultType="com.douzone.final_backend.vo.UserVO">
         select*
         from user
         order by u_date desc
     </select>
 
 
-    <select id="findApproval" resultType="com.douzone.final_backend.Bean.OwnerBean">
+    <select id="findApproval" resultType="com.douzone.final_backend.vo.OwnerVO">
         select *
         from owner
         where o_approval = 0
     </select>
 
-    <select id="approvalCompletion" resultType="com.douzone.final_backend.Bean.OwnerBean">
+    <select id="approvalCompletion" resultType="com.douzone.final_backend.vo.OwnerVO">
         select *
         from owner
         where o_approval = 1
         order by o_date DESC
     </select>
 
-    <select id="terminationWaiting" resultType="com.douzone.final_backend.Bean.OwnerBean">
+    <select id="terminationWaiting" resultType="com.douzone.final_backend.vo.OwnerVO">
         select *
         from owner
         where o_approval = 3
@@ -68,7 +68,7 @@
         where o_sNumber = #{o_sNumber}
     </update>
 
-    <select id="terminationCompletion" resultType="com.douzone.final_backend.Bean.OwnerBean">
+    <select id="terminationCompletion" resultType="com.douzone.final_backend.vo.OwnerVO">
         select *
         from owner
         where o_approval = 4

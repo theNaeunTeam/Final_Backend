@@ -1,7 +1,7 @@
-package com.douzone.final_backend.Common;
+package com.douzone.final_backend.config;
 
-import com.douzone.final_backend.Bean.GoodsBean;
-import com.douzone.final_backend.Service.OwnerService;
+import com.douzone.final_backend.vo.GoodsVO;
+import com.douzone.final_backend.service.impl.OwnerServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 public class Scheduler {
     @Autowired
-    private OwnerService ownerService;
+    private OwnerServiceImpl ownerServiceImpl;
 
     @Scheduled(cron = "0 0 0 * * * ") // 매일 새벽 12시에 실행
 //    @Scheduled(cron = "*/3 * * * * *")
@@ -24,8 +24,8 @@ public class Scheduler {
         // DB 에서 전체 상품 리스트의 유통기한 들고와서 반복적으로 오늘 날짜와 비교
         // 비교 후 날짜가 지났으면 판매 중지 2
 
-        List<GoodsBean> goodsList = ownerService.allGoodsList();
-        for (GoodsBean g : goodsList) {
+        List<GoodsVO> goodsList = ownerServiceImpl.allGoodsList();
+        for (GoodsVO g : goodsList) {
             try {
                 SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
                 Date now = new Date();
@@ -44,9 +44,9 @@ public class Scheduler {
                 if (date2.before(date1)) {
                     log.info("gcode" + g.getG_code());
                     // 판매 중지로 바꾸기
-                    ownerService.changeStatus(g.getG_code());
+                    ownerServiceImpl.changeStatus(g.getG_code());
                     // 해당 상품 예약이 있으면 거절로 바꾸기
-                    ownerService.deleteStatus(g.getG_code());
+                    ownerServiceImpl.deleteStatus(g.getG_code());
                     log.info("했다 !!!");
                 }
 

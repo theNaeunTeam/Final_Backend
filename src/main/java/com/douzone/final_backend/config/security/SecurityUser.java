@@ -1,4 +1,4 @@
-package com.douzone.final_backend.security;
+package com.douzone.final_backend.config.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

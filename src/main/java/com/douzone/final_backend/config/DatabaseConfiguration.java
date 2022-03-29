@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Common;
+package com.douzone.final_backend.config;
 
 
 import com.zaxxer.hikari.HikariConfig;

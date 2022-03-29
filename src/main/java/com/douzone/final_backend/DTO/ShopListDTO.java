@@ -6,11 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ShopListDTO {
+public class ShopListDTO{
 
     private String radius;
     private String o_sNumber;

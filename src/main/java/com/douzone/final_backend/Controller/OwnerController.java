@@ -1,13 +1,13 @@
-package com.douzone.final_backend.Controller;
+package com.douzone.final_backend.controller;
 
-import com.douzone.final_backend.Bean.GoodsBean;
-import com.douzone.final_backend.Bean.OwnerBean;
-import com.douzone.final_backend.Bean.ReserveBean;
-import com.douzone.final_backend.Common.ResponseDTO;
-import com.douzone.final_backend.Common.S3Service;
+import com.douzone.final_backend.vo.GoodsVO;
+import com.douzone.final_backend.vo.OwnerVO;
+import com.douzone.final_backend.vo.ReserveVO;
 import com.douzone.final_backend.DTO.*;
-import com.douzone.final_backend.Service.OwnerService;
-import com.douzone.final_backend.security.TokenProvider;
+import com.douzone.final_backend.DTO.ResponseDTO;
+import com.douzone.final_backend.config.S3Service;
+import com.douzone.final_backend.config.security.TokenProvider;
+import com.douzone.final_backend.service.OwnerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -54,6 +54,7 @@ public class OwnerController {
         log.info("ownerPage : " + owner);
         return ResponseEntity.ok().body(owner);
     }
+
     // owner  main 들어왔을 때 보이는 차트 정보
     // 연도별, 월별, 일별 매출
     @GetMapping("getDay")
@@ -105,7 +106,7 @@ public class OwnerController {
         log.info("file 정보 :" + file);
         log.info("goodsDTO" + goodsDTO);
         try {
-            if(file == null){
+            if (file == null) {
                 throw new RuntimeException("이미지를 선택해주세요");
             }
 
@@ -113,7 +114,7 @@ public class OwnerController {
             goodsDTO.setG_image(image);
             goodsDTO.setG_owner(userDetails.getUsername());
 
-            GoodsBean goods = GoodsBean.builder()
+            GoodsVO goods = GoodsVO.builder()
                     .g_owner(goodsDTO.getG_owner())
 //                    .g_owner("123")
                     .g_name(goodsDTO.getG_name())
@@ -125,16 +126,16 @@ public class OwnerController {
                     .g_expireDate(goodsDTO.getG_expireDate())
                     .g_category(goodsDTO.getG_category())
                     .build();
-            GoodsBean registerGoods = null;
+            GoodsVO registerGoods = null;
             int result = 0;
             if (goodsDTO.getActionType().equals("new")) {
 //                registerGoods = ownerService.addGoods(goods);
-                result =  ownerService.addGoods(goods);
+                result = ownerService.addGoods(goods);
                 log.info("상품 등록 완료" + registerGoods);
             } else if (goodsDTO.getActionType().equals("update")) {
                 goods.setG_code(goodsDTO.getG_code());
 //                registerGoods = ownerService.updateGoods(goods);
-                result =  ownerService.updateGoods(goods);
+                result = ownerService.updateGoods(goods);
                 log.info("상품 업데이트 완료" + registerGoods);
             }
 
@@ -171,12 +172,12 @@ public class OwnerController {
 
         try {
             // 해당 가게 상품 리스트
-            List<GoodsBean> goodsList = ownerService.goodsList(userDetails.getUsername());
+            List<GoodsVO> goodsList = ownerService.goodsList(userDetails.getUsername());
             List<GoodsDTO> responseDTO = new ArrayList<>();
             log.info("try문 ");
 
             // 해당 상품 예약 판매 완료된 갯수
-            for (GoodsBean g : goodsList) {
+            for (GoodsVO g : goodsList) {
                 int count = ownerService.getGoodsReserve(g.getG_code());
 
                 GoodsDTO dto = GoodsDTO.builder()
@@ -207,11 +208,11 @@ public class OwnerController {
         log.info("g : " + g_owner);
         log.info("reserveList 주인 :  " + userDetails.getUsername());
         try {
-            List<ReserveBean> reserveBeans = ownerService.reserveListAll(g_owner);
+            List<ReserveVO> reserveVOS = ownerService.reserveListAll(g_owner);
             log.info("if null");
             List<ReserveDTO> responseDTOList = new ArrayList<>();
-            for (ReserveBean r : reserveBeans) {
-                GoodsBean goods = ownerService.goodsData(r.getR_g_code());
+            for (ReserveVO r : reserveVOS) {
+                GoodsVO goods = ownerService.goodsData(r.getR_g_code());
 
                 ReserveDTO responseDTO = ReserveDTO.builder()
                         .r_code(r.getR_code())
@@ -252,15 +253,15 @@ public class OwnerController {
     public ResponseEntity<?> reserveCheck(@RequestBody ReserveDTO reserve) {
         log.info("reserve 넘어온 값 : " + reserve);
         try {
-            ReserveBean reserveBean = ownerService.reserveOne(reserve);
+            ReserveVO reserveVO = ownerService.reserveOne(reserve);
 
             ReserveDTO responseDTO = ReserveDTO.builder()
-                    .r_count(reserveBean.getR_count())
-                    .r_code(reserveBean.getR_code())
-                    .r_g_code(reserveBean.getR_g_code())
-                    .r_u_id(reserveBean.getR_u_id())
-                    .r_status(reserveBean.getR_status())
-                    .r_pay(reserveBean.getR_pay())
+                    .r_count(reserveVO.getR_count())
+                    .r_code(reserveVO.getR_code())
+                    .r_g_code(reserveVO.getR_g_code())
+                    .r_u_id(reserveVO.getR_u_id())
+                    .r_status(reserveVO.getR_status())
+                    .r_pay(reserveVO.getR_pay())
                     .check(reserve.getCheck())
                     .build();
             log.info("빌드한 responseDTO : " + responseDTO);
@@ -302,7 +303,7 @@ public class OwnerController {
 
     // 예약 현황에서 검색
     @GetMapping("searchReserve")
-    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput,@RequestParam(required = false) int startIndex) {
+    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput, @RequestParam(required = false) int startIndex) {
         log.info("예약현황에서 검색" + g_category + r_status + searchInput);
         // 넘어오는 값 g_category, r_status, searchInput(상품명)
         String o_sNumber = userDetails.getUsername();
@@ -365,11 +366,11 @@ public class OwnerController {
         log.info("search Build 성공");
 
         List<GoodsDTO> responseDTO = ownerService.search(g);
-        for(GoodsDTO dto : responseDTO){
+        for (GoodsDTO dto : responseDTO) {
             int count = ownerService.getGoodsReserve(dto.getG_code());
             dto.setCnt(count);
         }
-        log.info("cnt set ?? "+responseDTO);
+        log.info("cnt set ?? " + responseDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 
@@ -486,7 +487,7 @@ public class OwnerController {
         log.info("ownerExit " + o_sNumber);
 
         try {
-            OwnerBean owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
+            OwnerVO owner = ownerService.getByCredentials(o_sNumber, dto.getO_pw(), passwordEncoder);
 
             int result = ownerService.ownerExit(o_sNumber);
             return ResponseEntity.ok().body(result);

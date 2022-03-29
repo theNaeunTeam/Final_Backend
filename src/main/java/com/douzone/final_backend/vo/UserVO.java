@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Bean;
+package com.douzone.final_backend.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class UserBean {
+public class UserVO {
     private String u_id; // 사용자 id
     private String u_pw; // 비밀번호
     private String u_cellPhone; // 사용자 전화번호

@@ -1,6 +1,6 @@
-package com.douzone.final_backend.security;
+package com.douzone.final_backend.config.security;
 
-import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.vo.UserVO;
 import com.douzone.final_backend.DAO.MasterDAO;
 import com.douzone.final_backend.DAO.OwnerDAO;
 import com.douzone.final_backend.DAO.UserDAO;
@@ -35,7 +35,7 @@ public class CustomDetailsService implements UserDetailsService {
         SecurityUser securityUser = new SecurityUser();
 
         if(userDAO.findByUId(id) != null){
-            UserBean result = userDAO.findByUId(id);
+            UserVO result = userDAO.findByUId(id);
 
             securityUser.setId(result.getU_id());
             securityUser.setPw(result.getU_pw());

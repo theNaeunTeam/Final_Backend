@@ -1,4 +1,4 @@
-package com.douzone.final_backend.security;
+package com.douzone.final_backend.config.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

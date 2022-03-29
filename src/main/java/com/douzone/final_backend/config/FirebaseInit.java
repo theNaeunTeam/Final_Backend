@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Common;
+package com.douzone.final_backend.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Service
 public class FirebaseInit {
-    private static final String path = "final-d076c-firebase-adminsdk-fgu91-3b141c4621.json";
+    private static final String path = "final-4950c-firebase-adminsdk-1ru35-79e49267e2.json";
 
     @PostConstruct
     public void init(){

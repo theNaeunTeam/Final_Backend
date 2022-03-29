@@ -1,9 +1,9 @@
 package com.douzone.final_backend.DAO;
 
-import com.douzone.final_backend.Bean.GoodsBean;
-import com.douzone.final_backend.Bean.OwnerBean;
-import com.douzone.final_backend.Bean.ReserveBean;
-import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.vo.GoodsVO;
+import com.douzone.final_backend.vo.OwnerVO;
+import com.douzone.final_backend.vo.ReserveVO;
+import com.douzone.final_backend.vo.UserVO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.UserDTO;
@@ -20,7 +20,7 @@ public class UserDAO {
     @Autowired
     private SqlSession sqlSession;
 
-    public List<UserBean> select() {
+    public List<UserVO> select() {
         return sqlSession.selectList("selectUserAll");
     }
 
@@ -30,22 +30,22 @@ public class UserDAO {
     }
 
     // 회원가입 시 아이디 존재하지 않으면 데이터 insert
-    public void insertUser(UserBean userBean) {
-        sqlSession.insert("insertUser", userBean);
+    public void insertUser(UserVO userVO) {
+        sqlSession.insert("insertUser", userVO);
     }
 
     // 로그인 시 해당 아이디 값 들고옴 비밀번호 비교는 service에서
-    public UserBean findByUId(String u_id) {
+    public UserVO findByUId(String u_id) {
         return sqlSession.selectOne("findByUId", u_id);
     }
 
     // 가게 클릭 시 해당 가게 상품 중 판매중인 것만 반환
-    public List<GoodsBean> storeGoodsView(String o_sNumber) {
+    public List<GoodsVO> storeGoodsView(String o_sNumber) {
         return sqlSession.selectList("storeGoodsView", o_sNumber);
     }
 
     // 가게 클릭 시 해당 가게 정보
-    public OwnerBean findByStore(String o_sNumber) {
+    public OwnerVO findByStore(String o_sNumber) {
         return sqlSession.selectOne("storeView", o_sNumber);
     }
 
@@ -65,7 +65,7 @@ public class UserDAO {
         return sqlSession.delete("favorOff", favoritesDTO);
     }
 
-    public UserBean userData(String u_id) {
+    public UserVO userData(String u_id) {
         return sqlSession.selectOne("userData", u_id);
     }
 
@@ -81,7 +81,7 @@ public class UserDAO {
         return sqlSession.selectList("userReserveList", dto);
     }
 
-    public ReserveBean getReserve(ReserveDTO reserveDTO) {
+    public ReserveVO getReserve(ReserveDTO reserveDTO) {
         return sqlSession.selectOne("getReserve", reserveDTO);
     }
 
@@ -120,8 +120,8 @@ public class UserDAO {
     }
 
     // 유저정보 업데이트
-    public int updateUser(UserBean userBean) {
-        return sqlSession.update("updateUser", userBean);
+    public int updateUser(UserVO userVO) {
+        return sqlSession.update("updateUser", userVO);
     }
 
     // 유저 정보 삭제
@@ -141,7 +141,7 @@ public class UserDAO {
         return sqlSession.selectOne("changePWcheck",userDTO);
     }
 
-    public int pwUpdate(UserBean user) {
+    public int pwUpdate(UserVO user) {
         return sqlSession.update("pwUpdate",user);
     }
 }

@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Common;
+package com.douzone.final_backend.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

@@ -1,12 +1,15 @@
-package com.douzone.final_backend.Controller;
+package com.douzone.final_backend.controller;
 
-import com.douzone.final_backend.Bean.OwnerBean;
-import com.douzone.final_backend.Bean.UserBean;
-import com.douzone.final_backend.Common.ResponseDTO;
-import com.douzone.final_backend.Common.S3Service;
-import com.douzone.final_backend.DTO.*;
-import com.douzone.final_backend.Service.MasterService;
-import com.douzone.final_backend.security.TokenProvider;
+import com.douzone.final_backend.vo.OwnerVO;
+import com.douzone.final_backend.vo.UserVO;
+import com.douzone.final_backend.DTO.BannerDTO;
+import com.douzone.final_backend.DTO.LocalDTO;
+import com.douzone.final_backend.DTO.OwnerDTO;
+import com.douzone.final_backend.DTO.SaleDTO;
+import com.douzone.final_backend.DTO.ResponseDTO;
+import com.douzone.final_backend.config.S3Service;
+import com.douzone.final_backend.config.security.TokenProvider;
+import com.douzone.final_backend.service.MasterService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 
 @Slf4j
@@ -38,7 +44,7 @@ public class MasterController {
     public ResponseEntity<?> getOwnerList() {
 
         try {
-            List<OwnerBean> requestList = masterService.findAll();
+            List<OwnerVO> requestList = masterService.findAll();
             log.info("가게 정보 불러오기 성공");
             return ResponseEntity.ok().body(requestList);
         } catch (Exception e) {
@@ -84,7 +90,7 @@ public class MasterController {
     public ResponseEntity<?> getUserList() {
 
         try {
-            List<UserBean> userList = masterService.userAll();
+            List<UserVO> userList = masterService.userAll();
             log.info("회원 전체 리스트 불러오기" + userList);
             return ResponseEntity.ok().body(userList);
         } catch (Exception e) {
@@ -101,7 +107,7 @@ public class MasterController {
     public ResponseEntity<?> getApprovalWaiting() {
 
         try {
-            List<OwnerBean> requestList = masterService.findApproval();
+            List<OwnerVO> requestList = masterService.findApproval();
             log.info("가게 승인중 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
 
@@ -118,7 +124,7 @@ public class MasterController {
     public ResponseEntity<?> approvalWaiting() {
 
         try {
-            List<OwnerBean> requestList = masterService.approvalCompletion();
+            List<OwnerVO> requestList = masterService.approvalCompletion();
             log.info("가게 승인중 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
         } catch (Exception e) {
@@ -134,7 +140,7 @@ public class MasterController {
     public ResponseEntity<?> terminationWaiting() {
 
         try {
-            List<OwnerBean> requestList = masterService.terminationWaiting();
+            List<OwnerVO> requestList = masterService.terminationWaiting();
             log.info("가게 승인중 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
         } catch (Exception e) {
@@ -172,7 +178,7 @@ public class MasterController {
     @GetMapping("/terminationcompletion")
     public ResponseEntity<?> terminationCompletion() {
         try {
-            List<OwnerBean> requestList = masterService.terminationCompletion();
+            List<OwnerVO> requestList = masterService.terminationCompletion();
             log.info("가게 해지완료 리스트 불러오기 성공: " + requestList);
             return ResponseEntity.ok().body(requestList);
         } catch (Exception e) {
@@ -209,19 +215,19 @@ public class MasterController {
 
     // 월별 오너 가입 탈퇴수 가져오기
     @GetMapping("/masterMonth")
-    public ResponseEntity MonthMasterChart(){
+    public ResponseEntity MonthMasterChart() {
         log.info("masterMonth 들어왓다");
-        try{
+        try {
             int nowYear = Calendar.getInstance().get(Calendar.YEAR);
-            log.info(""+nowYear);
+            log.info("" + nowYear);
             List<Object> responseMonList = new ArrayList<>();
-            for (int dal= 2019 ; dal <= nowYear ; dal++){
-                List<SaleDTO> mon =  masterService.masterMonth(dal);
+            for (int dal = 2019; dal <= nowYear; dal++) {
+                List<SaleDTO> mon = masterService.masterMonth(dal);
                 responseMonList.add(mon);
             }
-                List<SaleDTO> year = masterService.masterYear(nowYear);
-                log.info("000000000000000000000000");
-                log.info(""+year);
+            List<SaleDTO> year = masterService.masterYear(nowYear);
+            log.info("000000000000000000000000");
+            log.info("" + year);
             SaleDTO result = SaleDTO.builder()
                     .totalMon(responseMonList)
                     .year(year)
@@ -229,7 +235,7 @@ public class MasterController {
 
             return ResponseEntity.ok().body(result);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -239,14 +245,14 @@ public class MasterController {
 
     // 월별 유저 가입 탈퇴수 가져오기
     @GetMapping("/userMonth")
-    public ResponseEntity MonthUserChart(){
+    public ResponseEntity MonthUserChart() {
         log.info("UserMonth 들어왓다");
-        try{
+        try {
             int nowYear = Calendar.getInstance().get(Calendar.YEAR);
-            log.info(""+nowYear);
+            log.info("" + nowYear);
             List<Object> responseMonList = new ArrayList<>();
-            for (int dal= 2019 ; dal <= nowYear ; dal++){
-                List<SaleDTO> mon =  masterService.userMonth(dal);
+            for (int dal = 2019; dal <= nowYear; dal++) {
+                List<SaleDTO> mon = masterService.userMonth(dal);
                 responseMonList.add(mon);
             }
             List<SaleDTO> year = masterService.userYear(nowYear);
@@ -258,7 +264,7 @@ public class MasterController {
 
             return ResponseEntity.ok().body(result);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -268,14 +274,14 @@ public class MasterController {
 
     // 월별 오너 + 유저 가입자수 가져오기 - MasterChart.tsx
     @GetMapping("/OwnerUserChart")
-    public ResponseEntity OnwerUserChart(){
+    public ResponseEntity OnwerUserChart() {
         log.info("MasterUserChart 들어왓다");
-        try{
+        try {
             int nowYear = Calendar.getInstance().get(Calendar.YEAR);
-            log.info(""+nowYear);
+            log.info("" + nowYear);
             List<Object> responseMonList = new ArrayList<>();
-            for (int dal= 2019 ; dal <= nowYear ; dal++){
-                List<SaleDTO> mon =  masterService.ownerUser(dal);
+            for (int dal = 2019; dal <= nowYear; dal++) {
+                List<SaleDTO> mon = masterService.ownerUser(dal);
                 responseMonList.add(mon);
             }
             List<SaleDTO> year = masterService.onnerUserYear(nowYear);
@@ -286,7 +292,7 @@ public class MasterController {
                     .build();
 
             return ResponseEntity.ok().body(result);
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -296,14 +302,14 @@ public class MasterController {
 
     // 월별 오너 + 유저 탈퇴수 가져오기 - MasterChart2.tsx
     @GetMapping("/OwnerUserChart2")
-    public ResponseEntity OnwerUserChart2(){
+    public ResponseEntity OnwerUserChart2() {
         log.info("MasterUserChart 들어왓다");
-        try{
+        try {
             int nowYear = Calendar.getInstance().get(Calendar.YEAR);
-            log.info(""+nowYear);
+            log.info("" + nowYear);
             List<Object> responseMonList = new ArrayList<>();
-            for (int dal= 2019 ; dal <= nowYear ; dal++){
-                List<SaleDTO> mon =  masterService.ownerUser2(dal);
+            for (int dal = 2019; dal <= nowYear; dal++) {
+                List<SaleDTO> mon = masterService.ownerUser2(dal);
                 responseMonList.add(mon);
             }
             List<SaleDTO> year = masterService.onnerUserYear2(nowYear);
@@ -314,7 +320,7 @@ public class MasterController {
                     .build();
 
             return ResponseEntity.ok().body(result);
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -324,21 +330,19 @@ public class MasterController {
 
     // 지역
     @GetMapping("/OwnerUserChart3")
-    public ResponseEntity OnwerUserChart3(){
+    public ResponseEntity OnwerUserChart3() {
         log.info("OwnerUserChart3 들어왓다");
-        try{
+        try {
             LocalDTO localDTO = masterService.OwnerUserChart3();
 
             return ResponseEntity.ok().body(localDTO);
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
                     .body(responseDTO);
         }
     }
-
-
 
 
     @PostMapping("/bannerImage")

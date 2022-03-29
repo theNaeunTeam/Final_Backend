@@ -4,7 +4,7 @@
 <mapper namespace="com.douzone.mapper.user">
 
     <!-- test -->
-    <select id="selectUserAll" resultType="com.douzone.final_backend.Bean.UserBean">
+    <select id="selectUserAll" resultType="com.douzone.final_backend.vo.UserVO">
         select *
         from user
     </select>
@@ -17,12 +17,12 @@
     </select>
 
     <!--  회원 가입   -->
-    <insert id="insertUser" parameterType="com.douzone.final_backend.Bean.UserBean">
+    <insert id="insertUser" parameterType="com.douzone.final_backend.vo.UserVO">
         insert into user(u_id, u_pw, u_cellPhone, u_email, u_gender, u_age)
         values (#{u_id}, #{u_pw}, #{u_cellPhone}, #{u_email}, #{u_gender}, #{u_age})
     </insert>
     <!-- 아이디에 해당하는 user 정보 출력. 로그인 시 사용-->
-    <select id="findByUId" resultType="com.douzone.final_backend.Bean.UserBean">
+    <select id="findByUId" resultType="com.douzone.final_backend.vo.UserVO">
         select *
         from user
         where u_id = #{u_id}
@@ -30,7 +30,7 @@
     </select>
 
     <!-- 해당 가게의 상세 정보 user 용  -->
-    <select id="storeView" resultType="com.douzone.final_backend.Bean.OwnerBean">
+    <select id="storeView" resultType="com.douzone.final_backend.vo.OwnerVO">
         select *
         from owner
         where o_sNumber = #{o_sNumber}
@@ -55,7 +55,7 @@
           and f_p_user_id = #{f_p_user_id}
     </delete>
 
-    <select id="userData" resultType="com.douzone.final_backend.Bean.UserBean">
+    <select id="userData" resultType="com.douzone.final_backend.vo.UserVO">
         select *
         from user
         where u_id = #{u_id}
@@ -102,7 +102,7 @@
         limit #{startIndex},10
     </select>
 
-    <select id="getReserve" resultType="com.douzone.final_backend.Bean.ReserveBean">
+    <select id="getReserve" resultType="com.douzone.final_backend.vo.ReserveVO">
         select *
         from reserve
         where r_code = #{r_code}
@@ -209,7 +209,7 @@
         where u_id = #{u_id}
     </select>
 
-    <update id="updateUser" parameterType="com.douzone.final_backend.Bean.UserBean">
+    <update id="updateUser" parameterType="com.douzone.final_backend.vo.UserVO">
         update user
         set u_pw        = #{u_pw},
             u_cellPhone = #{u_cellPhone},

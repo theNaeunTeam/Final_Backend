@@ -1,4 +1,4 @@
-package com.douzone.final_backend.security;
+package com.douzone.final_backend.config.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers( "/static/**", "/","/common/**","/manifest.json", "/favicon.ico", "/firebase-messaging-sw.js", "/logo.png", "/logo192.png", "/logo512.png", "/sitemap.xml", "/service-worker.js", "/service-worker.js.map", "/asset-manifest.json", "/robots.txt", "/index.html").permitAll()
+                .antMatchers(
+                        "/static/**",
+                        "/",
+                        "/common/**",
+                        "/manifest.json",
+                        "/favicon.ico",
+                        "/firebase-messaging-sw.js",
+                        "/logo.png",
+                        "/logo192.png",
+                        "/logo512.png",
+                        "/sitemap.xml",
+                        "/service-worker.js",
+                        "/service-worker.js.map",
+                        "/asset-manifest.json",
+                        "/robots.txt",
+                        "/index.html"
+                ).permitAll()
 //                .antMatchers("/user/**").permitAll()
                 .antMatchers("/user/**").hasAnyRole("USER", "MASTER")
 //                .antMatchers("/master/**").permitAll()

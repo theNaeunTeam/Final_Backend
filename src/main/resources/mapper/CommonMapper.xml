@@ -237,7 +237,7 @@
     </select>
 
     <!-- 해당 가게 클릭시 판매중인 상품 리스트 보기-->
-    <select id="storeGoodsView" resultType="com.douzone.final_backend.Bean.GoodsBean">
+    <select id="storeGoodsView" resultType="com.douzone.final_backend.vo.GoodsVO">
         select *
         from goods
         where g_owner = #{o_sNumber}
@@ -264,11 +264,17 @@
     </select>
 
     <!-- 비밀번호 업데이트 -->
-    <update id="pwUpdate" parameterType="com.douzone.final_backend.Bean.UserBean">
+    <update id="pwUpdate" parameterType="com.douzone.final_backend.vo.UserVO">
         update user
         set u_pw = #{u_pw}
         where u_id = #{u_id}
     </update>
+
+    <select id="SelectRedisUpdate" resultType="com.douzone.final_backend.DTO.ShopListDTO">
+        select *
+        from owner
+        where o_redis_flag is null
+    </select>
 </mapper>
 
 

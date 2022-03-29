@@ -1,19 +1,19 @@
-package com.douzone.final_backend.Controller;
+package com.douzone.final_backend.controller;
 
 
-import com.douzone.final_backend.Bean.GoodsBean;
-import com.douzone.final_backend.Bean.MasterBean;
-import com.douzone.final_backend.Bean.OwnerBean;
-import com.douzone.final_backend.Bean.UserBean;
-import com.douzone.final_backend.Common.MailService;
-import com.douzone.final_backend.Common.ResponseDTO;
-import com.douzone.final_backend.Common.S3Service;
+import com.douzone.final_backend.vo.GoodsVO;
+import com.douzone.final_backend.vo.MasterVO;
+import com.douzone.final_backend.vo.OwnerVO;
+import com.douzone.final_backend.vo.UserVO;
 import com.douzone.final_backend.DTO.*;
-import com.douzone.final_backend.Service.CommonService;
-import com.douzone.final_backend.Service.MasterService;
-import com.douzone.final_backend.Service.OwnerService;
-import com.douzone.final_backend.Service.UserService;
-import com.douzone.final_backend.security.TokenProvider;
+import com.douzone.final_backend.config.MailService;
+import com.douzone.final_backend.DTO.ResponseDTO;
+import com.douzone.final_backend.config.S3Service;
+import com.douzone.final_backend.config.security.TokenProvider;
+import com.douzone.final_backend.service.CommonService;
+import com.douzone.final_backend.service.MasterService;
+import com.douzone.final_backend.service.OwnerService;
+import com.douzone.final_backend.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -76,9 +76,10 @@ public class CommonController {
                     .body(responseDTO);
         }
     }
+
     // 현재 위치 저장 되어있을 경우 근처 가게 4개만 뽑아서 내보내기
     @GetMapping("/localList")
-    public ResponseEntity<?> localList(@RequestParam String LAT, String LON){
+    public ResponseEntity<?> localList(@RequestParam String LAT, String LON) {
         String range = "1.5";
         log.info("localList 들어옴");
         ShopListDTO s = ShopListDTO.builder()
@@ -86,10 +87,10 @@ public class CommonController {
                 .o_longitude(LON)
                 .radius(range)
                 .build();
-        try{
+        try {
             List<ShopListDTO> list = commonService.getLocalList(s);
             return ResponseEntity.ok().body(list);
-        }catch (Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -123,7 +124,7 @@ public class CommonController {
         log.info("회원가입 들어옴" + userDTO);
         try {
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
-            UserBean user = UserBean.builder()
+            UserVO user = UserVO.builder()
                     .u_id(userDTO.getU_id())
                     .u_pw(encodePW)
                     .u_cellPhone(userDTO.getU_cellPhone())
@@ -131,7 +132,7 @@ public class CommonController {
                     .u_gender(userDTO.getU_gender())
                     .u_age(userDTO.getU_age())
                     .build();
-            UserBean registerUser = userService.create(user);
+            UserVO registerUser = userService.create(user);
             UserDTO responseUserDTO = UserDTO.builder()
                     .u_id(registerUser.getU_id())
                     .u_pw(registerUser.getU_pw())
@@ -161,7 +162,7 @@ public class CommonController {
         // service 에서 예외처리 해줌.
         try {
             log.info("login1" + userDTO.getU_id());
-            UserBean user = userService.getByCredentials(
+            UserVO user = userService.getByCredentials(
                     userDTO.getU_id(),
                     userDTO.getU_pw(),
                     passwordEncoder
@@ -200,7 +201,7 @@ public class CommonController {
     public ResponseEntity<?> shopView(@RequestParam String o_sNumber) {
         log.info(o_sNumber);
         try {
-            List<GoodsBean> goodsList = userService.storeGoodsView(o_sNumber);
+            List<GoodsVO> goodsList = userService.storeGoodsView(o_sNumber);
             log.info("shopView" + goodsList);
             return ResponseEntity.ok().body(goodsList);
         } catch (Exception e) {
@@ -216,18 +217,18 @@ public class CommonController {
     public ResponseEntity<?> storeView(@RequestParam String o_sNumber) {
         log.info("storeView 들어오는 값 : " + o_sNumber);
         try {
-            OwnerBean ownerBean = userService.findByStore(o_sNumber);
+            OwnerVO ownerVO = userService.findByStore(o_sNumber);
             OwnerDTO responseDTO = OwnerDTO.builder()
-                    .o_sNumber(ownerBean.getO_sNumber())
-                    .o_address(ownerBean.getO_address())
-                    .o_image(ownerBean.getO_image())
-                    .o_cellPhone(ownerBean.getO_cellPhone())
-                    .o_name(ownerBean.getO_name())
-                    .o_phone(ownerBean.getO_phone())
-                    .o_time1(ownerBean.getO_time1())
-                    .o_time2(ownerBean.getO_time2())
-                    .o_latitude(ownerBean.getO_latitude())
-                    .o_longitude(ownerBean.getO_longitude())
+                    .o_sNumber(ownerVO.getO_sNumber())
+                    .o_address(ownerVO.getO_address())
+                    .o_image(ownerVO.getO_image())
+                    .o_cellPhone(ownerVO.getO_cellPhone())
+                    .o_name(ownerVO.getO_name())
+                    .o_phone(ownerVO.getO_phone())
+                    .o_time1(ownerVO.getO_time1())
+                    .o_time2(ownerVO.getO_time2())
+                    .o_latitude(ownerVO.getO_latitude())
+                    .o_longitude(ownerVO.getO_longitude())
                     .build();
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
@@ -246,7 +247,7 @@ public class CommonController {
             ownerDTO.setO_image(image);
 
             String encodePW = passwordEncoder.encode(ownerDTO.getO_pw());
-            OwnerBean owner = OwnerBean.builder()
+            OwnerVO owner = OwnerVO.builder()
                     .o_sNumber(ownerDTO.getO_sNumber())
                     .o_pw(encodePW)
                     .o_address(ownerDTO.getO_address())
@@ -279,7 +280,7 @@ public class CommonController {
         log.info("들어온 정보 : " + ownerDTO);
 
         try {
-            OwnerBean owner = ownerService.getByCredentials(
+            OwnerVO owner = ownerService.getByCredentials(
                     ownerDTO.getO_sNumber(),
                     ownerDTO.getO_pw(),
                     passwordEncoder
@@ -317,7 +318,7 @@ public class CommonController {
     public ResponseEntity<?> masterLogin(@RequestBody MasterDTO masterDTO) {
         log.info("masterDTO : " + masterDTO);
         try {
-            MasterBean master = masterService.login(masterDTO);
+            MasterVO master = masterService.login(masterDTO);
 //        MasterDTO master = masterService.findMaster(masterDTO);
             log.info("master ??" + master);
 
@@ -384,52 +385,52 @@ public class CommonController {
     }
 
 
-
     @PostMapping("/userFindPW")
     public ResponseEntity<?> userFindPW(@RequestBody UserDTO userDTO) {
-        log.info("id : "+userDTO.getU_id());
+        log.info("id : " + userDTO.getU_id());
 
         // id로 유저 정보 가져오기
-        try{
-            UserBean user = userService.findById(userDTO.getU_id());
+        try {
+            UserVO user = userService.findById(userDTO.getU_id());
             String u_pw = user.getU_pw().substring(0, 20);
-            log.info("u_pw : "+u_pw);
+            log.info("u_pw : " + u_pw);
 
-            String resPW = u_pw.replace("/","가");
-            log.info("resPW : "+resPW);
+            String resPW = u_pw.replace("/", "가");
+            log.info("resPW : " + resPW);
 
             mailService.sendMail(user.getU_email(), user.getU_id(), resPW);
             log.info("sendMail");
             return ResponseEntity.ok().body(true);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.info(e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }
     }
+
     // 링크 파라미터로 전해온 아이디와 비밀번호가 유효한지 검사
     @PostMapping("changePWcheck")
-    public ResponseEntity<?> changePWcheck(@RequestBody UserDTO userDTO){
-        log.info("들어온 값 : "+userDTO);
+    public ResponseEntity<?> changePWcheck(@RequestBody UserDTO userDTO) {
+        log.info("들어온 값 : " + userDTO);
         UserDTO responseDTO = userService.changePWcheck(userDTO);
-        log.info("결과 : "+responseDTO);
+        log.info("결과 : " + responseDTO);
         return ResponseEntity.ok().body(responseDTO);
     }
 
     @PatchMapping("changePW")
-    public ResponseEntity<?> changePW(@RequestBody UserDTO userDTO){
+    public ResponseEntity<?> changePW(@RequestBody UserDTO userDTO) {
         // 해당 비밀번호를 암호화해서 update
         // 비밀번호 암호화해서 전송
-        try{
+        try {
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
-            UserBean user = UserBean.builder()
+            UserVO user = UserVO.builder()
                     .u_id(userDTO.getU_id())
                     .u_pw(encodePW)
                     .build();
             int result = userService.pwUpdate(user);
 
             return ResponseEntity.ok().body(result);
-        }catch(Exception e){
+        } catch (Exception e) {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }

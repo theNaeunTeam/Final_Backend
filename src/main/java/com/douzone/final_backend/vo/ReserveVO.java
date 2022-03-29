@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Bean;
+package com.douzone.final_backend.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReserveBean {
+public class ReserveVO {
 
     private int r_code; // 예약 번호
     private String r_u_id; // 예약한 유저 id

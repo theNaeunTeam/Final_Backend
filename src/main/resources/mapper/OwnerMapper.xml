@@ -4,7 +4,7 @@
 <mapper namespace="com.douzone.mapper.owner">
 
     <!-- 로그인시 사용 승인완료, 해지신청대기중일 때만 로그인가능-->
-    <select id="findBySNum" resultType="com.douzone.final_backend.Bean.OwnerBean">
+    <select id="findBySNum" resultType="com.douzone.final_backend.vo.OwnerVO">
         select *
         from owner
         where o_sNumber = #{o_sNumber}
@@ -19,7 +19,7 @@
     </select>
 
     <!-- 입점 신청시 owner 추가-->
-    <insert id="insertOwner" parameterType="com.douzone.final_backend.Bean.OwnerBean">
+    <insert id="insertOwner" parameterType="com.douzone.final_backend.vo.OwnerVO">
         insert into owner(o_sNumber, o_pw, o_phone, o_name, o_cellPhone, o_address, o_date, o_time1, o_time2, o_image,
                           o_longitude, o_latitude)
         values (#{o_sNumber}, #{o_pw}, #{o_phone}, #{o_name}, #{o_cellPhone}, #{o_address}, #{o_date}, #{o_time1},
@@ -33,14 +33,14 @@
         where o_sNumber = #{id}
     </select>
     <!-- 상품 등록-->
-    <insert id="addGoods" parameterType="com.douzone.final_backend.Bean.GoodsBean">
+    <insert id="addGoods" parameterType="com.douzone.final_backend.vo.GoodsVO">
         insert into goods(g_owner, g_name, g_count, g_price, g_discount, g_detail, g_image, g_expireDate, g_category)
         values (#{g_owner}, #{g_name}, #{g_count}, #{g_price}, #{g_discount}, #{g_detail}, #{g_image}, #{g_expireDate},
                 #{g_category})
 
     </insert>
     <!-- 등록되어있는 상품 수정-->
-    <update id="updateGoods" parameterType="com.douzone.final_backend.Bean.GoodsBean">
+    <update id="updateGoods" parameterType="com.douzone.final_backend.vo.GoodsVO">
         update goods
         set g_owner      = #{g_owner},
             g_name       = #{g_name},
@@ -55,7 +55,7 @@
     </update>
 
     <!--  해당 가게의 상품 리스트  -->
-    <select id="goodsList" resultType="com.douzone.final_backend.Bean.GoodsBean">
+    <select id="goodsList" resultType="com.douzone.final_backend.vo.GoodsVO">
         select *
         from goods
         where g_owner = #{o_sNumber}
@@ -135,7 +135,7 @@
     </update>
 
     <!--  스케줄러에서 상품 가져올 때 사용. 판매중인 상품들만 유통기한 확인할거임  -->
-    <select id="allGoodsList" resultType="com.douzone.final_backend.Bean.GoodsBean">
+    <select id="allGoodsList" resultType="com.douzone.final_backend.vo.GoodsVO">
         select *
         from goods
         where g_status = 0
@@ -147,7 +147,7 @@
         where g_code = #{g_code}
     </update>
     <!-- 예약 번호로 예약정보 부르기 -->
-    <select id="reserveOne" resultType="com.douzone.final_backend.Bean.ReserveBean">
+    <select id="reserveOne" resultType="com.douzone.final_backend.vo.ReserveVO">
         select *
         from reserve
         where r_code = #{r_code};
@@ -161,7 +161,7 @@
     </update>
 
     <!-- 본인 가게 예약 리스트 -->
-    <select id="reserveList" resultType="com.douzone.final_backend.Bean.ReserveBean">
+    <select id="reserveList" resultType="com.douzone.final_backend.vo.ReserveVO">
         select *
         from reserve
         where r_owner = #{g_owner}
@@ -170,7 +170,7 @@
     </select>
 
     <!-- 탄다오너 어플 예약목록 보기 -->
-    <select id="reserveListAll" resultType="com.douzone.final_backend.Bean.ReserveBean">
+    <select id="reserveListAll" resultType="com.douzone.final_backend.vo.ReserveVO">
         select *
         from reserve
         where r_owner = #{g_owner}
@@ -180,7 +180,7 @@
     </select>
 
     <!-- g_code로 물건 정보 조회 -->
-    <select id="goodsData" resultType="com.douzone.final_backend.Bean.GoodsBean">
+    <select id="goodsData" resultType="com.douzone.final_backend.vo.GoodsVO">
         select *
         from goods
         where g_code = #{r_g_code}

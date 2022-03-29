@@ -1,13 +1,13 @@
-package com.douzone.final_backend.Controller;
+package com.douzone.final_backend.controller;
 
-import com.douzone.final_backend.Bean.ReserveBean;
-import com.douzone.final_backend.Bean.UserBean;
-import com.douzone.final_backend.Common.ResponseDTO;
+import com.douzone.final_backend.vo.ReserveVO;
+import com.douzone.final_backend.vo.UserVO;
 import com.douzone.final_backend.DTO.FavoritesDTO;
 import com.douzone.final_backend.DTO.ReserveDTO;
 import com.douzone.final_backend.DTO.UserDTO;
-import com.douzone.final_backend.Service.UserService;
-import com.douzone.final_backend.security.TokenProvider;
+import com.douzone.final_backend.DTO.ResponseDTO;
+import com.douzone.final_backend.config.security.TokenProvider;
+import com.douzone.final_backend.service.UserService;
 import com.google.firebase.messaging.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,11 +93,11 @@ public class UserController {
     @GetMapping("myPage")
     public ResponseEntity<?> myPage(@AuthenticationPrincipal UserDetails userDetails) {
         log.info("mypage 들어옴");
-        log.info(userDetails.getUsername()+"이름ㅇ?");
+        log.info(userDetails.getUsername() + "이름ㅇ?");
         String u_id = userDetails.getUsername();
         try {
             // user 정보가 없을 시 예외 발생
-            UserBean user = userService.userData(u_id);
+            UserVO user = userService.userData(u_id);
             log.info("user 정보 " + user);
             int save = userService.userSave(u_id);
             int reserve = userService.userReserve(u_id);
@@ -126,7 +126,7 @@ public class UserController {
         reserveDTO.setR_u_id(u_id);
 
         try {
-            ReserveBean reserve = userService.getReserve(reserveDTO);
+            ReserveVO reserve = userService.getReserve(reserveDTO);
 
             ReserveDTO responseDTO = ReserveDTO.builder()
                     .r_count(reserve.getR_count())
@@ -154,7 +154,7 @@ public class UserController {
 
     // user 예약 현황에서 검색
     @GetMapping("searchReserve")
-    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput,@RequestParam int startIndex) {
+    public ResponseEntity<?> searchReserve(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String g_category, @RequestParam(required = false) String r_status, @RequestParam(required = false) String searchInput, @RequestParam int startIndex) {
         log.info("유저 예약 현황에서 검색 : " + g_category + r_status + searchInput);
 
         String u_id = userDetails.getUsername();
@@ -180,14 +180,14 @@ public class UserController {
 
         List<ReserveDTO> responseDTO = userService.searchReserve(r);
 
-        log.info("결과 r"+responseDTO);
+        log.info("결과 r" + responseDTO);
 
         return ResponseEntity.ok().body(responseDTO);
     }
 
     // user 즐겨찾는 가게 목록
     @GetMapping("favorList")
-    public ResponseEntity<?> favorList(@AuthenticationPrincipal UserDetails userDetails,@RequestParam int startIndex) {
+    public ResponseEntity<?> favorList(@AuthenticationPrincipal UserDetails userDetails, @RequestParam int startIndex) {
         String u_id = userDetails.getUsername();
         // 필요한 정보 -> o_name, o_address, o_time1, o_time2 , o_phone, o_approval
         FavoritesDTO dto = FavoritesDTO.builder()
@@ -208,7 +208,7 @@ public class UserController {
         // 필요한 정보 -> u_id, u_pw, u_cellPhone, u_email, u_gender, u_age
         try {
 
-            UserBean user = userService.userData(u_id);
+            UserVO user = userService.userData(u_id);
             log.info("user 정보" + user);
 
             UserDTO responseDTO = UserDTO.builder()
@@ -233,11 +233,11 @@ public class UserController {
         log.info("회원정보 수정 들어옴  :" + userDTO);
 
         try {
-            if(userDTO.getU_pw() == null){
+            if (userDTO.getU_pw() == null) {
                 throw new RuntimeException("비밀번호를 입력해주세요");
             }
             String encodePW = passwordEncoder.encode(userDTO.getU_pw());
-            UserBean user = UserBean.builder()
+            UserVO user = UserVO.builder()
                     .u_id(userDTO.getU_id())
                     .u_pw(encodePW)
                     .u_cellPhone(userDTO.getU_cellPhone())
@@ -316,10 +316,10 @@ public class UserController {
         String u_id = userDetails.getUsername();
         log.info(userDTO + " 들어온 데이터");
         try {
-            if(userDTO.getU_pw() == null){
+            if (userDTO.getU_pw() == null) {
                 throw new RuntimeException("비밀번호를 입력해주세요");
             }
-            UserBean user = userService.getByCredentials(
+            UserVO user = userService.getByCredentials(
                     u_id,
                     userDTO.getU_pw(),
                     passwordEncoder

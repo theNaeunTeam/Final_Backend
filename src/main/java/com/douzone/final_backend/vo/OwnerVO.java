@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Bean;
+package com.douzone.final_backend.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OwnerBean {
+public class OwnerVO {
     private String o_sNumber; // 사업자 번호
     private int o_approval; // 가맹 상태 0:승인대기 1:승인완료 2:승인거절 3:가맹해제
     private String o_pw; // 가게 로그인 비밀번호

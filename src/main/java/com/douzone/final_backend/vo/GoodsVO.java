@@ -1,4 +1,4 @@
-package com.douzone.final_backend.Bean;
+package com.douzone.final_backend.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoodsBean {
+public class GoodsVO {
     private int g_code; //상품 코드
     private String g_owner; // 상품 올린 사업자 번호
     private String g_name; // 상품 이름

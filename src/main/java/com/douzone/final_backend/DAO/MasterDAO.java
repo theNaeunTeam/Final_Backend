@@ -1,8 +1,8 @@
 package com.douzone.final_backend.DAO;
 
-import com.douzone.final_backend.Bean.MasterBean;
-import com.douzone.final_backend.Bean.OwnerBean;
-import com.douzone.final_backend.Bean.UserBean;
+import com.douzone.final_backend.vo.MasterVO;
+import com.douzone.final_backend.vo.OwnerVO;
+import com.douzone.final_backend.vo.UserVO;
 import com.douzone.final_backend.DTO.BannerDTO;
 import com.douzone.final_backend.DTO.LocalDTO;
 import com.douzone.final_backend.DTO.MasterDTO;
@@ -22,7 +22,7 @@ public class MasterDAO {
     private SqlSession sqlSession;
 
 
-    public List<OwnerBean> findAll() {
+    public List<OwnerVO> findAll() {
         return sqlSession.selectList("findAll");
     }
 
@@ -39,25 +39,25 @@ public class MasterDAO {
         return sqlSession.selectOne("findByMaster", id);
     }
 
-    public MasterBean masterLogin(MasterDTO masterDTO) {
+    public MasterVO masterLogin(MasterDTO masterDTO) {
         log.info(masterDTO.getM_id() + "/" + masterDTO.getM_pw());
         log.info("MasterBean  : " + sqlSession.selectOne("masterlogin", masterDTO));
         return sqlSession.selectOne("masterlogin", masterDTO);
     }
 
-    public List<UserBean> userAll() {
+    public List<UserVO> userAll() {
         return sqlSession.selectList("userAll");
     }
 
-    public List<OwnerBean> findApproval() {
+    public List<OwnerVO> findApproval() {
         return sqlSession.selectList("findApproval");
     }
 
-    public List<OwnerBean> approvalCompletion() {
+    public List<OwnerVO> approvalCompletion() {
         return sqlSession.selectList("approvalCompletion");
     }
 
-    public List<OwnerBean> terminationWaiting() {
+    public List<OwnerVO> terminationWaiting() {
         return sqlSession.selectList("terminationWaiting");
     }
 
@@ -66,7 +66,7 @@ public class MasterDAO {
         return sqlSession.update("terminationOK", o_sNumber);
     }
 
-    public List<OwnerBean> terminationCompletion() {
+    public List<OwnerVO> terminationCompletion() {
         return sqlSession.selectList("terminationCompletion");
     }
 
